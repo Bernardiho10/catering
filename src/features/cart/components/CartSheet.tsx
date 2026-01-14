@@ -20,6 +20,7 @@ import { useState, useEffect } from "react"
 export function CartSheet() {
     const { items, removeItem, updateQuantity, total } = useCartStore()
     const [isMounted, setIsMounted] = useState(false)
+    const [isOpen, setIsOpen] = useState(false)
 
     useEffect(() => {
         setIsMounted(true)
@@ -28,9 +29,13 @@ export function CartSheet() {
     if (!isMounted) return null
 
     const itemCount = items.reduce((acc, item) => acc + item.quantity, 0)
+    
+    const handleCheckout = () => {
+        setIsOpen(false)
+    }
 
     return (
-        <Sheet>
+        <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild>
                 <Button variant="ghost" size="icon" className="relative text-muted-foreground hover:text-primary transition-colors">
                     <ShoppingBag className="h-5 w-5" />
@@ -111,6 +116,7 @@ export function CartSheet() {
                             className="w-full rounded-full h-12 text-base font-semibold" 
                             size="lg" 
                             asChild
+                            onClick={handleCheckout}
                         >
                             <Link href="/checkout">Proceed to Checkout</Link>
                         </Button>

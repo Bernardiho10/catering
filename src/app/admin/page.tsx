@@ -4,15 +4,23 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Plus, Trash, ShieldCheck, Loader2, Sparkles } from "lucide-react";
+import { Plus, Trash, ShieldCheck, Loader2, Sparkles, Percent, Save } from "lucide-react";
 import { motion } from "framer-motion";
 import { createClient } from "@/lib/supabase/client";
 import { toast } from "sonner";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
 
 interface DailyDish {
     id: number;
     name: string;
     sold_out: boolean;
+}
+
+interface SiteSettings {
+    id: number;
+    tax_rate: number;
+    delivery_fee: number;
 }
 
 export default function AdminPage() {
@@ -21,8 +29,43 @@ export default function AdminPage() {
     const [loading, setLoading] = useState(true);
     const [isAdmin, setIsAdmin] = useState(false);
     const [userEmail, setUserEmail] = useState<string | null>(null);
+    const [taxRate, setTaxRate] = useState<number>(8.0);
+    const [deliveryFee, setDeliveryFee] = useState<number>(2.99);
+    const [savingSettings, setSavingSettings] = useState(false);
     const router = useRouter();
     const supabase = createClient();
+
+    const fetchSettings = async () => {
+        const { data } = await supabase
+            .from('site_settings')
+            .select('*')
+            .single<SiteSettings>();
+        
+        if (data) {
+            setTaxRate(data.tax_rate);
+            setDeliveryFee(data.delivery_fee);
+        }
+    };
+
+    const saveSettings = async () => {
+        setSavingSettings(true);
+        
+        const { error } = await supabase
+            .from('site_settings')
+            .upsert({ 
+                id: 1,
+                tax_rate: taxRate, 
+                delivery_fee: deliveryFee 
+            });
+
+        if (error) {
+            toast.error("Failed to save settings. Please try again.");
+        } else {
+            toast.success("Settings saved successfully!");
+        }
+        
+        setSavingSettings(false);
+    };
 
     const fetchDishes = async () => {
         setLoading(true);
@@ -92,6 +135,7 @@ export default function AdminPage() {
         };
         checkUser();
         fetchDishes();
+        fetchSettings();
     }, []);
 
     const markAllSoldOut = async () => {
@@ -121,6 +165,18 @@ export default function AdminPage() {
                     <Button onClick={() => router.push('/login')} className="mt-6 rounded-full" variant="outline">
                         Sign In
                     </Button>
+                    {process.env.NODE_ENV === 'development' && (
+                        <div className="mt-8 p-4 rounded-2xl bg-muted/50 border border-border text-left">
+                            <p className="text-xs font-semibold text-foreground mb-2">Demo Admin Credentials</p>
+                            <div className="space-y-1 text-xs text-muted-foreground font-mono">
+                                <p>Email: admin@foody.com</p>
+                                <p>Password: FoodyAdmin123!</p>
+                            </div>
+                            <p className="text-[10px] text-muted-foreground mt-3">
+                                See ADMIN_SETUP.md for setup instructions
+                            </p>
+                        </div>
+                    )}
                 </div>
             </div>
         );
@@ -250,6 +306,88 @@ export default function AdminPage() {
                             </div>
                         </div>
                     </div>
+
+                    {/* Tax & Fees Settings */}
+                    <Card className="rounded-3xl border border-border shadow-sm overflow-hidden">
+                        <CardHeader className="p-6 border-b border-border bg-gradient-to-r from-amber-500/5 via-primary/5 to-blue-500/5">
+                            <div className="flex items-center gap-3">
+                                <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-amber-500 to-blue-500 flex items-center justify-center">
+                                    <Percent className="h-5 w-5 text-white" />
+                                </div>
+                                <div>
+                                    <CardTitle className="text-lg font-heading font-semibold">Tax & Delivery Settings</CardTitle>
+                                    <p className="text-sm text-muted-foreground">Configure tax rate and delivery fees for all orders</p>
+                                </div>
+                            </div>
+                        </CardHeader>
+                        <CardContent className="p-6">
+                            <div className="grid sm:grid-cols-2 gap-6">
+                                <div className="space-y-2">
+                                    <Label htmlFor="taxRate" className="text-sm font-medium">
+                                        Sales Tax Rate (%)
+                                    </Label>
+                                    <div className="relative">
+                                        <Input
+                                            id="taxRate"
+                                            type="number"
+                                            step="0.01"
+                                            min="0"
+                                            max="20"
+                                            value={taxRate}
+                                            onChange={(e) => setTaxRate(parseFloat(e.target.value) || 0)}
+                                            className="rounded-xl pr-10"
+                                            placeholder="8.0"
+                                        />
+                                        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm">%</span>
+                                    </div>
+                                    <p className="text-xs text-muted-foreground">
+                                        Applied to all orders. US average: 7-10%
+                                    </p>
+                                </div>
+
+                                <div className="space-y-2">
+                                    <Label htmlFor="deliveryFee" className="text-sm font-medium">
+                                        Delivery Fee ($)
+                                    </Label>
+                                    <div className="relative">
+                                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm">$</span>
+                                        <Input
+                                            id="deliveryFee"
+                                            type="number"
+                                            step="0.01"
+                                            min="0"
+                                            value={deliveryFee}
+                                            onChange={(e) => setDeliveryFee(parseFloat(e.target.value) || 0)}
+                                            className="rounded-xl pl-7"
+                                            placeholder="2.99"
+                                        />
+                                    </div>
+                                    <p className="text-xs text-muted-foreground">
+                                        Flat rate applied to each order
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div className="mt-6 pt-6 border-t border-border flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                                <div className="text-sm text-muted-foreground">
+                                    <p className="font-medium text-foreground">Example Order:</p>
+                                    <p>$50.00 subtotal + ${deliveryFee.toFixed(2)} delivery + ${(50 * taxRate / 100).toFixed(2)} tax = <span className="font-semibold text-primary">${(50 + deliveryFee + (50 * taxRate / 100)).toFixed(2)}</span></p>
+                                </div>
+                                <Button 
+                                    onClick={saveSettings}
+                                    disabled={savingSettings}
+                                    className="rounded-full gap-2"
+                                >
+                                    {savingSettings ? (
+                                        <Loader2 className="h-4 w-4 animate-spin" />
+                                    ) : (
+                                        <Save className="h-4 w-4" />
+                                    )}
+                                    Save Settings
+                                </Button>
+                            </div>
+                        </CardContent>
+                    </Card>
                 </div>
             </div>
         </div>

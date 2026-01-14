@@ -25,11 +25,34 @@ export default async function OrdersPage() {
 
     if (error) {
         return (
-            <div className="container py-24 px-4">
-                <h1 className="text-2xl font-heading tracking-wider text-foreground">Your Orders</h1>
-                <p className="mt-2 text-muted-foreground">
-                    We couldn’t load your orders right now. Please try again in a moment.
-                </p>
+            <div className="container mx-auto px-4 md:px-6 py-12 md:py-16 space-y-8">
+                <div className="flex flex-col gap-2 text-left">
+                    <p className="text-xs tracking-widest uppercase text-muted-foreground">Foody</p>
+                    <h1 className="text-3xl sm:text-4xl font-heading font-semibold text-foreground leading-tight">Your Orders</h1>
+                    <p className="text-muted-foreground max-w-2xl">
+                        We couldn’t load your orders right now. Please try again in a moment.
+                    </p>
+                </div>
+
+                <Card className="rounded-2xl">
+                    <CardContent className="py-14 flex flex-col items-center text-center">
+                        <div className="h-14 w-14 rounded-2xl bg-muted flex items-center justify-center border border-border">
+                            <Package className="h-6 w-6 text-muted-foreground" />
+                        </div>
+                        <h2 className="mt-4 font-heading font-semibold text-xl">Temporarily unavailable</h2>
+                        <p className="mt-1 text-sm text-muted-foreground max-w-sm">
+                            If this keeps happening, make sure you’re signed in and your account has access to orders.
+                        </p>
+                        <div className="mt-6 flex w-full flex-col sm:flex-row gap-3 sm:justify-center">
+                            <Button asChild className="rounded-full" variant="outline">
+                                <Link href="/">Back to menu</Link>
+                            </Button>
+                            <Button asChild className="rounded-full">
+                                <Link href="/login">Sign in</Link>
+                            </Button>
+                        </div>
+                    </CardContent>
+                </Card>
             </div>
         )
     }

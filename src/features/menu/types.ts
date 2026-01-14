@@ -6,9 +6,17 @@ export interface MenuItem {
     price: number // in cents
     category: string
     image_url: string
-    images: string[] // New: Array of images for gallery
+    images: string[]
     active: boolean
     dietary_tags: string[]
+    rating?: number
+    review_count?: number
+    prep_time?: number
+    serves?: number
+    calories?: number
+    featured?: boolean
+    seasonal?: string
+    benefits?: string[]
 }
 
 export type CartItem = MenuItem & {

@@ -7,10 +7,29 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Button } from "@/components/ui/button"
 import { motion, AnimatePresence } from "framer-motion"
 import Image from "next/image"
-import { ArrowDown, Leaf, Clock, Truck, Heart } from "lucide-react"
+import { ArrowDown, Leaf, Clock, Truck, Heart, Star, Flame } from "lucide-react"
+import { HowItWorks } from "@/components/sections/HowItWorks"
+import { Testimonials } from "@/components/sections/Testimonials"
+import { AboutTeam } from "@/components/sections/AboutTeam"
+import { NewsletterSignup } from "@/components/sections/NewsletterSignup"
+import { BehindTheScenes } from "@/components/sections/BehindTheScenes"
+import { Card, CardContent } from "@/components/ui/card"
+import { formatCurrency } from "@/lib/utils"
+import { MenuFilterBar } from "@/components/menu/MenuFilterBar"
+import { ProductDialog } from "@/features/menu/components/ProductDialog"
+import { MenuItem } from "@/features/menu/types"
 
 export default function Home() {
   const categories = Array.from(new Set(MOCK_MENU_ITEMS.map(item => item.category)))
+  const maxPrice = Math.max(...MOCK_MENU_ITEMS.map(item => item.price))
+  
+  const [selectedFeaturedItem, setSelectedFeaturedItem] = useState<MenuItem | null>(null)
+  const [featuredDialogOpen, setFeaturedDialogOpen] = useState(false)
+
+  const handleFeaturedClick = (item: MenuItem) => {
+    setSelectedFeaturedItem(item)
+    setFeaturedDialogOpen(true)
+  }
 
   const heroSlides = useMemo(() => {
     const items = MOCK_MENU_ITEMS.filter(i => i.image_url).slice(0, 5)
@@ -21,10 +40,28 @@ export default function Home() {
         image_url: i.image_url as string,
       }))
     }
-    return [{ id: "placeholder", name: "Today’s Catering Highlights", image_url: "/placeholder-food.jpg" }]
+    return [{ id: "placeholder", name: "Today's Catering Highlights", image_url: "/placeholder-food.jpg" }]
   }, [])
 
   const [activeSlide, setActiveSlide] = useState(0)
+  const [searchQuery, setSearchQuery] = useState("")
+  const [selectedDietary, setSelectedDietary] = useState<string[]>([])
+  const [priceRange, setPriceRange] = useState<[number, number]>([0, maxPrice])
+
+  const filteredItems = useMemo(() => {
+    return MOCK_MENU_ITEMS.filter(item => {
+      const matchesSearch = !searchQuery || 
+        item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.description.toLowerCase().includes(searchQuery.toLowerCase())
+      
+      const matchesDietary = selectedDietary.length === 0 ||
+        selectedDietary.every(tag => item.dietary_tags.includes(tag))
+      
+      const matchesPrice = item.price >= priceRange[0] && item.price <= priceRange[1]
+
+      return matchesSearch && matchesDietary && matchesPrice
+    })
+  }, [searchQuery, selectedDietary, priceRange])
 
   useEffect(() => {
     if (heroSlides.length <= 1) return
@@ -38,7 +75,7 @@ export default function Home() {
     <div className="flex flex-col min-h-screen">
       {/* Hero Section - Warm & Inviting */}
       <section className="relative min-h-[85vh] flex items-center">
-        <div className="absolute inset-0 bg-gradient-to-br from-accent/50 via-background to-secondary/30" />
+        <div className="absolute inset-0 bg-gradient-to-br from-amber-50/50 via-background to-blue-50/30 dark:from-amber-950/20 dark:via-background dark:to-blue-950/20" />
         
         <div className="container mx-auto relative z-10 px-4 md:px-6 py-20">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
@@ -48,14 +85,14 @@ export default function Home() {
               transition={{ duration: 0.8, ease: "easeOut" }}
               className="space-y-8"
             >
-              <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full text-primary text-sm font-medium">
+              <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-amber-500/10 via-primary/10 to-blue-500/10 rounded-full text-amber-600 dark:text-amber-400 text-sm font-medium border border-amber-200/50 dark:border-amber-500/20">
                 <Leaf className="h-4 w-4" />
                 Premium Catering Services
               </div>
               
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-heading font-semibold text-foreground leading-tight">
                 Exceptional catering for{" "}
-                <span className="text-primary">every occasion</span>
+                <span className="text-golden">every occasion</span>
               </h1>
               
               <p className="text-lg text-muted-foreground max-w-lg leading-relaxed">
@@ -97,40 +134,12 @@ export default function Home() {
               </div>
             </motion.div>
 
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
-              className="relative hidden lg:block"
-            >
-              <div className="relative aspect-square rounded-3xl overflow-hidden bg-muted/50 shadow-2xl">
-                <img 
-                  src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800&h=800&fit=crop"
-                  alt="Fresh healthy food bowl"
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
-              </div>
-              
-              <div className="absolute -bottom-6 -left-6 bg-card p-4 rounded-2xl shadow-lg border border-border">
-                <div className="flex items-center gap-3">
-                  <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">
-                    <Leaf className="h-6 w-6 text-primary" />
-                  </div>
-                  <div>
-                    <p className="font-semibold text-foreground">100% Fresh</p>
-                    <p className="text-sm text-muted-foreground">Local ingredients</p>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-
-            {/* Hero Image Carousel (Today's Dishes) */}
+            {/* Hero Image Carousel (Today's Dishes) - Side by side with text */}
             <motion.div
               initial={{ opacity: 0, x: 30 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8, ease: "easeOut", delay: 0.15 }}
-              className="relative"
+              className="relative hidden lg:block"
             >
               <div className="relative w-full aspect-[4/5] sm:aspect-[5/6] lg:aspect-[4/5] rounded-3xl overflow-hidden border border-border shadow-xl bg-muted">
                 <AnimatePresence mode="wait">
@@ -177,13 +186,26 @@ export default function Home() {
                   ))}
                 </div>
               )}
+
+              {/* 100% Fresh Badge */}
+              <div className="absolute -bottom-6 -left-6 bg-card p-4 rounded-2xl shadow-lg border border-border">
+                <div className="flex items-center gap-3">
+                  <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">
+                    <Leaf className="h-6 w-6 text-primary" />
+                  </div>
+                  <div>
+                    <p className="font-semibold text-foreground">100% Fresh</p>
+                    <p className="text-sm text-muted-foreground">Local ingredients</p>
+                  </div>
+                </div>
+              </div>
             </motion.div>
           </div>
         </div>
       </section>
 
       {/* Menu Section */}
-      <section id="menu" className="container mx-auto px-4 md:px-6 py-20 space-y-12">
+      <section id="menu" className="container mx-auto px-4 md:px-6 py-20 space-y-10">
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -199,12 +221,22 @@ export default function Home() {
           </p>
         </motion.div>
 
+        <MenuFilterBar
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
+          selectedDietary={selectedDietary}
+          onDietaryChange={setSelectedDietary}
+          priceRange={priceRange}
+          onPriceRangeChange={setPriceRange}
+          maxPrice={maxPrice}
+        />
+
         <Tabs defaultValue="All" className="w-full">
-          <div className="flex justify-center mb-10 overflow-x-auto pb-4 scrollbar-hide -mx-4 px-4 sm:mx-0 sm:px-0">
-            <TabsList className="bg-muted/60 p-1.5 h-auto rounded-full gap-1 flex-nowrap min-w-max">
+          <div className="flex justify-center mb-8">
+            <TabsList className="bg-muted/60 p-1.5 h-auto rounded-2xl sm:rounded-full gap-1 flex-wrap sm:flex-nowrap justify-center">
               <TabsTrigger
                 value="All"
-                className="rounded-full px-5 py-2.5 text-sm data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all"
+                className="rounded-full px-4 sm:px-5 py-2 sm:py-2.5 text-xs sm:text-sm data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all"
               >
                 All Dishes
               </TabsTrigger>
@@ -212,7 +244,7 @@ export default function Home() {
                 <TabsTrigger
                   key={cat}
                   value={cat}
-                  className="rounded-full px-5 py-2.5 text-sm data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all capitalize"
+                  className="rounded-full px-4 sm:px-5 py-2 sm:py-2.5 text-xs sm:text-sm data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all capitalize"
                 >
                   {cat}
                 </TabsTrigger>
@@ -221,15 +253,125 @@ export default function Home() {
           </div>
 
           <TabsContent value="All" className="animate-in fade-in duration-500">
-            <MenuGrid items={MOCK_MENU_ITEMS} />
+            {filteredItems.length > 0 ? (
+              <MenuGrid items={filteredItems} />
+            ) : (
+              <div className="text-center py-16 space-y-4">
+                <p className="text-lg text-muted-foreground">No dishes match your filters.</p>
+                <Button variant="outline" onClick={() => { setSearchQuery(""); setSelectedDietary([]); setPriceRange([0, maxPrice]); }}>
+                  Clear filters
+                </Button>
+              </div>
+            )}
           </TabsContent>
           {categories.map(cat => (
             <TabsContent key={cat} value={cat} className="animate-in fade-in duration-500">
-              <MenuGrid items={MOCK_MENU_ITEMS.filter(item => item.category === cat)} />
+              {filteredItems.filter(item => item.category === cat).length > 0 ? (
+                <MenuGrid items={filteredItems.filter(item => item.category === cat)} />
+              ) : (
+                <div className="text-center py-16 space-y-4">
+                  <p className="text-lg text-muted-foreground">No dishes match your filters in this category.</p>
+                  <Button variant="outline" onClick={() => { setSearchQuery(""); setSelectedDietary([]); setPriceRange([0, maxPrice]); }}>
+                    Clear filters
+                  </Button>
+                </div>
+              )}
             </TabsContent>
           ))}
         </Tabs>
       </section>
+
+      {/* Featured This Week - Inspired by Serious Eats / Epicurious */}
+      <section className="py-16 md:py-20 bg-muted/30">
+        <div className="container mx-auto px-4 md:px-6">
+          <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-10">
+            <div className="space-y-2">
+              <p className="text-xs tracking-widest uppercase text-primary font-medium">Editor&apos;s Pick</p>
+              <h2 className="text-2xl sm:text-3xl font-heading font-semibold text-foreground">
+                Featured This Week
+              </h2>
+            </div>
+            <Button variant="outline" className="rounded-full w-fit">
+              View all featured
+            </Button>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {MOCK_MENU_ITEMS.filter(item => item.featured).slice(0, 3).map((item, index) => (
+              <motion.div
+                key={item.id}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+              >
+                <Card className="group overflow-hidden rounded-2xl border-border hover:border-primary/30 transition-all duration-300 hover:shadow-lg cursor-pointer" onClick={() => handleFeaturedClick(item)}>
+                  <div className="relative h-56 overflow-hidden">
+                    <Image
+                      src={item.image_url}
+                      alt={item.name}
+                      fill
+                      className="object-cover transition-transform duration-500 group-hover:scale-105"
+                      sizes="(max-width: 768px) 100vw, 33vw"
+                    />
+                    <div className="absolute top-3 left-3 bg-primary text-primary-foreground text-xs font-medium px-2.5 py-1 rounded-full flex items-center gap-1">
+                      <Flame className="h-3 w-3" />
+                      Popular
+                    </div>
+                  </div>
+                  <CardContent className="p-5 space-y-3">
+                    <div className="flex items-start justify-between gap-2">
+                      <h3 className="font-semibold text-lg text-foreground group-hover:text-primary transition-colors">
+                        {item.name}
+                      </h3>
+                      <span className="font-semibold text-primary">{formatCurrency(item.price)}</span>
+                    </div>
+                    {item.rating && (
+                      <div className="flex items-center gap-2">
+                        <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
+                        <span className="text-sm font-medium">{item.rating}</span>
+                        <span className="text-xs text-muted-foreground">({item.review_count} reviews)</span>
+                      </div>
+                    )}
+                    <p className="text-sm text-muted-foreground line-clamp-2">{item.description}</p>
+                    {item.benefits && item.benefits.length > 0 && (
+                      <div className="flex gap-1.5 flex-wrap">
+                        {item.benefits.map(b => (
+                          <span key={b} className="text-xs bg-primary/10 text-primary px-2 py-1 rounded-full capitalize">
+                            {b}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Behind The Scenes - Kitchen Videos */}
+      <BehindTheScenes />
+
+      {/* How It Works */}
+      <HowItWorks />
+
+      {/* Testimonials */}
+      <Testimonials />
+
+      {/* About Team */}
+      <AboutTeam />
+
+      {/* Newsletter Signup */}
+      <NewsletterSignup />
+
+      {/* Featured Item Product Dialog */}
+      <ProductDialog
+        item={selectedFeaturedItem}
+        open={featuredDialogOpen}
+        onOpenChange={setFeaturedDialogOpen}
+      />
     </div>
   )
 }

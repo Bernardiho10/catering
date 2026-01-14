@@ -84,9 +84,11 @@ export async function Header() {
                         href="/"
                         className="flex items-center gap-2.5 group"
                     >
-                        <Leaf className="h-7 w-7 text-primary transition-transform group-hover:rotate-12" />
+                        <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-amber-500 via-primary to-blue-500 flex items-center justify-center transition-transform group-hover:scale-105 shadow-lg shadow-amber-500/20">
+                            <Leaf className="h-5 w-5 text-white" />
+                        </div>
                         <div className="flex flex-col">
-                            <span className="font-heading font-semibold text-2xl text-foreground transition-colors group-hover:text-primary">
+                            <span className="font-heading font-semibold text-2xl text-golden">
                                 Foody
                             </span>
                             <span className="text-[10px] text-muted-foreground tracking-wide">Premium Catering Services</span>
@@ -96,7 +98,9 @@ export async function Header() {
 
                 {/* Mobile Brand */}
                 <div className="md:hidden flex items-center gap-2">
-                    <Leaf className="h-5 w-5 text-primary" />
+                    <div className="h-7 w-7 rounded-lg bg-gradient-to-br from-amber-500 via-primary to-blue-500 flex items-center justify-center shadow-md shadow-amber-500/20">
+                        <Leaf className="h-4 w-4 text-white" />
+                    </div>
                     <span className="font-heading font-semibold text-lg text-foreground">Foody</span>
                 </div>
 
