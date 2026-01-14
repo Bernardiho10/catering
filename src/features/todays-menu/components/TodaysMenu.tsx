@@ -33,7 +33,7 @@ export function TodaysMenu() {
                 .order('created_at', { ascending: false });
 
             if (!error && data) {
-                setDishes(data.map(d => d.name));
+                setDishes(data.map((d: any) => d.name));
             }
             setIsLoading(false);
         };

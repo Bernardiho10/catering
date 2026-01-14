@@ -39,11 +39,11 @@ export default function AdminPage() {
         const { data } = await supabase
             .from('site_settings')
             .select('*')
-            .single<SiteSettings>();
+            .single();
         
         if (data) {
-            setTaxRate(data.tax_rate);
-            setDeliveryFee(data.delivery_fee);
+            setTaxRate(data.tax_rate || 8.0);
+            setDeliveryFee(data.delivery_fee || 299);
         }
     };
 
@@ -129,7 +129,7 @@ export default function AdminPage() {
                 .from("users")
                 .select("role")
                 .eq("id", user.id)
-                .maybeSingle<{ role: string | null }>();
+                .maybeSingle();
 
             setIsAdmin(dbUser?.role === "admin");
         };

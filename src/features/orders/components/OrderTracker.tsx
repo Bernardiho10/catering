@@ -35,7 +35,7 @@ export function OrderTracker({ orderId, initialStatus, initialCheckpoints }: Ord
                     table: 'orders',
                     filter: `id=eq.${orderId}`,
                 },
-                (payload) => {
+                (payload: any) => {
                     setStatus(payload.new.status)
                 }
             )
