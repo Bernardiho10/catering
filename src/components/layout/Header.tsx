@@ -37,6 +37,24 @@ export async function Header() {
                         Menu
                     </Link>
                     <Link
+                        href="/catering"
+                        className="text-sm text-muted-foreground transition-colors hover:text-primary"
+                    >
+                        Catering
+                    </Link>
+                    <Link
+                        href="/gift-cards"
+                        className="text-sm text-muted-foreground transition-colors hover:text-primary"
+                    >
+                        Gift Cards
+                    </Link>
+                    <Link
+                        href="/corporate"
+                        className="text-sm text-muted-foreground transition-colors hover:text-primary"
+                    >
+                        Corporate
+                    </Link>
+                    <Link
                         href="/orders"
                         className="text-sm text-muted-foreground transition-colors hover:text-primary"
                     >
@@ -68,11 +86,38 @@ export async function Header() {
                             <Link href="/" className="hover:text-primary transition-colors text-muted-foreground">
                                 Menu
                             </Link>
+                            <Link href="/catering" className="hover:text-primary transition-colors text-muted-foreground">
+                                Catering
+                            </Link>
+                            <Link href="/gift-cards" className="hover:text-primary transition-colors text-muted-foreground">
+                                Gift Cards
+                            </Link>
+                            <Link href="/rewards" className="hover:text-primary transition-colors text-muted-foreground">
+                                Rewards
+                            </Link>
+                            <Link href="/corporate" className="hover:text-primary transition-colors text-muted-foreground">
+                                Corporate
+                            </Link>
+                            <Link href="/delivery-areas" className="hover:text-primary transition-colors text-muted-foreground">
+                                Delivery Areas
+                            </Link>
                             <Link
                                 href="/orders"
                                 className="text-muted-foreground hover:text-primary transition-colors"
                             >
                                 My Orders
+                            </Link>
+                            <Link href="/faq" className="text-muted-foreground hover:text-primary transition-colors">
+                                FAQs
+                            </Link>
+                            <Link href="/about" className="text-muted-foreground hover:text-primary transition-colors">
+                                Our Story
+                            </Link>
+                            <Link href="/contact" className="text-muted-foreground hover:text-primary transition-colors">
+                                Contact
+                            </Link>
+                            <Link href="/policies/delivery" className="text-muted-foreground hover:text-primary transition-colors">
+                                Delivery Policy
                             </Link>
                         </nav>
                     </SheetContent>

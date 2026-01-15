@@ -7,7 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Button } from "@/components/ui/button"
 import { motion, AnimatePresence } from "framer-motion"
 import Image from "next/image"
-import { ArrowDown, Leaf, Clock, Truck, Heart, Star, Flame } from "lucide-react"
+import { ArrowDown, Leaf, Clock, Truck, Heart, Star, Flame, Gift, HelpCircle, Building2, MapPinned, Sparkles, ArrowRight } from "lucide-react"
 import { HowItWorks } from "@/components/sections/HowItWorks"
 import { Testimonials } from "@/components/sections/Testimonials"
 import { AboutTeam } from "@/components/sections/AboutTeam"
@@ -18,6 +18,7 @@ import { formatCurrency } from "@/lib/utils"
 import { MenuFilterBar } from "@/components/menu/MenuFilterBar"
 import { ProductDialog } from "@/features/menu/components/ProductDialog"
 import { MenuItem } from "@/features/menu/types"
+import Link from "next/link"
 
 export default function Home() {
   const categories = Array.from(new Set(MOCK_MENU_ITEMS.map(item => item.category)))
@@ -200,6 +201,139 @@ export default function Home() {
                 </div>
               </div>
             </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* Quick Links / Competitive Features */}
+      <section className="py-16 md:py-20 bg-muted/20">
+        <div className="container mx-auto px-4 md:px-6">
+          <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-10">
+            <div className="space-y-2">
+              <p className="text-xs tracking-widest uppercase text-primary font-medium">Explore</p>
+              <h2 className="text-2xl sm:text-3xl font-heading font-semibold text-foreground">
+                Everything you need for a full-service catering experience
+              </h2>
+              <p className="text-sm text-muted-foreground max-w-2xl">
+                Gift cards, corporate accounts, rewards, FAQs, delivery zones, and catering packages — all accessible from here.
+              </p>
+            </div>
+            <Link href="/catering">
+              <Button variant="outline" className="rounded-full w-fit gap-2">
+                View catering packages
+                <ArrowRight className="h-4 w-4" />
+              </Button>
+            </Link>
+          </div>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <Link href="/catering" className="group">
+              <Card className="h-full rounded-2xl border-border hover:border-primary/30 transition-all hover:shadow-lg">
+                <CardContent className="p-6 space-y-3">
+                  <div className="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center">
+                    <Sparkles className="h-6 w-6 text-primary" />
+                  </div>
+                  <div className="space-y-1">
+                    <h3 className="font-semibold text-lg text-foreground group-hover:text-primary transition-colors">
+                      Catering Packages
+                    </h3>
+                    <p className="text-sm text-muted-foreground">
+                      Essential, Premium, and Luxury packages with a quote request form.
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+            </Link>
+
+            <Link href="/corporate" className="group">
+              <Card className="h-full rounded-2xl border-border hover:border-primary/30 transition-all hover:shadow-lg">
+                <CardContent className="p-6 space-y-3">
+                  <div className="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center">
+                    <Building2 className="h-6 w-6 text-primary" />
+                  </div>
+                  <div className="space-y-1">
+                    <h3 className="font-semibold text-lg text-foreground group-hover:text-primary transition-colors">
+                      Corporate Accounts
+                    </h3>
+                    <p className="text-sm text-muted-foreground">
+                      Streamlined business ordering with invoicing + support application.
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+            </Link>
+
+            <Link href="/gift-cards" className="group">
+              <Card className="h-full rounded-2xl border-border hover:border-primary/30 transition-all hover:shadow-lg">
+                <CardContent className="p-6 space-y-3">
+                  <div className="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center">
+                    <Gift className="h-6 w-6 text-primary" />
+                  </div>
+                  <div className="space-y-1">
+                    <h3 className="font-semibold text-lg text-foreground group-hover:text-primary transition-colors">
+                      Gift Cards
+                    </h3>
+                    <p className="text-sm text-muted-foreground">
+                      Choose an amount, occasion, delivery method, and add a message.
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+            </Link>
+
+            <Link href="/rewards" className="group">
+              <Card className="h-full rounded-2xl border-border hover:border-primary/30 transition-all hover:shadow-lg">
+                <CardContent className="p-6 space-y-3">
+                  <div className="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center">
+                    <Star className="h-6 w-6 text-primary" />
+                  </div>
+                  <div className="space-y-1">
+                    <h3 className="font-semibold text-lg text-foreground group-hover:text-primary transition-colors">
+                      Rewards
+                    </h3>
+                    <p className="text-sm text-muted-foreground">
+                      Tiered rewards program with point redemptions and perks.
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+            </Link>
+
+            <Link href="/faq" className="group">
+              <Card className="h-full rounded-2xl border-border hover:border-primary/30 transition-all hover:shadow-lg">
+                <CardContent className="p-6 space-y-3">
+                  <div className="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center">
+                    <HelpCircle className="h-6 w-6 text-primary" />
+                  </div>
+                  <div className="space-y-1">
+                    <h3 className="font-semibold text-lg text-foreground group-hover:text-primary transition-colors">
+                      FAQs
+                    </h3>
+                    <p className="text-sm text-muted-foreground">
+                      Searchable FAQ categories for ordering, delivery, payment, and catering.
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+            </Link>
+
+            <Link href="/delivery-areas" className="group">
+              <Card className="h-full rounded-2xl border-border hover:border-primary/30 transition-all hover:shadow-lg">
+                <CardContent className="p-6 space-y-3">
+                  <div className="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center">
+                    <MapPinned className="h-6 w-6 text-primary" />
+                  </div>
+                  <div className="space-y-1">
+                    <h3 className="font-semibold text-lg text-foreground group-hover:text-primary transition-colors">
+                      Delivery Areas
+                    </h3>
+                    <p className="text-sm text-muted-foreground">
+                      Delivery zones with fees and estimated delivery times.
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+            </Link>
           </div>
         </div>
       </section>
