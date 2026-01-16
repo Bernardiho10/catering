@@ -7,7 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Button } from "@/components/ui/button"
 import { motion, AnimatePresence } from "framer-motion"
 import Image from "next/image"
-import { ArrowDown, Leaf, Clock, Truck, Heart, Star, Flame, Gift, HelpCircle, Building2, MapPinned, Sparkles, ArrowRight } from "lucide-react"
+import { ArrowDown, Leaf, Clock, Truck, Heart, Star, Flame, Gift, HelpCircle, Building2, MapPinned, Sparkles, ArrowRight, ChevronLeft, ChevronRight, ChefHat, Utensils } from "lucide-react"
 import { HowItWorks } from "@/components/sections/HowItWorks"
 import { Testimonials } from "@/components/sections/Testimonials"
 import { AboutTeam } from "@/components/sections/AboutTeam"
@@ -33,15 +33,18 @@ export default function Home() {
   }
 
   const heroSlides = useMemo(() => {
-    const items = MOCK_MENU_ITEMS.filter(i => i.image_url).slice(0, 5)
+    const items = MOCK_MENU_ITEMS.filter(i => i.image_url).slice(0, 6)
     if (items.length > 0) {
       return items.map(i => ({
         id: String(i.id),
         name: i.name,
+        description: i.description,
         image_url: i.image_url as string,
+        ctaHref: "/#menu",
+        ctaLabel: "Order Now",
       }))
     }
-    return [{ id: "placeholder", name: "Today's Catering Highlights", image_url: "/placeholder-food.jpg" }]
+    return [{ id: "placeholder", name: "Today's Catering Highlights", description: "Fresh, chef-crafted dishes prepared daily for your next event.", image_url: "/placeholder-food.jpg", ctaHref: "/#menu", ctaLabel: "Order Now" }]
   }, [])
 
   const [activeSlide, setActiveSlide] = useState(0)
@@ -72,135 +75,169 @@ export default function Home() {
     return () => window.clearInterval(interval)
   }, [heroSlides.length])
 
+  const activeHero = heroSlides[activeSlide]
+
+  const goPrev = () => {
+    setActiveSlide((s) => (s - 1 + heroSlides.length) % heroSlides.length)
+  }
+
+  const goNext = () => {
+    setActiveSlide((s) => (s + 1) % heroSlides.length)
+  }
+
   return (
     <div className="flex flex-col min-h-screen">
-      {/* Hero Section - Warm & Inviting */}
-      <section className="relative min-h-[85vh] flex items-center">
+      {/* Hero Slider (Tiff's Treats inspired) */}
+      <section className="relative">
         <div className="absolute inset-0 bg-gradient-to-br from-amber-50/50 via-background to-blue-50/30 dark:from-amber-950/20 dark:via-background dark:to-blue-950/20" />
-        
-        <div className="container mx-auto relative z-10 px-4 md:px-6 py-20">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, ease: "easeOut" }}
-              className="space-y-8"
-            >
-              <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-amber-500/10 via-primary/10 to-blue-500/10 rounded-full text-amber-600 dark:text-amber-400 text-sm font-medium border border-amber-200/50 dark:border-amber-500/20">
-                <Leaf className="h-4 w-4" />
-                Premium Catering Services
-              </div>
-              
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-heading font-semibold text-foreground leading-tight">
-                Exceptional catering for{" "}
-                <span className="text-golden">every occasion</span>
-              </h1>
-              
-              <p className="text-lg text-muted-foreground max-w-lg leading-relaxed">
-                From intimate gatherings to corporate events, we bring restaurant-quality cuisine 
-                and impeccable service to your venue. Let us handle the details while you enjoy the moment.
-              </p>
-              
-              <div className="flex flex-wrap gap-4 pt-4">
-                <Button 
-                  size="lg" 
-                  onClick={() => document.getElementById('menu')?.scrollIntoView({ behavior: 'smooth' })} 
-                  className="rounded-full px-8 text-base"
-                >
-                  Browse Menu
-                  <ArrowDown className="ml-2 h-4 w-4" />
-                </Button>
-                <Button 
-                  size="lg" 
-                  variant="outline" 
-                  className="rounded-full px-8 text-base"
-                >
-                  How It Works
-                </Button>
-              </div>
 
-              <div className="flex flex-wrap gap-6 pt-6 text-sm text-muted-foreground">
-                <div className="flex items-center gap-2">
-                  <Clock className="h-4 w-4 text-primary" />
-                  <span>Ready in 30 min</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Truck className="h-4 w-4 text-primary" />
-                  <span>Free delivery</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Heart className="h-4 w-4 text-primary" />
-                  <span>Made fresh daily</span>
-                </div>
-              </div>
-            </motion.div>
-
-            {/* Hero Image Carousel (Today's Dishes) - Side by side with text */}
-            <motion.div
-              initial={{ opacity: 0, x: 30 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8, ease: "easeOut", delay: 0.15 }}
-              className="relative hidden lg:block"
-            >
-              <div className="relative w-full aspect-[4/5] sm:aspect-[5/6] lg:aspect-[4/5] rounded-3xl overflow-hidden border border-border shadow-xl bg-muted">
+        <div className="container mx-auto relative z-10 px-4 md:px-6 pt-10 pb-10">
+          <div className="rounded-3xl border border-border bg-card overflow-hidden shadow-xl">
+            <div className="grid lg:grid-cols-5">
+              {/* Image stage */}
+              <div className="relative lg:col-span-3 min-h-[260px] sm:min-h-[360px] lg:min-h-[460px] bg-muted">
                 <AnimatePresence mode="wait">
                   <motion.div
-                    key={heroSlides[activeSlide]?.id}
+                    key={activeHero?.id}
                     initial={{ opacity: 0, scale: 1.02 }}
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.98 }}
-                    transition={{ duration: 0.9, ease: "easeInOut" }}
+                    transition={{ duration: 0.6, ease: "easeInOut" }}
                     className="absolute inset-0"
                   >
                     <Image
-                      src={heroSlides[activeSlide]?.image_url ?? "/placeholder-food.jpg"}
-                      alt={heroSlides[activeSlide]?.name ?? "Featured dish"}
+                      src={activeHero?.image_url ?? "/placeholder-food.jpg"}
+                      alt={activeHero?.name ?? "Featured dish"}
                       fill
-                      className="object-cover"
                       priority
-                      sizes="(max-width: 768px) 100vw, 560px"
+                      sizes="(max-width: 1024px) 100vw, 60vw"
+                      className="object-cover"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/10 to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-r from-black/15 via-transparent to-black/10" />
                   </motion.div>
                 </AnimatePresence>
 
-                <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-6">
-                  <p className="text-white/80 text-xs tracking-widest uppercase">Today’s Highlights</p>
-                  <h3 className="text-white text-xl sm:text-2xl font-heading font-semibold leading-tight">
-                    {heroSlides[activeSlide]?.name}
-                  </h3>
-                </div>
+                {heroSlides.length > 1 && (
+                  <div className="absolute inset-y-0 left-0 right-0 flex items-center justify-between px-3">
+                    <button
+                      type="button"
+                      onClick={goPrev}
+                      aria-label="Previous slide"
+                      className="h-10 w-10 rounded-full bg-white/85 dark:bg-zinc-900/70 border border-border shadow-sm flex items-center justify-center text-foreground hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                    >
+                      <ChevronLeft className="h-5 w-5" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={goNext}
+                      aria-label="Next slide"
+                      className="h-10 w-10 rounded-full bg-white/85 dark:bg-zinc-900/70 border border-border shadow-sm flex items-center justify-center text-foreground hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                    >
+                      <ChevronRight className="h-5 w-5" />
+                    </button>
+                  </div>
+                )}
               </div>
 
-              {heroSlides.length > 1 && (
-                <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2">
+              {/* Right content panel */}
+              <div className="lg:col-span-2 bg-background">
+                <div className="h-full flex flex-col justify-center px-6 py-10 md:px-10">
+                  <p className="text-xs tracking-[0.22em] uppercase text-muted-foreground">Today’s highlight</p>
+                  <h1 className="mt-3 text-3xl md:text-4xl font-heading font-semibold text-foreground">
+                    {activeHero?.name}
+                  </h1>
+                  <p className="mt-3 text-sm md:text-base text-muted-foreground leading-relaxed">
+                    {activeHero?.description}
+                  </p>
+
+                  <div className="mt-7 flex flex-wrap items-center gap-3">
+                    <Link href={activeHero?.ctaHref ?? "/#menu"}>
+                      <Button className="rounded-full px-8">
+                        {activeHero?.ctaLabel ?? "Order Now"}
+                      </Button>
+                    </Link>
+                    <Link href="/catering">
+                      <Button variant="outline" className="rounded-full px-8">
+                        Catering
+                      </Button>
+                    </Link>
+                  </div>
+
+                  <div className="mt-7 flex flex-wrap gap-6 text-sm text-muted-foreground">
+                    <div className="flex items-center gap-2">
+                      <Clock className="h-4 w-4 text-primary" />
+                      <span>Ready in 30 min</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Truck className="h-4 w-4 text-primary" />
+                      <span>Delivery available</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Heart className="h-4 w-4 text-primary" />
+                      <span>Made fresh daily</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Bottom segmented nav bar */}
+            {heroSlides.length > 1 && (
+              <div className="border-t border-border bg-background">
+                <div className="grid grid-cols-3 md:grid-cols-6">
                   {heroSlides.map((s, idx) => (
                     <button
                       key={s.id}
                       type="button"
-                      aria-label={`Show slide ${idx + 1}`}
                       onClick={() => setActiveSlide(idx)}
-                      className={`h-2.5 w-2.5 rounded-full transition-colors ${
-                        idx === activeSlide ? "bg-primary" : "bg-border"
+                      aria-current={idx === activeSlide ? "true" : "false"}
+                      className={`px-3 py-3 text-[10px] sm:text-xs tracking-widest uppercase border-r border-border last:border-r-0 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+                        idx === activeSlide
+                          ? "text-primary bg-primary/5"
+                          : "text-muted-foreground hover:text-foreground"
                       }`}
-                    />
+                    >
+                      <span className="line-clamp-1">{s.name}</span>
+                    </button>
                   ))}
                 </div>
-              )}
+              </div>
+            )}
+          </div>
 
-              {/* 100% Fresh Badge */}
-              <div className="absolute -bottom-6 -left-6 bg-card p-4 rounded-2xl shadow-lg border border-border">
-                <div className="flex items-center gap-3">
-                  <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">
-                    <Leaf className="h-6 w-6 text-primary" />
-                  </div>
-                  <div>
-                    <p className="font-semibold text-foreground">100% Fresh</p>
-                    <p className="text-sm text-muted-foreground">Local ingredients</p>
-                  </div>
+          {/* Catering-themed visual strip (replaces ribbon) */}
+          <div className="mt-6 rounded-3xl border border-border overflow-hidden bg-gradient-to-r from-primary/10 via-amber-500/10 to-blue-500/10">
+            <div className="grid md:grid-cols-3">
+              <div className="p-6 flex items-start gap-4">
+                <div className="h-12 w-12 rounded-2xl bg-primary/15 flex items-center justify-center">
+                  <ChefHat className="h-6 w-6 text-primary" />
+                </div>
+                <div>
+                  <p className="font-semibold text-foreground">Chef-crafted catering</p>
+                  <p className="text-sm text-muted-foreground">Plated meals, buffets, and custom menus for events.</p>
                 </div>
               </div>
-            </motion.div>
+              <div className="p-6 flex items-start gap-4 border-t md:border-t-0 md:border-l md:border-r border-border">
+                <div className="h-12 w-12 rounded-2xl bg-primary/15 flex items-center justify-center">
+                  <Utensils className="h-6 w-6 text-primary" />
+                </div>
+                <div>
+                  <p className="font-semibold text-foreground">Perfect for any occasion</p>
+                  <p className="text-sm text-muted-foreground">Weddings, corporate lunches, birthdays, and more.</p>
+                </div>
+              </div>
+              <div className="p-6 flex items-start gap-4 border-t md:border-t-0">
+                <div className="h-12 w-12 rounded-2xl bg-primary/15 flex items-center justify-center">
+                  <MapPinned className="h-6 w-6 text-primary" />
+                </div>
+                <div>
+                  <p className="font-semibold text-foreground">Check delivery instantly</p>
+                  <p className="text-sm text-muted-foreground">
+                    Confirm delivery for Jackson, Texas, and Chicago — or nationwide.
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>

@@ -2,6 +2,7 @@
 import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
 import { CartItem, MenuItem } from '@/features/menu/types'
+import { determineDeliveryEligibility, type DeliveryZoneId } from '@/lib/delivery-zones'
 
 interface CartStore {
     items: CartItem[]
@@ -10,6 +11,24 @@ interface CartStore {
     updateQuantity: (itemId: string, quantity: number) => void
     clearCart: () => void
     total: number
+
+    deliveryAddress: {
+        addressLine1: string
+        city: string
+        state: string
+        postalCode: string
+        country: string
+    } | null
+    deliveryZoneId: DeliveryZoneId | null
+    deliveryFeeCents: number
+    setDeliveryAddress: (input: {
+        addressLine1: string
+        city: string
+        state: string
+        postalCode: string
+        country: string
+    }) => void
+    clearDeliveryAddress: () => void
 }
 
 export const useCartStore = create<CartStore>()(
@@ -17,6 +36,9 @@ export const useCartStore = create<CartStore>()(
         (set, get) => ({
             items: [],
             total: 0,
+            deliveryAddress: null,
+            deliveryZoneId: null,
+            deliveryFeeCents: 0,
             addItem: (item) => {
                 const currentItems = get().items
                 const existingItem = currentItems.find((i) => i.id === item.id)
@@ -63,6 +85,21 @@ export const useCartStore = create<CartStore>()(
                 })
             },
             clearCart: () => set({ items: [], total: 0 }),
+
+            setDeliveryAddress: (input) => {
+                const eligibility = determineDeliveryEligibility(input)
+                if (!eligibility.eligible || eligibility.deliveryFeeCents === null) {
+                    set({ deliveryAddress: input, deliveryZoneId: null, deliveryFeeCents: 0 })
+                    return
+                }
+
+                set({
+                    deliveryAddress: input,
+                    deliveryZoneId: eligibility.zoneId,
+                    deliveryFeeCents: eligibility.deliveryFeeCents,
+                })
+            },
+            clearDeliveryAddress: () => set({ deliveryAddress: null, deliveryZoneId: null, deliveryFeeCents: 0 }),
         }),
         {
             name: 'katherine-cart-storage',
