@@ -5,6 +5,8 @@ import { Star, Gift, Trophy, Zap, Crown, Sparkles, Check } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import Link from "next/link"
+import { useState } from "react"
+import { Confetti } from "@/components/magicui/confetti"
 
 const TIERS = [
   { name: "Bronze", points: "0-499", icon: Star, color: "from-amber-600 to-amber-800", benefits: ["1 point per $1 spent", "Birthday reward", "Member-only offers"] },
@@ -20,6 +22,8 @@ const REWARDS = [
 ]
 
 export default function RewardsPage() {
+  const [showConfetti, setShowConfetti] = useState(false);
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-background via-amber-50/20 to-background dark:from-background dark:via-amber-950/10 dark:to-background">
       {/* Hero */}
@@ -132,8 +136,26 @@ export default function RewardsPage() {
               </motion.div>
             ))}
           </div>
+          <div className="text-center mt-12">
+            <Button
+              size="lg"
+              variant="secondary"
+              className="rounded-full"
+              onClick={() => {
+                setShowConfetti(true);
+                setTimeout(() => setShowConfetti(false), 4000);
+              }}
+            >
+              Preview Celebration 🎉
+            </Button>
+          </div>
         </div>
       </section>
+
+      <Confetti
+        trigger={showConfetti}
+        className="z-50"
+      />
     </div>
   )
 }
