@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { Menu, Leaf, Search, MapPin, User, Gift, ChevronDown, Package, HelpCircle } from "lucide-react"
+import { Menu, Leaf, Search, MapPin, User, Gift, ChevronDown, Package, HelpCircle, Truck } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
@@ -15,6 +15,23 @@ export function Header() {
     const [loginOpen, setLoginOpen] = useState(false)
     const [registerOpen, setRegisterOpen] = useState(false)
     const [deliveryOpen, setDeliveryOpen] = useState(false)
+    const [isLoggedIn, setIsLoggedIn] = useState(false)
+
+    // Check login status on mount
+    useState(() => {
+        if (typeof window !== "undefined") {
+            const hasAuth = localStorage.getItem("isLoggedIn")
+            if (hasAuth) setIsLoggedIn(true)
+        }
+    })
+
+    const handleLogout = () => {
+        localStorage.removeItem("isLoggedIn")
+        localStorage.removeItem("user")
+        localStorage.removeItem("lastOrder")
+        setIsLoggedIn(false)
+        window.location.href = "/"
+    }
 
     return (
         <header className="sticky top-0 z-50 flex flex-col w-full bg-white dark:bg-zinc-900 border-b border-border shadow-sm">
@@ -31,8 +48,8 @@ export function Header() {
                         </button>
                     </div>
                     <div className="flex items-center gap-4 md:gap-6">
-                        <Link href="/orders" className="flex items-center gap-1.5 text-muted-foreground hover:text-primary transition-colors hidden sm:flex">
-                            <Package className="h-3.5 w-3.5" />
+                        <Link href="/tracker" className="text-xs font-medium hover:text-primary transition-colors flex items-center gap-1.5">
+                            <Truck className="h-3.5 w-3.5" />
                             Track Order
                         </Link>
                         <Link href="/faq" className="flex items-center gap-1.5 text-muted-foreground hover:text-primary transition-colors hidden sm:flex">
@@ -40,13 +57,24 @@ export function Header() {
                             Help
                         </Link>
                         <div className="h-4 w-px bg-border hidden sm:block" />
-                        <button
-                            onClick={() => setLoginOpen(true)}
-                            className="flex items-center gap-1.5 text-muted-foreground hover:text-primary transition-colors font-medium"
-                        >
-                            <User className="h-3.5 w-3.5" />
-                            Sign In / Join Rewards
-                        </button>
+
+                        {isLoggedIn ? (
+                            <Link
+                                href="/profile"
+                                className="flex items-center gap-1.5 text-primary hover:text-primary/80 transition-colors font-medium"
+                            >
+                                <User className="h-3.5 w-3.5" />
+                                My Account
+                            </Link>
+                        ) : (
+                            <button
+                                onClick={() => setLoginOpen(true)}
+                                className="flex items-center gap-1.5 text-muted-foreground hover:text-primary transition-colors font-medium"
+                            >
+                                <User className="h-3.5 w-3.5" />
+                                Sign In / Join Rewards
+                            </button>
+                        )}
                     </div>
                 </div>
             </div>
@@ -167,7 +195,7 @@ export function Header() {
                                 <div className="space-y-4">
                                     <h4 className="font-bold text-lg border-b pb-2">Account</h4>
                                     <button onClick={() => setLoginOpen(true)} className="block text-left text-muted-foreground hover:text-primary w-full">Sign In / Join Rewards</button>
-                                    <Link href="/orders" className="block text-muted-foreground hover:text-primary">Track Order</Link>
+                                    <Link href="/tracker" className="block text-muted-foreground hover:text-primary">Track Order</Link>
                                 </div>
                             </nav>
                         </SheetContent>
@@ -182,6 +210,10 @@ export function Header() {
                 onSwitchToRegister={() => {
                     setLoginOpen(false)
                     setRegisterOpen(true)
+                }}
+                onLoginSuccess={() => {
+                    setIsLoggedIn(true)
+                    setLoginOpen(false)
                 }}
             />
             <RegisterModal

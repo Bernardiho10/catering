@@ -13,6 +13,7 @@ interface LoginModalProps {
     open: boolean
     onOpenChange: (open: boolean) => void
     onSwitchToRegister: () => void
+    onLoginSuccess?: () => void
 }
 
 interface RegisterModalProps {
@@ -21,7 +22,7 @@ interface RegisterModalProps {
     onSwitchToLogin: () => void
 }
 
-export function LoginModal({ open, onOpenChange, onSwitchToRegister }: LoginModalProps) {
+export function LoginModal({ open, onOpenChange, onSwitchToRegister, onLoginSuccess }: LoginModalProps) {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [showPassword, setShowPassword] = useState(false)
@@ -35,9 +36,15 @@ export function LoginModal({ open, onOpenChange, onSwitchToRegister }: LoginModa
         setIsLoading(true)
         // Simulate API call
         await new Promise(resolve => setTimeout(resolve, 1500))
+
+        // Mock Login Success
+        localStorage.setItem("isLoggedIn", "true")
+        localStorage.setItem("user", JSON.stringify({ name: email.split('@')[0], email: email })) // Mock basic user profile
+
         toast.success("Welcome back!")
         setIsLoading(false)
         onOpenChange(false)
+        if (onLoginSuccess) onLoginSuccess()
     }
 
     return (
@@ -171,6 +178,11 @@ export function RegisterModal({ open, onOpenChange, onSwitchToLogin }: RegisterM
         setIsLoading(true)
         // Simulate API call
         await new Promise(resolve => setTimeout(resolve, 1500))
+
+        // Mock Registration Success
+        localStorage.setItem("isLoggedIn", "true")
+        localStorage.setItem("user", JSON.stringify({ name: firstName, email: email }))
+
         toast.success("Account created successfully! Welcome aboard!")
         setIsLoading(false)
         onOpenChange(false)

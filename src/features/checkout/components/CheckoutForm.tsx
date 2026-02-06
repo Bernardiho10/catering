@@ -82,6 +82,32 @@ export function CheckoutForm({ clientSecret }: { clientSecret: string }) {
         setIsLoading(false)
     }
 
+    // Mock checkout for demo purposes
+    const handleMockCheckout = async () => {
+        setIsLoading(true)
+        await new Promise(resolve => setTimeout(resolve, 2000))
+
+        // Create mock order data
+        const mockOrder = {
+            id: `ORD-${Math.floor(Math.random() * 10000)}`,
+            date: new Date().toISOString(),
+            status: 'In Progress',
+            total: 26.50, // This would normally come from cart store but for now hardcoded or read from store
+            items: []
+        }
+        localStorage.setItem('lastOrder', JSON.stringify(mockOrder))
+
+        // Clear cart
+        try {
+            // We need to access clearCart from the store but it's not directly exposed here inside the function easily unless we use the hook
+            // Actually we have clearCart from the hook above
+            clearCart()
+        } catch (e) { console.error(e) }
+
+        toast.success("Order placed successfully! (Demo)")
+        window.location.href = "/tracker"
+    }
+
     return (
         <form id="payment-form" onSubmit={handleSubmit} className="space-y-6">
             <PaymentElement id="payment-element" options={{ layout: "tabs" }} />
@@ -89,6 +115,25 @@ export function CheckoutForm({ clientSecret }: { clientSecret: string }) {
                 <span id="button-text">
                     {isLoading ? <div className="spinner" id="spinner">Processing...</div> : "Pay now"}
                 </span>
+            </Button>
+
+            <div className="relative my-4">
+                <div className="absolute inset-0 flex items-center">
+                    <span className="w-full border-t" />
+                </div>
+                <div className="relative flex justify-center text-xs uppercase">
+                    <span className="bg-background px-2 text-muted-foreground">Or (Demo Mode)</span>
+                </div>
+            </div>
+
+            <Button
+                type="button"
+                variant="secondary"
+                className="w-full bg-green-100 text-green-700 hover:bg-green-200"
+                onClick={handleMockCheckout}
+                disabled={isLoading}
+            >
+                Simulate Successful Order
             </Button>
             {message && <div id="payment-message" className="text-red-500 text-sm mt-2">{message}</div>}
         </form>
