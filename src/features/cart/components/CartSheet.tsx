@@ -17,8 +17,13 @@ import Image from "next/image"
 import Link from "next/link"
 import { useState, useEffect } from "react"
 
-export function CartSheet() {
-    const { items, removeItem, updateQuantity, total } = useCartStore()
+
+interface CartSheetProps {
+    trigger?: React.ReactNode;
+}
+
+export function CartSheet({ trigger }: CartSheetProps) {
+    const { items, removeItem, updateQuantity, total, orderType, fullAddress } = useCartStore()
     const [isMounted, setIsMounted] = useState(false)
     const [isOpen, setIsOpen] = useState(false)
 
@@ -29,7 +34,7 @@ export function CartSheet() {
     if (!isMounted) return null
 
     const itemCount = items.reduce((acc, item) => acc + item.quantity, 0)
-    
+
     const handleCheckout = () => {
         setIsOpen(false)
     }
@@ -37,20 +42,32 @@ export function CartSheet() {
     return (
         <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className="relative text-muted-foreground hover:text-primary transition-colors">
-                    <ShoppingBag className="h-5 w-5" />
-                    {itemCount > 0 && (
-                        <span className="absolute -top-1.5 -right-1.5 h-5 w-5 rounded-full bg-primary text-[11px] font-semibold text-primary-foreground flex items-center justify-center">
-                            {itemCount}
-                        </span>
-                    )}
-                    <span className="sr-only">Open cart</span>
-                </Button>
+                {trigger ? (
+                    trigger
+                ) : (
+                    <Button variant="ghost" size="icon" className="relative text-muted-foreground hover:text-primary transition-colors">
+                        <ShoppingBag className="h-5 w-5" />
+                        {itemCount > 0 && (
+                            <span className="absolute -top-1.5 -right-1.5 h-5 w-5 rounded-full bg-primary text-[11px] font-semibold text-primary-foreground flex items-center justify-center">
+                                {itemCount}
+                            </span>
+                        )}
+                        <span className="sr-only">Open cart</span>
+                    </Button>
+                )}
             </SheetTrigger>
             <SheetContent className="flex flex-col w-full sm:max-w-md !bg-white dark:!bg-zinc-900 border-l border-border p-0">
                 <SheetHeader className="p-6 pb-4 border-b border-border bg-zinc-50 dark:bg-zinc-800/50">
                     <SheetTitle className="text-2xl font-heading font-semibold">Your Cart</SheetTitle>
-                    <SheetDescription className="text-sm">
+                    {orderType && (
+                        <div className="mt-2 text-sm text-foreground bg-white dark:bg-black/20 p-3 rounded-lg border border-border/50 shadow-sm">
+                            <div className="font-semibold capitalize flex items-center gap-2">
+                                {orderType === "delivery" ? <span className="text-green-600">Truck Delivery</span> : <span className="text-blue-600">Store Pickup</span>}
+                            </div>
+                            {fullAddress && <div className="text-muted-foreground truncate">{fullAddress}</div>}
+                        </div>
+                    )}
+                    <SheetDescription className="text-sm mt-1">
                         {itemCount === 0 ? "Your cart is waiting to be filled" : `${itemCount} item${itemCount > 1 ? 's' : ''} ready for checkout`}
                     </SheetDescription>
                 </SheetHeader>
@@ -81,19 +98,19 @@ export function CartSheet() {
                                     <h4 className="font-semibold text-foreground truncate mb-1">{item.name}</h4>
                                     <p className="text-sm text-primary font-semibold">{formatCurrency(item.price * item.quantity)}</p>
                                     <div className="flex items-center gap-1 mt-2 bg-white dark:bg-zinc-900 rounded-full p-0.5 border border-border w-fit">
-                                        <Button 
-                                            variant="ghost" 
-                                            size="icon" 
-                                            className="h-7 w-7 rounded-full hover:bg-muted" 
+                                        <Button
+                                            variant="ghost"
+                                            size="icon"
+                                            className="h-7 w-7 rounded-full hover:bg-muted"
                                             onClick={() => updateQuantity(item.id, item.quantity - 1)}
                                         >
                                             <Minus className="h-3 w-3" />
                                         </Button>
                                         <span className="w-6 text-center text-sm font-semibold">{item.quantity}</span>
-                                        <Button 
-                                            variant="ghost" 
-                                            size="icon" 
-                                            className="h-7 w-7 rounded-full hover:bg-muted" 
+                                        <Button
+                                            variant="ghost"
+                                            size="icon"
+                                            className="h-7 w-7 rounded-full hover:bg-muted"
                                             onClick={() => updateQuantity(item.id, item.quantity + 1)}
                                         >
                                             <Plus className="h-3 w-3" />
@@ -112,9 +129,9 @@ export function CartSheet() {
                             <span className="text-2xl font-semibold font-heading">{formatCurrency(total)}</span>
                         </div>
                         <p className="text-xs text-muted-foreground">Delivery fees calculated at checkout</p>
-                        <Button 
-                            className="w-full rounded-full h-12 text-base font-semibold" 
-                            size="lg" 
+                        <Button
+                            className="w-full rounded-full h-12 text-base font-semibold"
+                            size="lg"
                             asChild
                             onClick={handleCheckout}
                         >

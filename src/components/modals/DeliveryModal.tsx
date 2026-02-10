@@ -1,232 +1,119 @@
+
 "use client"
 
 import { useState } from "react"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { MapPin, Truck, Store, Clock, ChevronRight } from "lucide-react"
+import { Label } from "@/components/ui/label"
+import { Truck, Store, MapPin, ChevronRight, X } from "lucide-react"
+import { AddressEntryModal } from "./AddressEntryModal"
 
 interface DeliveryModalProps {
     open: boolean
     onOpenChange: (open: boolean) => void
 }
 
-const DELIVERY_AREAS = [
-    { id: "downtown", name: "Downtown", deliveryTime: "25-35 min" },
-    { id: "midtown", name: "Midtown", deliveryTime: "30-40 min" },
-    { id: "uptown", name: "Uptown", deliveryTime: "35-45 min" },
-    { id: "suburbs", name: "Suburbs", deliveryTime: "40-50 min" },
-]
-
 export function DeliveryModal({ open, onOpenChange }: DeliveryModalProps) {
-    const [orderType, setOrderType] = useState<"delivery" | "pickup">("delivery")
-    const [address, setAddress] = useState("")
-    const [selectedArea, setSelectedArea] = useState("")
-    const [step, setStep] = useState<"type" | "address" | "confirm">("type")
+    const [method, setMethod] = useState<"delivery" | "pickup" | null>(null)
+    const [addressModalOpen, setAddressModalOpen] = useState(false)
 
-    const handleContinue = () => {
-        if (step === "type") {
-            setStep("address")
-        } else if (step === "address") {
-            setStep("confirm")
-        } else {
-            // Final confirmation - close modal
+    const handleMethodSelect = (selected: "delivery" | "pickup") => {
+        setMethod(selected)
+        if (selected === "delivery") {
+            // Close this modal and open address modal (or keep this open and switch view, but typical flow might be distinct modals)
+            // Typically "Start Order" -> "Delivery or Pickup" -> "Address"
+            // We'll treat this modal as the "Start Order" selector.
             onOpenChange(false)
-            setStep("type")
+            setAddressModalOpen(true)
+        } else {
+            // For pickup, we might show store selector here or navigate to locations page
+            // For now, let's just close and log (or navigate)
+            console.log("Pickup selected")
+            onOpenChange(false)
+            // In a real app, this would open StoreSelectorModal or redirect
+            window.location.href = "/locations"
         }
-    }
-
-    const handleBack = () => {
-        if (step === "address") {
-            setStep("type")
-        } else if (step === "confirm") {
-            setStep("address")
-        }
-    }
-
-    const resetAndClose = () => {
-        setStep("type")
-        setAddress("")
-        setSelectedArea("")
-        onOpenChange(false)
     }
 
     return (
-        <Dialog open={open} onOpenChange={resetAndClose}>
-            <DialogContent className="sm:max-w-md bg-white dark:bg-zinc-900 border-border rounded-2xl p-0 overflow-hidden">
-                <div className="p-6">
-                    <DialogHeader className="space-y-3 mb-6">
-                        <DialogTitle className="text-2xl font-heading font-semibold text-foreground">
-                            {step === "type" && "How would you like to receive your order?"}
-                            {step === "address" && (orderType === "delivery" ? "Enter Delivery Address" : "Select Pickup Location")}
-                            {step === "confirm" && "Confirm Your Selection"}
+        <>
+            <Dialog open={open} onOpenChange={onOpenChange}>
+                <DialogContent className="sm:max-w-[480px] p-0 gap-0 bg-white dark:bg-zinc-900 border-border shadow-2xl overflow-hidden">
+                    <div className="bg-[#c41e3a] p-6 text-white text-center relative">
+                        <DialogTitle className="text-2xl font-heading font-bold">
+                            Start Your Order
                         </DialogTitle>
-                        <DialogDescription className="text-muted-foreground">
-                            {step === "type" && "Choose delivery or pickup to get started."}
-                            {step === "address" && orderType === "delivery" && "We'll show you the freshest items available in your area."}
-                            {step === "address" && orderType === "pickup" && "Select your preferred pickup location."}
-                            {step === "confirm" && "Review your order type and location."}
+                        <DialogDescription className="text-white/80 mt-1">
+                            How would you like to receive your warm cookies?
                         </DialogDescription>
-                    </DialogHeader>
+                        {/* Close button override for custom header */}
+                        <div
+                            className="absolute right-4 top-4 opacity-70 hover:opacity-100 cursor-pointer transition-opacity"
+                            onClick={() => onOpenChange(false)}
+                        >
+                            <X className="h-5 w-5" />
+                        </div>
+                    </div>
 
-                    {/* Step 1: Order Type Selection */}
-                    {step === "type" && (
-                        <div className="space-y-4">
-                            <RadioGroup
-                                value={orderType}
-                                onValueChange={(value) => setOrderType(value as "delivery" | "pickup")}
-                                className="grid grid-cols-2 gap-4"
+                    <div className="p-6 md:p-8 space-y-6">
+                        <div className="grid gap-4">
+                            <button
+                                onClick={() => handleMethodSelect("delivery")}
+                                className="group relative flex items-center gap-4 p-5 rounded-2xl border-2 border-muted hover:border-[#c41e3a] hover:bg-[#c41e3a]/5 transition-all duration-300 text-left"
                             >
-                                <Label
-                                    htmlFor="delivery"
-                                    className={`flex flex-col items-center gap-3 p-6 rounded-xl border-2 cursor-pointer transition-all ${orderType === "delivery"
-                                            ? "border-primary bg-primary/5"
-                                            : "border-border hover:border-primary/50"
-                                        }`}
-                                >
-                                    <RadioGroupItem value="delivery" id="delivery" className="sr-only" />
-                                    <div className={`p-3 rounded-full ${orderType === "delivery" ? "bg-primary text-white" : "bg-muted"}`}>
-                                        <Truck className="h-6 w-6" />
-                                    </div>
-                                    <span className="font-semibold text-foreground">Delivery</span>
-                                    <span className="text-xs text-muted-foreground text-center">We bring it to you</span>
-                                </Label>
-                                <Label
-                                    htmlFor="pickup"
-                                    className={`flex flex-col items-center gap-3 p-6 rounded-xl border-2 cursor-pointer transition-all ${orderType === "pickup"
-                                            ? "border-primary bg-primary/5"
-                                            : "border-border hover:border-primary/50"
-                                        }`}
-                                >
-                                    <RadioGroupItem value="pickup" id="pickup" className="sr-only" />
-                                    <div className={`p-3 rounded-full ${orderType === "pickup" ? "bg-primary text-white" : "bg-muted"}`}>
-                                        <Store className="h-6 w-6" />
-                                    </div>
-                                    <span className="font-semibold text-foreground">Pickup</span>
-                                    <span className="text-xs text-muted-foreground text-center">Pick up at our store</span>
-                                </Label>
-                            </RadioGroup>
-                        </div>
-                    )}
-
-                    {/* Step 2: Address/Location Selection */}
-                    {step === "address" && orderType === "delivery" && (
-                        <div className="space-y-4">
-                            <div className="space-y-2">
-                                <Label htmlFor="address" className="text-sm font-medium">
-                                    Delivery Address
-                                </Label>
-                                <div className="relative">
-                                    <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                                    <Input
-                                        id="address"
-                                        placeholder="Enter your street address"
-                                        value={address}
-                                        onChange={(e) => setAddress(e.target.value)}
-                                        className="pl-10 h-12 rounded-xl"
-                                    />
+                                <div className="h-14 w-14 rounded-full bg-[#c41e3a]/10 text-[#c41e3a] flex items-center justify-center shrink-0 group-hover:bg-[#c41e3a] group-hover:text-white transition-colors duration-300">
+                                    <Truck className="h-7 w-7" />
                                 </div>
-                            </div>
-
-                            <div className="space-y-2">
-                                <Label className="text-sm font-medium">Or select a delivery area</Label>
-                                <RadioGroup value={selectedArea} onValueChange={setSelectedArea} className="space-y-2">
-                                    {DELIVERY_AREAS.map((area) => (
-                                        <Label
-                                            key={area.id}
-                                            htmlFor={area.id}
-                                            className={`flex items-center justify-between p-4 rounded-xl border-2 cursor-pointer transition-all ${selectedArea === area.id
-                                                    ? "border-primary bg-primary/5"
-                                                    : "border-border hover:border-primary/50"
-                                                }`}
-                                        >
-                                            <div className="flex items-center gap-3">
-                                                <RadioGroupItem value={area.id} id={area.id} />
-                                                <span className="font-medium">{area.name}</span>
-                                            </div>
-                                            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                                                <Clock className="h-4 w-4" />
-                                                {area.deliveryTime}
-                                            </div>
-                                        </Label>
-                                    ))}
-                                </RadioGroup>
-                            </div>
-                        </div>
-                    )}
-
-                    {step === "address" && orderType === "pickup" && (
-                        <div className="space-y-4">
-                            <RadioGroup value={selectedArea} onValueChange={setSelectedArea} className="space-y-2">
-                                {[
-                                    { id: "main-store", name: "Main Street Store", address: "123 Main St", hours: "8am - 10pm" },
-                                    { id: "oak-store", name: "Oak Avenue Location", address: "456 Oak Ave", hours: "9am - 9pm" },
-                                    { id: "park-store", name: "Central Park Store", address: "789 Park Blvd", hours: "7am - 11pm" },
-                                ].map((store) => (
-                                    <Label
-                                        key={store.id}
-                                        htmlFor={store.id}
-                                        className={`flex items-center justify-between p-4 rounded-xl border-2 cursor-pointer transition-all ${selectedArea === store.id
-                                                ? "border-primary bg-primary/5"
-                                                : "border-border hover:border-primary/50"
-                                            }`}
-                                    >
-                                        <div className="flex items-center gap-3">
-                                            <RadioGroupItem value={store.id} id={store.id} />
-                                            <div>
-                                                <p className="font-medium">{store.name}</p>
-                                                <p className="text-sm text-muted-foreground">{store.address}</p>
-                                            </div>
-                                        </div>
-                                        <div className="text-sm text-muted-foreground">{store.hours}</div>
-                                    </Label>
-                                ))}
-                            </RadioGroup>
-                        </div>
-                    )}
-
-                    {/* Step 3: Confirmation */}
-                    {step === "confirm" && (
-                        <div className="space-y-4">
-                            <div className="p-4 bg-muted/50 rounded-xl space-y-3">
-                                <div className="flex items-center gap-3">
-                                    {orderType === "delivery" ? (
-                                        <Truck className="h-5 w-5 text-primary" />
-                                    ) : (
-                                        <Store className="h-5 w-5 text-primary" />
-                                    )}
-                                    <span className="font-semibold capitalize">{orderType}</span>
+                                <div className="flex-1">
+                                    <h3 className="font-heading font-bold text-lg text-foreground group-hover:text-[#c41e3a] transition-colors">
+                                        Delivery
+                                    </h3>
+                                    <p className="text-sm text-muted-foreground mt-0.5">
+                                        We bring warm cookies to your door.
+                                    </p>
                                 </div>
-                                <div className="flex items-center gap-3">
-                                    <MapPin className="h-5 w-5 text-muted-foreground" />
-                                    <span className="text-muted-foreground">
-                                        {address || DELIVERY_AREAS.find(a => a.id === selectedArea)?.name || "Selected location"}
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                    )}
-                </div>
+                                <ChevronRight className="h-5 w-5 text-muted-foreground group-hover:text-[#c41e3a] transition-colors" />
+                            </button>
 
-                {/* Footer Actions */}
-                <div className="border-t border-border bg-muted/30 p-4 flex gap-3">
-                    {step !== "type" && (
-                        <Button variant="outline" onClick={handleBack} className="rounded-full">
-                            Back
-                        </Button>
-                    )}
-                    <Button
-                        onClick={handleContinue}
-                        className="flex-1 rounded-full h-12"
-                        disabled={step === "address" && !address && !selectedArea}
-                    >
-                        {step === "confirm" ? "Start Ordering" : "Continue"}
-                        <ChevronRight className="h-4 w-4 ml-2" />
-                    </Button>
-                </div>
-            </DialogContent>
-        </Dialog>
+                            <button
+                                onClick={() => handleMethodSelect("pickup")}
+                                className="group relative flex items-center gap-4 p-5 rounded-2xl border-2 border-muted hover:border-[#c41e3a] hover:bg-[#c41e3a]/5 transition-all duration-300 text-left"
+                            >
+                                <div className="h-14 w-14 rounded-full bg-[#c41e3a]/10 text-[#c41e3a] flex items-center justify-center shrink-0 group-hover:bg-[#c41e3a] group-hover:text-white transition-colors duration-300">
+                                    <Store className="h-7 w-7" />
+                                </div>
+                                <div className="flex-1">
+                                    <h3 className="font-heading font-bold text-lg text-foreground group-hover:text-[#c41e3a] transition-colors">
+                                        Pickup
+                                    </h3>
+                                    <p className="text-sm text-muted-foreground mt-0.5">
+                                        Order ahead and pick up in store.
+                                    </p>
+                                </div>
+                                <ChevronRight className="h-5 w-5 text-muted-foreground group-hover:text-[#c41e3a] transition-colors" />
+                            </button>
+                        </div>
+
+                        <div className="text-center pt-2">
+                            <p className="text-xs text-muted-foreground">
+                                By continuing, you agree to our <a href="/terms" className="underline hover:text-primary">Terms of Use</a>.
+                            </p>
+                        </div>
+                    </div>
+                </DialogContent>
+            </Dialog>
+
+            <AddressEntryModal
+                open={addressModalOpen}
+                onOpenChange={setAddressModalOpen}
+                onConfirm={(addr) => {
+                    console.log("Confirmed address:", addr)
+                    setAddressModalOpen(false)
+                    // Proceed to menu or next step
+                    window.location.href = "/menu"
+                }}
+            />
+        </>
     )
 }

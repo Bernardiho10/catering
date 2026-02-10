@@ -7,8 +7,8 @@ import { Footer } from "@/components/layout/Footer";
 import { ThemeProvider } from "@/components/theme-provider";
 
 export const metadata: Metadata = {
-  title: "Foody | Premium Catering Services",
-  description: "Experience exceptional catering for your events. From intimate gatherings to corporate functions, Foody brings restaurant-quality cuisine to your venue.",
+  title: "David's Delights | Warm Cookies Delivered",
+  description: "Experience the joy of fresh-baked, warm cookies delivered to your door. From our signature chocolate chip to our famous cookie pies, David's Delights brings sweet moments to every occasion.",
 };
 
 export default function RootLayout({

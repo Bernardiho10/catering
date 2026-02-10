@@ -1,29 +1,108 @@
 "use client"
 
-import { Marquee } from "@/components/magicui/marquee"
-import { Gift, Truck, Clock, Star } from "lucide-react"
+import { useState, useEffect } from "react"
+import { X, ChevronLeft, ChevronRight } from "lucide-react"
+import Link from "next/link"
+import { cn } from "@/lib/utils"
 
 const announcements = [
-    { icon: Truck, text: "Free delivery on orders over $30!" },
-    { icon: Gift, text: "New! Gift cards now available" },
-    { icon: Clock, text: "Same-day delivery available" },
-    { icon: Star, text: "Join Rewards and earn points on every order" },
+    {
+        id: 1,
+        text: "💝 Valentine's Day Mini Heart Cookie Pies Now Available!",
+        link: "/menu?cat=valentines",
+        bgColor: "bg-[#c41e3a]",
+    },
+    {
+        id: 2,
+        text: "🏈 Game Day Cookies – Order for the Big Game!",
+        link: "/menu",
+        bgColor: "bg-[#c41e3a]",
+    },
+    {
+        id: 3,
+        text: "🚚 Same-Day Delivery in All Locations",
+        link: "/delivery-areas",
+        bgColor: "bg-[#c41e3a]",
+    },
+    {
+        id: 4,
+        text: "⭐ Join Tiff's Rewards® – Earn Free Cookies!",
+        link: "/rewards",
+        bgColor: "bg-[#c41e3a]",
+    },
 ]
 
 export function AnnouncementBar() {
+    const [currentIndex, setCurrentIndex] = useState(0)
+    const [isVisible, setIsVisible] = useState(true)
+
+    useEffect(() => {
+        const timer = setInterval(() => {
+            setCurrentIndex((prev) => (prev + 1) % announcements.length)
+        }, 4000)
+        return () => clearInterval(timer)
+    }, [])
+
+    if (!isVisible) return null
+
+    const announcement = announcements[currentIndex]
+
     return (
-        <div className="bg-primary text-primary-foreground py-2 overflow-hidden">
-            <Marquee pauseOnHover className="[--duration:30s]">
-                {announcements.map((item, idx) => {
-                    const Icon = item.icon
-                    return (
-                        <div key={idx} className="flex items-center gap-2 mx-8">
-                            <Icon className="h-4 w-4" />
-                            <span className="text-sm font-medium whitespace-nowrap">{item.text}</span>
-                        </div>
-                    )
-                })}
-            </Marquee>
+        <div className={cn(
+            "relative py-2.5 text-white text-sm font-medium transition-colors",
+            announcement.bgColor
+        )}>
+            <div className="container mx-auto px-4 md:px-6 flex items-center justify-center gap-4">
+                {/* Previous Button */}
+                <button
+                    onClick={() => setCurrentIndex((prev) => (prev - 1 + announcements.length) % announcements.length)}
+                    className="hidden sm:flex items-center justify-center h-6 w-6 rounded-full bg-white/20 hover:bg-white/30 transition-colors"
+                    aria-label="Previous announcement"
+                >
+                    <ChevronLeft className="h-4 w-4" />
+                </button>
+
+                {/* Announcement Text */}
+                <Link
+                    href={announcement.link}
+                    className="text-center hover:underline transition-all"
+                >
+                    {announcement.text}
+                </Link>
+
+                {/* Next Button */}
+                <button
+                    onClick={() => setCurrentIndex((prev) => (prev + 1) % announcements.length)}
+                    className="hidden sm:flex items-center justify-center h-6 w-6 rounded-full bg-white/20 hover:bg-white/30 transition-colors"
+                    aria-label="Next announcement"
+                >
+                    <ChevronRight className="h-4 w-4" />
+                </button>
+
+                {/* Close Button */}
+                <button
+                    onClick={() => setIsVisible(false)}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 h-6 w-6 flex items-center justify-center rounded-full bg-white/20 hover:bg-white/30 transition-colors"
+                    aria-label="Close announcement"
+                >
+                    <X className="h-3.5 w-3.5" />
+                </button>
+            </div>
+
+            {/* Dots Indicator */}
+            <div className="absolute bottom-0.5 left-1/2 -translate-x-1/2 flex gap-1">
+                {announcements.map((_, index) => (
+                    <button
+                        key={index}
+                        onClick={() => setCurrentIndex(index)}
+                        className={cn(
+                            "h-1 rounded-full transition-all",
+                            index === currentIndex ? "w-4 bg-white" : "w-1 bg-white/40"
+                        )}
+                        aria-label={`Go to announcement ${index + 1}`}
+                    />
+                ))}
+            </div>
         </div>
     )
 }

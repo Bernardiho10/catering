@@ -19,6 +19,8 @@ interface CartStore {
         postalCode: string
         country: string
     } | null
+    fullAddress: string | null
+    orderType: "delivery" | "pickup" | null
     deliveryZoneId: DeliveryZoneId | null
     deliveryFeeCents: number
     setDeliveryAddress: (input: {
@@ -28,6 +30,8 @@ interface CartStore {
         postalCode: string
         country: string
     }) => void
+    setFullAddress: (address: string) => void
+    setOrderType: (type: "delivery" | "pickup") => void
     clearDeliveryAddress: () => void
 }
 
@@ -37,6 +41,8 @@ export const useCartStore = create<CartStore>()(
             items: [],
             total: 0,
             deliveryAddress: null,
+            fullAddress: null,
+            orderType: null,
             deliveryZoneId: null,
             deliveryFeeCents: 0,
             addItem: (item) => {
@@ -99,7 +105,9 @@ export const useCartStore = create<CartStore>()(
                     deliveryFeeCents: eligibility.deliveryFeeCents,
                 })
             },
-            clearDeliveryAddress: () => set({ deliveryAddress: null, deliveryZoneId: null, deliveryFeeCents: 0 }),
+            setFullAddress: (address) => set({ fullAddress: address }),
+            setOrderType: (type) => set({ orderType: type }),
+            clearDeliveryAddress: () => set({ deliveryAddress: null, fullAddress: null, orderType: null, deliveryZoneId: null, deliveryFeeCents: 0 }),
         }),
         {
             name: 'katherine-cart-storage',

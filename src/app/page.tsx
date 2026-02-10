@@ -11,12 +11,15 @@ import { BookPromoSection } from "@/components/sections/BookPromoSection"
 import { TreatsTruckSection } from "@/components/sections/TreatsTruckSection"
 import { AnnouncementBar } from "@/components/sections/AnnouncementBar"
 import { Card, CardContent } from "@/components/ui/card"
-import { Gift, RotateCcw, Users, Star, Flame } from "lucide-react"
+import { Gift, RotateCcw, Users, Star, Flame, Heart, Sparkles, ChevronRight } from "lucide-react"
 import Image from "next/image"
+import Link from "next/link"
 import { MOCK_MENU_ITEMS } from "@/lib/mock-data"
 import { formatCurrency } from "@/lib/utils"
 import { ProductDialog } from "@/features/menu/components/ProductDialog"
 import { MenuItem } from "@/features/menu/types"
+import { WarmMoments } from "@/components/sections/WarmMoments"
+import { Particles } from "@/components/magicui/particles"
 import { FloatingCart } from "@/components/layout/FloatingCart"
 import { BlurFade } from "@/components/magicui/blur-fade"
 
@@ -44,25 +47,33 @@ export default function Home() {
       <HeroCarousel onOrderClick={() => setDeliveryModalOpen(true)} />
 
       {/* Quick Action Buttons */}
-      <section className="py-8 bg-muted/30 border-b border-border">
+      <section className="py-8 md:py-10 bg-white dark:bg-zinc-950 border-b border-border">
         <div className="container mx-auto px-4 md:px-6">
-          <div className="flex flex-wrap justify-center gap-3">
+          <div className="flex flex-wrap justify-center gap-3 md:gap-4">
             <Button
               variant="outline"
               size="lg"
-              className="rounded-full gap-2 h-12"
+              className="rounded-full gap-2 h-12 px-6 border-2 hover:border-[#c41e3a] hover:text-[#c41e3a]"
               onClick={() => setDeliveryModalOpen(true)}
             >
               <Gift className="h-5 w-5" />
               Gift Cards
             </Button>
-            <Button variant="outline" size="lg" className="rounded-full gap-2 h-12">
+            <Button
+              variant="outline"
+              size="lg"
+              className="rounded-full gap-2 h-12 px-6 border-2 hover:border-[#c41e3a] hover:text-[#c41e3a]"
+            >
               <RotateCcw className="h-5 w-5" />
               Repeat Order
             </Button>
-            <Button variant="outline" size="lg" className="rounded-full gap-2 h-12">
+            <Button
+              variant="outline"
+              size="lg"
+              className="rounded-full gap-2 h-12 px-6 border-2 hover:border-[#c41e3a] hover:text-[#c41e3a]"
+            >
               <Users className="h-5 w-5" />
-              Order for Multiple Recipients
+              Multiple Recipients
             </Button>
           </div>
         </div>
@@ -71,22 +82,40 @@ export default function Home() {
       {/* Occasion Categories */}
       <OccasionCategories />
 
+
+      {/* Warm Moments Section */}
+      <WarmMoments />
+
+      {/* Global Background Particles */}
+      <div className="fixed inset-0 pointer-events-none z-0">
+        <Particles
+          className="absolute inset-0"
+          quantity={100}
+          ease={80}
+          color="#c41e3a"
+          refresh
+        />
+      </div>
+
       {/* Best Sellers Section */}
-      <section className="py-16 bg-background">
+      <section className="py-16 md:py-20 bg-white dark:bg-zinc-950">
         <div className="container mx-auto px-4 md:px-6">
           <BlurFade delay={0.1} inView>
-            <div className="flex items-center justify-between mb-8">
+            <div className="flex items-center justify-between mb-10">
               <div>
-                <p className="text-xs tracking-widest uppercase text-primary font-semibold mb-2">
+                <span className="inline-block px-4 py-1.5 rounded-full text-sm font-semibold bg-[#c41e3a]/10 text-[#c41e3a] mb-3">
                   Customer Favorites
-                </p>
+                </span>
                 <h2 className="text-3xl md:text-4xl font-bold text-foreground">
                   Best Sellers
                 </h2>
               </div>
-              <Button variant="outline" className="rounded-full">
-                View All
-              </Button>
+              <Link href="/menu">
+                <Button variant="outline" className="rounded-full border-2 hover:border-[#c41e3a] hover:text-[#c41e3a]">
+                  View All
+                  <ChevronRight className="h-4 w-4 ml-1" />
+                </Button>
+              </Link>
             </div>
           </BlurFade>
 
@@ -94,7 +123,7 @@ export default function Home() {
             {bestSellers.map((item, index) => (
               <BlurFade key={item.id} delay={0.1 + index * 0.1} inView>
                 <Card
-                  className="group cursor-pointer hover:shadow-xl transition-all duration-300 overflow-hidden border-2 hover:border-primary bg-card"
+                  className="group cursor-pointer hover:shadow-xl transition-all duration-300 overflow-hidden border-2 hover:border-[#c41e3a] bg-card"
                   onClick={() => handleProductClick(item)}
                 >
                   <div className="relative aspect-square overflow-hidden bg-muted">
@@ -105,17 +134,17 @@ export default function Home() {
                       className="object-cover transition-transform duration-500 group-hover:scale-110"
                       sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
                     />
-                    <div className="absolute top-3 left-3 bg-primary text-primary-foreground text-xs font-bold px-2.5 py-1 rounded-full flex items-center gap-1">
+                    <div className="absolute top-3 left-3 bg-[#c41e3a] text-white text-xs font-bold px-2.5 py-1 rounded-full flex items-center gap-1">
                       <Flame className="h-3 w-3" />
                       Popular
                     </div>
                   </div>
                   <CardContent className="p-4 space-y-2">
                     <div className="flex items-start justify-between gap-2">
-                      <h3 className="font-semibold text-base text-foreground group-hover:text-primary transition-colors line-clamp-2">
+                      <h3 className="font-semibold text-base text-foreground group-hover:text-[#c41e3a] transition-colors line-clamp-2">
                         {item.name}
                       </h3>
-                      <span className="font-bold text-primary shrink-0">
+                      <span className="font-bold text-[#c41e3a] shrink-0">
                         {formatCurrency(item.price)}
                       </span>
                     </div>
@@ -140,11 +169,11 @@ export default function Home() {
       </section>
 
       {/* Cookie Pie Section */}
-      <section className="py-16 bg-muted/30">
+      <section className="py-16 md:py-20 bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50 dark:from-amber-950/30 dark:via-orange-950/20 dark:to-yellow-950/30">
         <div className="container mx-auto px-4 md:px-6">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <BlurFade delay={0.2} inView>
-              <div className="relative aspect-square rounded-3xl overflow-hidden shadow-2xl">
+              <div className="relative aspect-square max-w-[500px] mx-auto rounded-3xl overflow-hidden shadow-2xl">
                 <Image
                   src="https://images.unsplash.com/photo-1499636136210-6f4ee915583e?auto=format&fit=crop&w=800&q=80"
                   alt="Cookie Pie"
@@ -152,34 +181,49 @@ export default function Home() {
                   className="object-cover"
                   sizes="(max-width: 1024px) 100vw, 50vw"
                 />
+                {/* Sparkles */}
+                <div className="absolute inset-0 pointer-events-none">
+                  <Sparkles className="absolute top-1/4 right-1/4 h-8 w-8 text-amber-400/60 animate-pulse" />
+                  <Sparkles className="absolute bottom-1/4 left-1/4 h-6 w-6 text-orange-400/50 animate-pulse delay-500" />
+                </div>
               </div>
             </BlurFade>
-            <div className="space-y-6">
+            <div className="space-y-6 text-center lg:text-left">
               <BlurFade delay={0.1} inView>
-                <p className="text-xs tracking-widest uppercase text-primary font-semibold">
-                  Signature Item
-                </p>
+                <span className="inline-block px-4 py-1.5 rounded-full text-sm font-semibold bg-amber-500/10 text-amber-700 dark:text-amber-400">
+                  ⭐ Signature Item
+                </span>
               </BlurFade>
               <BlurFade delay={0.2} inView>
-                <h2 className="text-3xl md:text-4xl font-bold text-foreground">
+                <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground">
                   Cookie Pie
                 </h2>
               </BlurFade>
               <BlurFade delay={0.3} inView>
-                <p className="text-lg text-muted-foreground leading-relaxed">
+                <p className="text-lg text-muted-foreground leading-relaxed max-w-xl mx-auto lg:mx-0">
                   Our famous Cookie Pie is a warm, gooey, giant cookie baked fresh to order.
                   Perfect for sharing (or not!). Available in multiple flavors with optional
                   ice cream on top.
                 </p>
               </BlurFade>
               <BlurFade delay={0.4} inView>
-                <div className="flex flex-wrap gap-3">
-                  <Button size="lg" className="rounded-full" onClick={() => setDeliveryModalOpen(true)}>
+                <div className="flex flex-wrap gap-4 justify-center lg:justify-start pt-2">
+                  <Button
+                    size="lg"
+                    className="rounded-full px-8 h-14 text-base font-bold bg-[#c41e3a] hover:bg-[#a31830]"
+                    onClick={() => setDeliveryModalOpen(true)}
+                  >
                     Order Cookie Pie
                   </Button>
-                  <Button size="lg" variant="outline" className="rounded-full">
-                    See All Flavors
-                  </Button>
+                  <Link href="/menu?cat=pie">
+                    <Button
+                      size="lg"
+                      variant="outline"
+                      className="rounded-full px-8 h-14 text-base font-semibold border-2 border-amber-500 text-amber-700 hover:bg-amber-500/10"
+                    >
+                      See All Flavors
+                    </Button>
+                  </Link>
                 </div>
               </BlurFade>
             </div>
@@ -196,26 +240,42 @@ export default function Home() {
       {/* Book Promo Section */}
       <BookPromoSection />
 
-      {/* Promotional Features / Rewards */}
-      <section className="py-16 bg-primary text-primary-foreground">
+      {/* Rewards Section */}
+      <section className="py-16 md:py-20 bg-[#c41e3a] text-white">
         <div className="container mx-auto px-4 md:px-6">
           <BlurFade delay={0.2} inView>
             <div className="max-w-3xl mx-auto text-center space-y-6">
-              <h2 className="text-3xl md:text-4xl font-bold">
-                Join Katherine's Rewards®
+              <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-semibold bg-white/20">
+                <Star className="h-4 w-4" />
+                David's Rewards®
+              </span>
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold">
+                Join David's Rewards®
               </h2>
-              <p className="text-lg opacity-90">
+              <p className="text-lg md:text-xl text-white/90 leading-relaxed">
                 Stack up points on every purchase to pay for future orders, or redeem for
                 free treats and prizes. Opt in to start earning today!
               </p>
-              <Button
-                size="lg"
-                variant="secondary"
-                className="rounded-full px-8 h-12 text-base font-semibold"
-                onClick={() => setRegisterModalOpen(true)}
-              >
-                Sign Up for Rewards
-              </Button>
+              <div className="flex flex-wrap gap-4 justify-center pt-4">
+                <Button
+                  size="lg"
+                  variant="secondary"
+                  className="rounded-full px-10 h-14 text-base font-bold bg-white text-[#c41e3a] hover:bg-white/90 shadow-lg"
+                  onClick={() => setRegisterModalOpen(true)}
+                >
+                  Sign Up for Rewards
+                  <ChevronRight className="h-5 w-5 ml-1" />
+                </Button>
+                <Link href="/rewards">
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="rounded-full px-8 h-14 text-base font-semibold border-2 border-white text-white hover:bg-white/10"
+                  >
+                    Learn More
+                  </Button>
+                </Link>
+              </div>
             </div>
           </BlurFade>
         </div>

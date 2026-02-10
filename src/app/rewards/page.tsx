@@ -21,34 +21,37 @@ const REWARDS = [
   { points: 1000, reward: "Free entrée (up to $30)" },
 ]
 
+import { RetroGrid } from "@/components/magicui/retro-grid"
+
 export default function RewardsPage() {
   const [showConfetti, setShowConfetti] = useState(false);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background via-amber-50/20 to-background dark:from-background dark:via-amber-950/10 dark:to-background">
+    <div className="min-h-screen bg-background">
       {/* Hero */}
-      <section className="py-16 md:py-24">
-        <div className="container mx-auto px-4 md:px-6">
+      <section className="relative py-20 md:py-32 overflow-hidden bg-zinc-50 dark:bg-zinc-950">
+        <RetroGrid className="z-0 opacity-50" />
+        <div className="container relative z-10 mx-auto px-4 md:px-6">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center max-w-3xl mx-auto">
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-amber-500/10 to-primary/10 rounded-full text-amber-600 dark:text-amber-400 text-sm font-medium mb-6">
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#c41e3a]/10 rounded-full text-[#c41e3a] text-sm font-bold mb-6 border border-[#c41e3a]/20">
               <Sparkles className="h-4 w-4" />
-              Foody Rewards
+              David's Delights Rewards
             </div>
-            <h1 className="text-3xl md:text-5xl font-heading font-bold mb-4">
-              Earn Points. Get <span className="text-golden">Rewarded.</span>
+            <h1 className="text-4xl md:text-6xl font-heading font-bold mb-6 tracking-tight">
+              Earn Points. Get <span className="text-[#c41e3a]">Rewarded.</span>
             </h1>
-            <p className="text-lg text-muted-foreground mb-8">
-              Join our free rewards program and earn points on every order. Redeem for discounts, free items, and exclusive perks.
+            <p className="text-xl text-muted-foreground mb-10 max-w-2xl mx-auto leading-relaxed">
+              Join our exclusive rewards program. Earn points on every warm cookie order and redeem them for sweet treats, merchandise, and more.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link href="/signup">
-                <Button size="lg" className="rounded-full gap-2">
+                <Button size="lg" className="rounded-full gap-2 h-14 px-8 text-base font-bold bg-[#c41e3a] hover:bg-[#a31830] shadow-lg hover:shadow-xl transition-all">
                   <Zap className="h-4 w-4" />
                   Join Now - It's Free
                 </Button>
               </Link>
               <Link href="/login">
-                <Button size="lg" variant="outline" className="rounded-full">
+                <Button size="lg" variant="outline" className="rounded-full h-14 px-8 text-base font-bold border-2 hover:bg-muted">
                   Sign In to View Points
                 </Button>
               </Link>

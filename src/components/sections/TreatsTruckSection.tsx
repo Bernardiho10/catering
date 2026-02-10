@@ -1,111 +1,132 @@
 "use client"
 
+import { Button } from "@/components/ui/button"
+import { BlurFade } from "@/components/magicui/blur-fade"
+import { Truck, Users, PartyPopper, Calendar, ChevronRight } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { Calendar, MapPin, Users, PartyPopper } from "lucide-react"
-import { BlurFade } from "@/components/magicui/blur-fade"
+
+const features = [
+    {
+        icon: Users,
+        title: "Perfect for Crowds",
+        description: "Corporate events, parties, weddings & more",
+    },
+    {
+        icon: PartyPopper,
+        title: "Full Experience",
+        description: "Our team serves warm cookies on-site",
+    },
+    {
+        icon: Calendar,
+        title: "Easy Booking",
+        description: "Book online or call us to plan your event",
+    },
+]
 
 export function TreatsTruckSection() {
     return (
-        <section className="py-16 md:py-24 bg-background">
-            <div className="container mx-auto px-4 md:px-6">
-                <div className="grid lg:grid-cols-2 gap-12 items-center">
-                    {/* Content */}
-                    <div className="space-y-6 order-2 lg:order-1">
+        <section className="py-16 md:py-24 bg-zinc-900 text-white overflow-hidden relative">
+            {/* Background Pattern */}
+            <div className="absolute inset-0">
+                <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#c41e3a]/20 rounded-full blur-3xl" />
+                <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl" />
+            </div>
+
+            <div className="container mx-auto px-4 md:px-6 relative z-10">
+                <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+                    {/* Content Side */}
+                    <div className="space-y-8 order-2 lg:order-1">
                         <BlurFade delay={0.1} inView>
-                            <p className="text-xs tracking-widest uppercase text-primary font-semibold">
-                                Special Events
-                            </p>
+                            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-semibold bg-[#c41e3a] text-white">
+                                <Truck className="h-4 w-4" />
+                                Treats Truck
+                            </span>
                         </BlurFade>
 
                         <BlurFade delay={0.2} inView>
-                            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground">
-                                Book the Treats Truck
+                            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight">
+                                Ordering for a <span className="text-[#c41e3a]">Special Event?</span>
                             </h2>
                         </BlurFade>
 
                         <BlurFade delay={0.3} inView>
-                            <p className="text-lg text-muted-foreground">
-                                Make your next event unforgettable! Our Treats Truck brings the warmth
-                                of fresh-baked cookies directly to your celebration. Perfect for
-                                weddings, corporate events, birthday parties, and more.
+                            <p className="text-lg md:text-xl text-zinc-300 leading-relaxed">
+                                From cookie trays to Tiffwich® Ice Cream Sandwich parties, we've got you covered.
+                                Check out our tasty solutions for parties, gifts, and gatherings.
                             </p>
                         </BlurFade>
 
+                        {/* Features */}
                         <BlurFade delay={0.4} inView>
-                            <div className="grid sm:grid-cols-2 gap-4 py-4">
-                                <div className="flex items-start gap-3 p-4 bg-card rounded-xl border border-border">
-                                    <div className="p-2 bg-primary/10 rounded-lg shrink-0">
-                                        <PartyPopper className="h-5 w-5 text-primary" />
+                            <div className="space-y-4 pt-4">
+                                {features.map((feature) => (
+                                    <div
+                                        key={feature.title}
+                                        className="flex items-start gap-4 p-4 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10"
+                                    >
+                                        <div className="h-12 w-12 rounded-full bg-[#c41e3a] flex items-center justify-center shrink-0">
+                                            <feature.icon className="h-6 w-6" />
+                                        </div>
+                                        <div>
+                                            <h4 className="font-semibold text-lg">{feature.title}</h4>
+                                            <p className="text-zinc-400">{feature.description}</p>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <p className="font-semibold text-sm">Private Events</p>
-                                        <p className="text-xs text-muted-foreground">Weddings, birthdays, celebrations</p>
-                                    </div>
-                                </div>
-                                <div className="flex items-start gap-3 p-4 bg-card rounded-xl border border-border">
-                                    <div className="p-2 bg-primary/10 rounded-lg shrink-0">
-                                        <Users className="h-5 w-5 text-primary" />
-                                    </div>
-                                    <div>
-                                        <p className="font-semibold text-sm">Corporate Events</p>
-                                        <p className="text-xs text-muted-foreground">Team building, client appreciation</p>
-                                    </div>
-                                </div>
-                                <div className="flex items-start gap-3 p-4 bg-card rounded-xl border border-border">
-                                    <div className="p-2 bg-primary/10 rounded-lg shrink-0">
-                                        <MapPin className="h-5 w-5 text-primary" />
-                                    </div>
-                                    <div>
-                                        <p className="font-semibold text-sm">On-Location</p>
-                                        <p className="text-xs text-muted-foreground">We come to you</p>
-                                    </div>
-                                </div>
-                                <div className="flex items-start gap-3 p-4 bg-card rounded-xl border border-border">
-                                    <div className="p-2 bg-primary/10 rounded-lg shrink-0">
-                                        <Calendar className="h-5 w-5 text-primary" />
-                                    </div>
-                                    <div>
-                                        <p className="font-semibold text-sm">Easy Booking</p>
-                                        <p className="text-xs text-muted-foreground">Reserve your date online</p>
-                                    </div>
-                                </div>
+                                ))}
                             </div>
                         </BlurFade>
 
                         <BlurFade delay={0.5} inView>
-                            <div className="flex flex-wrap gap-4">
+                            <div className="flex flex-wrap gap-4 pt-4">
                                 <Link href="/catering">
-                                    <Button size="lg" className="rounded-full h-12 px-8">
-                                        Book Now
+                                    <Button
+                                        size="lg"
+                                        className="rounded-full px-8 h-14 text-base font-bold bg-[#c41e3a] hover:bg-[#a31830] shadow-lg"
+                                    >
+                                        Explore Catering
+                                        <ChevronRight className="h-5 w-5 ml-1" />
                                     </Button>
                                 </Link>
-                                <Link href="/contact">
-                                    <Button size="lg" variant="outline" className="rounded-full h-12 px-8">
-                                        Get a Quote
+                                <Link href="/catering/treats-truck">
+                                    <Button
+                                        size="lg"
+                                        variant="outline"
+                                        className="rounded-full px-8 h-14 text-base font-semibold border-2 border-white/30 text-white hover:bg-white/10"
+                                    >
+                                        Book the Truck
                                     </Button>
                                 </Link>
                             </div>
                         </BlurFade>
                     </div>
 
-                    {/* Truck Image */}
+                    {/* Image Side */}
                     <BlurFade delay={0.3} inView>
                         <div className="relative order-1 lg:order-2">
+                            {/* Main Image */}
                             <div className="relative aspect-[4/3] rounded-3xl overflow-hidden shadow-2xl">
                                 <Image
-                                    src="https://images.unsplash.com/photo-1567129937968-cdad8f07e2f8?auto=format&fit=crop&w=800&q=80"
-                                    alt="Food Truck"
+                                    src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=800&q=80"
+                                    alt="Tiff's Treats Truck Catering"
                                     fill
                                     className="object-cover"
                                     sizes="(max-width: 1024px) 100vw, 50vw"
                                 />
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+                                {/* Gradient Overlay */}
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
                             </div>
-                            {/* Decorative elements */}
-                            <div className="absolute -z-10 -bottom-4 -left-4 w-32 h-32 bg-primary/20 rounded-full blur-2xl" />
-                            <div className="absolute -z-10 -top-4 -right-4 w-24 h-24 bg-amber-500/20 rounded-full blur-xl" />
+
+                            {/* Floating Stats Cards */}
+                            <div className="absolute -bottom-6 -left-6 md:left-6 bg-white text-zinc-900 rounded-2xl shadow-xl p-4 md:p-5">
+                                <p className="text-3xl md:text-4xl font-bold text-[#c41e3a]">1000+</p>
+                                <p className="text-sm text-zinc-600">Events Catered</p>
+                            </div>
+
+                            <div className="absolute -top-6 -right-6 md:right-6 bg-[#c41e3a] text-white rounded-2xl shadow-xl p-4 md:p-5">
+                                <p className="text-3xl md:text-4xl font-bold">5★</p>
+                                <p className="text-sm text-white/80">Customer Rating</p>
+                            </div>
                         </div>
                     </BlurFade>
                 </div>
