@@ -6,12 +6,9 @@ import { DeliveryModal } from "@/components/modals/DeliveryModal"
 import { LoginModal, RegisterModal } from "@/components/modals/AuthModals"
 import { OccasionCategories } from "@/components/sections/OccasionCategories"
 import { HeroCarousel } from "@/components/sections/HeroCarousel"
-import { AppDownloadSection } from "@/components/sections/AppDownloadSection"
-import { BookPromoSection } from "@/components/sections/BookPromoSection"
-import { TreatsTruckSection } from "@/components/sections/TreatsTruckSection"
 import { AnnouncementBar } from "@/components/sections/AnnouncementBar"
 import { Card, CardContent } from "@/components/ui/card"
-import { Gift, RotateCcw, Users, Star, Flame, Heart, Sparkles, ChevronRight } from "lucide-react"
+import { Gift, RotateCcw, Users, Star, Flame, Heart, Sparkles, ChevronRight, Truck } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import { MOCK_MENU_ITEMS } from "@/lib/mock-data"
@@ -19,7 +16,6 @@ import { formatCurrency } from "@/lib/utils"
 import { ProductDialog } from "@/features/menu/components/ProductDialog"
 import { MenuItem } from "@/features/menu/types"
 import { WarmMoments } from "@/components/sections/WarmMoments"
-import { Particles } from "@/components/magicui/particles"
 import { FloatingCart } from "@/components/layout/FloatingCart"
 import { BlurFade } from "@/components/magicui/blur-fade"
 
@@ -39,41 +35,38 @@ export default function Home() {
   const bestSellers = MOCK_MENU_ITEMS.filter(item => item.featured).slice(0, 4)
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen bg-white">
       {/* Announcement Bar */}
       <AnnouncementBar />
 
       {/* Hero Carousel */}
       <HeroCarousel onOrderClick={() => setDeliveryModalOpen(true)} />
 
-      {/* Quick Action Buttons */}
-      <section className="py-8 md:py-10 bg-white dark:bg-zinc-950 border-b border-border">
+      {/* Quick Action Buttons - Styled like Cookiedelivery */}
+      <section className="py-12 bg-white border-b border-blue-50">
         <div className="container mx-auto px-4 md:px-6">
-          <div className="flex flex-wrap justify-center gap-3 md:gap-4">
+          <div className="flex flex-wrap justify-center gap-4 md:gap-8">
             <Button
-              variant="outline"
-              size="lg"
-              className="rounded-full gap-2 h-12 px-6 border-2 hover:border-[#c41e3a] hover:text-[#c41e3a]"
+              variant="ghost"
+              className="flex flex-col items-center gap-2 h-auto py-4 px-8 text-primary hover:text-accent hover:bg-transparent"
               onClick={() => setDeliveryModalOpen(true)}
             >
-              <Gift className="h-5 w-5" />
-              Gift Cards
+              <Gift className="h-8 w-8 text-accent" />
+              <span className="font-black uppercase tracking-widest text-xs">Gift Cards</span>
             </Button>
             <Button
-              variant="outline"
-              size="lg"
-              className="rounded-full gap-2 h-12 px-6 border-2 hover:border-[#c41e3a] hover:text-[#c41e3a]"
+              variant="ghost"
+              className="flex flex-col items-center gap-2 h-auto py-4 px-8 text-primary hover:text-accent hover:bg-transparent"
             >
-              <RotateCcw className="h-5 w-5" />
-              Repeat Order
+              <Truck className="h-8 w-8 text-primary" />
+              <span className="font-black uppercase tracking-widest text-xs">Bulk Orders</span>
             </Button>
             <Button
-              variant="outline"
-              size="lg"
-              className="rounded-full gap-2 h-12 px-6 border-2 hover:border-[#c41e3a] hover:text-[#c41e3a]"
+              variant="ghost"
+              className="flex flex-col items-center gap-2 h-auto py-4 px-8 text-primary hover:text-accent hover:bg-transparent"
             >
-              <Users className="h-5 w-5" />
-              Multiple Recipients
+              <Users className="h-8 w-8 text-primary" />
+              <span className="font-black uppercase tracking-widest text-xs">Group Gifts</span>
             </Button>
           </div>
         </div>
@@ -82,197 +75,26 @@ export default function Home() {
       {/* Occasion Categories */}
       <OccasionCategories />
 
-
-      {/* Warm Moments Section */}
-      <WarmMoments />
-
-      {/* Global Background Particles */}
-      <div className="fixed inset-0 pointer-events-none z-0">
-        <Particles
-          className="absolute inset-0"
-          quantity={100}
-          ease={80}
-          color="#c41e3a"
-          refresh
-        />
-      </div>
-
-      {/* Best Sellers Section */}
-      <section className="py-16 md:py-20 bg-white dark:bg-zinc-950">
+      {/* Our Promise Section */}
+      <section className="py-24 bg-blue-50/10 border-y border-blue-50">
         <div className="container mx-auto px-4 md:px-6">
           <BlurFade delay={0.1} inView>
-            <div className="flex items-center justify-between mb-10">
-              <div>
-                <span className="inline-block px-4 py-1.5 rounded-full text-sm font-semibold bg-[#c41e3a]/10 text-[#c41e3a] mb-3">
-                  Customer Favorites
-                </span>
-                <h2 className="text-3xl md:text-4xl font-bold text-foreground">
-                  Best Sellers
-                </h2>
+            <div className="max-w-4xl mx-auto text-center space-y-8">
+              <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-sm">
+                <Heart className="h-4 w-4 text-primary" />
+                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">Our Promise</span>
               </div>
-              <Link href="/menu">
-                <Button variant="outline" className="rounded-full border-2 hover:border-[#c41e3a] hover:text-[#c41e3a]">
-                  View All
-                  <ChevronRight className="h-4 w-4 ml-1" />
-                </Button>
-              </Link>
-            </div>
-          </BlurFade>
-
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {bestSellers.map((item, index) => (
-              <BlurFade key={item.id} delay={0.1 + index * 0.1} inView>
-                <Card
-                  className="group cursor-pointer hover:shadow-xl transition-all duration-300 overflow-hidden border-2 hover:border-[#c41e3a] bg-card"
-                  onClick={() => handleProductClick(item)}
-                >
-                  <div className="relative aspect-square overflow-hidden bg-muted">
-                    <Image
-                      src={item.image_url}
-                      alt={item.name}
-                      fill
-                      className="object-cover transition-transform duration-500 group-hover:scale-110"
-                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                    />
-                    <div className="absolute top-3 left-3 bg-[#c41e3a] text-white text-xs font-bold px-2.5 py-1 rounded-full flex items-center gap-1">
-                      <Flame className="h-3 w-3" />
-                      Popular
-                    </div>
-                  </div>
-                  <CardContent className="p-4 space-y-2">
-                    <div className="flex items-start justify-between gap-2">
-                      <h3 className="font-semibold text-base text-foreground group-hover:text-[#c41e3a] transition-colors line-clamp-2">
-                        {item.name}
-                      </h3>
-                      <span className="font-bold text-[#c41e3a] shrink-0">
-                        {formatCurrency(item.price)}
-                      </span>
-                    </div>
-                    {item.rating && (
-                      <div className="flex items-center gap-1.5">
-                        <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
-                        <span className="text-sm font-medium">{item.rating}</span>
-                        <span className="text-xs text-muted-foreground">
-                          ({item.review_count})
-                        </span>
-                      </div>
-                    )}
-                    <p className="text-sm text-muted-foreground line-clamp-2">
-                      {item.description}
-                    </p>
-                  </CardContent>
-                </Card>
-              </BlurFade>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Cookie Pie Section */}
-      <section className="py-16 md:py-20 bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50 dark:from-amber-950/30 dark:via-orange-950/20 dark:to-yellow-950/30">
-        <div className="container mx-auto px-4 md:px-6">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <BlurFade delay={0.2} inView>
-              <div className="relative aspect-square max-w-[500px] mx-auto rounded-3xl overflow-hidden shadow-2xl">
-                <Image
-                  src="https://images.unsplash.com/photo-1499636136210-6f4ee915583e?auto=format&fit=crop&w=800&q=80"
-                  alt="Cookie Pie"
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 1024px) 100vw, 50vw"
-                />
-                {/* Sparkles */}
-                <div className="absolute inset-0 pointer-events-none">
-                  <Sparkles className="absolute top-1/4 right-1/4 h-8 w-8 text-amber-400/60 animate-pulse" />
-                  <Sparkles className="absolute bottom-1/4 left-1/4 h-6 w-6 text-orange-400/50 animate-pulse delay-500" />
-                </div>
-              </div>
-            </BlurFade>
-            <div className="space-y-6 text-center lg:text-left">
-              <BlurFade delay={0.1} inView>
-                <span className="inline-block px-4 py-1.5 rounded-full text-sm font-semibold bg-amber-500/10 text-amber-700 dark:text-amber-400">
-                  ⭐ Signature Item
-                </span>
-              </BlurFade>
-              <BlurFade delay={0.2} inView>
-                <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground">
-                  Cookie Pie
-                </h2>
-              </BlurFade>
-              <BlurFade delay={0.3} inView>
-                <p className="text-lg text-muted-foreground leading-relaxed max-w-xl mx-auto lg:mx-0">
-                  Our famous Cookie Pie is a warm, gooey, giant cookie baked fresh to order.
-                  Perfect for sharing (or not!). Available in multiple flavors with optional
-                  ice cream on top.
-                </p>
-              </BlurFade>
-              <BlurFade delay={0.4} inView>
-                <div className="flex flex-wrap gap-4 justify-center lg:justify-start pt-2">
-                  <Button
-                    size="lg"
-                    className="rounded-full px-8 h-14 text-base font-bold bg-[#c41e3a] hover:bg-[#a31830]"
-                    onClick={() => setDeliveryModalOpen(true)}
-                  >
-                    Order Cookie Pie
-                  </Button>
-                  <Link href="/menu?cat=pie">
-                    <Button
-                      size="lg"
-                      variant="outline"
-                      className="rounded-full px-8 h-14 text-base font-semibold border-2 border-amber-500 text-amber-700 hover:bg-amber-500/10"
-                    >
-                      See All Flavors
-                    </Button>
-                  </Link>
-                </div>
-              </BlurFade>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* App Download Section */}
-      <AppDownloadSection />
-
-      {/* Treats Truck Section */}
-      <TreatsTruckSection />
-
-      {/* Book Promo Section */}
-      <BookPromoSection />
-
-      {/* Rewards Section */}
-      <section className="py-16 md:py-20 bg-[#c41e3a] text-white">
-        <div className="container mx-auto px-4 md:px-6">
-          <BlurFade delay={0.2} inView>
-            <div className="max-w-3xl mx-auto text-center space-y-6">
-              <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-semibold bg-white/20">
-                <Star className="h-4 w-4" />
-                David's Rewards®
-              </span>
-              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold">
-                Join David's Rewards®
+              <h2 className="text-3xl md:text-5xl font-black text-primary uppercase tracking-tighter">
+                At The A Cake, we don&apos;t just bake; <br />
+                <span className="text-accent italic font-serif normal-case tracking-normal">We Care.</span>
               </h2>
-              <p className="text-lg md:text-xl text-white/90 leading-relaxed">
-                Stack up points on every purchase to pay for future orders, or redeem for
-                free treats and prizes. Opt in to start earning today!
+              <p className="text-xl md:text-2xl text-primary/70 leading-relaxed font-medium">
+                At The A Cake, we don&apos;t just bake; we care. From our family to yours, we use only the highest quality organic ingredients, free from artificial preservatives and synthetic additives. We believe that what you put in your body matters, and that starts with the purity of the ingredients used in our kitchen. Whether it&apos;s the rich, organic cocoa in our chocolate cakes or the hand-pressed citrus in our lemon varieties, you can taste the difference that honest, organic baking makes.
               </p>
-              <div className="flex flex-wrap gap-4 justify-center pt-4">
-                <Button
-                  size="lg"
-                  variant="secondary"
-                  className="rounded-full px-10 h-14 text-base font-bold bg-white text-[#c41e3a] hover:bg-white/90 shadow-lg"
-                  onClick={() => setRegisterModalOpen(true)}
-                >
-                  Sign Up for Rewards
-                  <ChevronRight className="h-5 w-5 ml-1" />
-                </Button>
-                <Link href="/rewards">
-                  <Button
-                    size="lg"
-                    variant="outline"
-                    className="rounded-full px-8 h-14 text-base font-semibold border-2 border-white text-white hover:bg-white/10"
-                  >
-                    Learn More
+              <div className="pt-4">
+                <Link href="/about">
+                  <Button variant="outline" className="rounded-sm border-2 border-primary text-primary px-10 h-14 font-black uppercase tracking-widest hover:bg-primary/5">
+                    The Heart Behind the Bake
                   </Button>
                 </Link>
               </div>
@@ -280,6 +102,133 @@ export default function Home() {
           </BlurFade>
         </div>
       </section>
+
+      {/* Best Sellers Section */}
+      <section className="py-24 bg-white">
+        <div className="container mx-auto px-4 md:px-6">
+          <BlurFade delay={0.1} inView>
+            <div className="text-center mb-16">
+              <h2 className="text-3xl md:text-5xl font-black text-primary uppercase tracking-tighter mb-4">
+                Our Signature Blessings
+              </h2>
+              <div className="w-24 h-1 bg-accent mx-auto mb-8"></div>
+            </div>
+          </BlurFade>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-12">
+            {bestSellers.map((item, index) => (
+              <BlurFade key={item.id} delay={0.1 + index * 0.1} inView>
+                <div
+                  className="group cursor-pointer space-y-4"
+                  onClick={() => handleProductClick(item)}
+                >
+                  <div className="relative aspect-square overflow-hidden rounded-sm bg-blue-50 border border-blue-100">
+                    <Image
+                      src={item.image_url}
+                      alt={item.name}
+                      fill
+                      className="object-cover transition-transform duration-700 group-hover:scale-110"
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                    />
+                    <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/10 transition-colors" />
+                  </div>
+                  <div className="text-center space-y-1">
+                    <h3 className="text-sm font-black text-primary uppercase tracking-widest group-hover:text-accent transition-colors">
+                      {item.name}
+                    </h3>
+                    <p className="text-xs font-bold text-primary/40 uppercase tracking-widest">
+                      {formatCurrency(item.price)}
+                    </p>
+                  </div>
+                </div>
+              </BlurFade>
+            ))}
+          </div>
+
+          <div className="text-center mt-16">
+            <Link href="/menu">
+              <Button className="rounded-sm bg-primary hover:bg-primary/90 px-12 h-16 text-sm font-black uppercase tracking-widest shadow-xl">
+                Browse Our Flavors
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Nursing Mother's Special Section */}
+      <section className="py-24 border-y border-blue-50 bg-white">
+        <div className="container mx-auto px-4 md:px-6">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            <BlurFade delay={0.2} inView>
+              <div className="relative aspect-square rounded-sm overflow-hidden shadow-2xl border-8 border-white">
+                <Image
+                  src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=800&q=80"
+                  alt="Nursing Mother's Special"
+                  fill
+                  className="object-cover"
+                />
+              </div>
+            </BlurFade>
+            <div className="space-y-8">
+              <BlurFade delay={0.1} inView>
+                <h2 className="text-4xl md:text-6xl font-black text-primary uppercase tracking-tighter leading-none">
+                  Abraham&apos;s <br />
+                  <span className="text-accent italic font-serif normal-case tracking-normal">Specialty</span>
+                </h2>
+              </BlurFade>
+              <BlurFade delay={0.2} inView>
+                <div className="space-y-4">
+                  <h3 className="text-xl font-black text-primary uppercase tracking-widest">The Nursing Mother&apos;s Special</h3>
+                  <p className="text-lg text-primary/70 leading-relaxed font-medium">
+                    Our signature recipe. Crafted with specific organic ingredients known to support lactation, offering a delicious, nutrient-dense treat for new moms.
+                  </p>
+                </div>
+              </BlurFade>
+              <BlurFade delay={0.3} inView>
+                <Link href="/menu">
+                  <Button
+                    size="lg"
+                    className="rounded-sm px-10 h-16 text-sm font-black uppercase tracking-widest bg-primary hover:bg-primary/90 shadow-xl"
+                  >
+                    Bring a Blessing Home
+                  </Button>
+                </Link>
+              </BlurFade>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Rewards Section */}
+      <section className="py-24 bg-blue-50/10">
+        <div className="container mx-auto px-4 md:px-6 text-center">
+          <BlurFade delay={0.2} inView>
+            <div className="max-w-3xl mx-auto space-y-8">
+              <div className="flex justify-center mb-8">
+                <Star className="h-16 w-16 text-accent fill-accent" />
+              </div>
+              <h2 className="text-3xl md:text-6xl font-black text-primary uppercase tracking-tighter">
+                Abraham&apos;s Rewards
+              </h2>
+              <p className="text-xl text-primary/60 font-medium leading-relaxed">
+                Join our family! Earn points with every organic blessing you purchase. Redeem points for free cakes, exclusive tastings, and special family bundles.
+              </p>
+              <div className="flex flex-wrap gap-4 justify-center pt-4">
+                <Button
+                  size="lg"
+                  className="rounded-sm px-12 h-16 text-sm font-black uppercase tracking-widest bg-primary hover:bg-primary/90 shadow-2xl"
+                  onClick={() => setRegisterModalOpen(true)}
+                >
+                  Join the Family
+                </Button>
+              </div>
+            </div>
+          </BlurFade>
+        </div>
+      </section>
+
+      {/* Warm Moments */}
+      <WarmMoments />
 
       {/* Modals */}
       <DeliveryModal open={deliveryModalOpen} onOpenChange={setDeliveryModalOpen} />

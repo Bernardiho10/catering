@@ -90,7 +90,7 @@ export function AddressEntryModal({ open, onOpenChange, onConfirm }: AddressEntr
                                     <History className="h-5 w-5" />
                                 </div>
                                 <div className="text-left flex-1">
-                                    <span className="block font-medium text-foreground">123 Cookie Lane</span>
+                                    <span className="block font-medium text-foreground">123 Blessing Blvd</span>
                                     <span className="block text-xs text-muted-foreground">Austin, TX 78701</span>
                                 </div>
                                 <Star className="h-4 w-4 text-muted-foreground hover:text-amber-400 cursor-pointer" />

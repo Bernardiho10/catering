@@ -13,7 +13,7 @@ export default function SpecialsPage() {
                 <div className="grid md:grid-cols-2 gap-8">
                     <div className="bg-primary/5 rounded-3xl p-8 border border-primary/10">
                         <h3 className="text-2xl font-bold font-heading mb-4">Double Dozen Deal</h3>
-                        <p className="text-muted-foreground mb-6">Get 2 dozen classic cookies for just $35. Perfect for sharing!</p>
+                        <p className="text-muted-foreground mb-6">Get 2 organic cakes for just $35. Perfect for sharing!</p>
                         <Button asChild size="lg" className="rounded-full">
                             <Link href="/menu?cat=packs">View Packs</Link>
                         </Button>

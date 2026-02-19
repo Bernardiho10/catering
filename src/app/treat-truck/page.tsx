@@ -39,7 +39,7 @@ export default function TreatTruckPage() {
                             The Treat Truck
                         </h1>
                         <p className="text-xl md:text-2xl text-white/90 max-w-2xl mx-auto font-medium drop-shadow-md">
-                            Bringing warm cookies and smiles to neighborhoods, events, and festivals near you.
+                            Bringing fresh cakes and smiles to neighborhoods, events, and festivals near you.
                         </p>
                         <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
                             <Button size="lg" className="rounded-full bg-white text-[#c41e3a] hover:bg-zinc-100 font-bold h-14 px-8 text-lg">
@@ -139,7 +139,7 @@ export default function TreatTruckPage() {
                             >
                                 <h2 className="text-4xl md:text-5xl font-heading font-bold mb-6">Have the Truck at Your Next Event</h2>
                                 <p className="text-xl text-muted-foreground mb-8 leading-relaxed">
-                                    Imagine the smell of fresh-baked cookies wafting through your event. Our Treat Truck comes fully stocked with warm cookies, ice cold milk, and ice cream sandwiches.
+                                    Imagine the smell of fresh-baked cakes wafting through your event. Our Treat Truck comes fully stocked with fresh cakes, ice cold milk, and ice cream sandwiches.
                                 </p>
 
                                 <div className="space-y-6">

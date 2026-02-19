@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { motion } from "framer-motion"
-import { Users, Calendar, ChefHat, Star, Check, ArrowRight, Phone, Mail } from "lucide-react"
+import { Users, Calendar, ChefHat, Star, Check, ArrowRight, Phone, Mail, Utensils, Sparkles } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -10,62 +10,59 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { toast } from "sonner"
 import Image from "next/image"
+import { submitCateringRequest } from "@/app/actions/catering"
+import { BlurFade } from "@/components/magicui/blur-fade"
 
 const CATERING_PACKAGES = [
   {
-    name: "Essential",
-    description: "Perfect for small gatherings and office meetings",
-    pricePerPerson: 25,
-    minGuests: 10,
+    name: "Small Blessing",
+    description: "Perfect for intimate gatherings and office meetings",
+    pricePerPerson: 15,
+    minGuests: 12,
     features: [
-      "Choice of 2 main courses",
-      "2 side dishes",
-      "Fresh bread basket",
-      "Disposable plates & utensils",
-      "Standard delivery"
+      "Assorted Organic Mini Cakes",
+      "Choice of 2 Signature Flavors",
+      "Biodegradable Napkins",
+      "Standard Local Delivery"
     ],
     popular: false
   },
   {
-    name: "Premium",
-    description: "Ideal for corporate events and celebrations",
-    pricePerPerson: 45,
-    minGuests: 20,
+    name: "Family Feast",
+    description: "Ideal for birthday parties and celebrations",
+    pricePerPerson: 22,
+    minGuests: 24,
     features: [
-      "Choice of 3 main courses",
-      "3 side dishes",
-      "Appetizer selection",
-      "Fresh bread & butter",
-      "Premium serving ware",
-      "Setup assistance",
-      "Dedicated coordinator"
+      "Full Sized Signature Cakes",
+      "Choice of 4 Signature Flavors",
+      "Custom Gift Note",
+      "Premium Delivery & Setup",
+      "Dedicated Treats Coordinator"
     ],
     popular: true
   },
   {
-    name: "Luxury",
-    description: "Full-service experience for memorable events",
-    pricePerPerson: 75,
-    minGuests: 30,
+    name: "Prophetic Event",
+    description: "Full-service experience for grand occasions",
+    pricePerPerson: 35,
+    minGuests: 50,
     features: [
-      "Full menu customization",
-      "4+ main courses",
-      "Appetizers & desserts",
-      "Premium beverages",
-      "Elegant serving ware",
-      "Full setup & cleanup",
-      "On-site chef & servers",
-      "Complimentary tasting"
+      "Unlimited Cake Service",
+      "Custom Seasonal Flavors",
+      "Luxury Serving Ware",
+      "On-site Warm Station",
+      "Complimentary Tasting Session",
+      "Full Setup & Cleanup"
     ],
     popular: false
   }
 ]
 
 const EVENT_TYPES = [
-  { name: "Corporate Events", image: "https://images.unsplash.com/photo-1511578314322-379afb476865?w=400&h=300&fit=crop" },
-  { name: "Weddings", image: "https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=400&h=300&fit=crop" },
-  { name: "Private Parties", image: "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=400&h=300&fit=crop" },
-  { name: "Holiday Events", image: "https://images.unsplash.com/photo-1467810563316-b5476525c0f9?w=400&h=300&fit=crop" },
+  { name: "Corporate Blessings", image: "https://images.unsplash.com/photo-1511578314322-379afb476865?w=400&h=300&fit=crop" },
+  { name: "Divine Weddings", image: "https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=400&h=300&fit=crop" },
+  { name: "Family Reunions", image: "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=400&h=300&fit=crop" },
+  { name: "Church Events", image: "https://images.unsplash.com/photo-1467810563316-b5476525c0f9?w=400&h=300&fit=crop" },
 ]
 
 export default function CateringPage() {
@@ -83,174 +80,196 @@ export default function CateringPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
-    await new Promise(resolve => setTimeout(resolve, 1500))
-    toast.success("Request submitted! Our catering team will contact you within 24 hours.")
-    setFormData({ name: "", email: "", phone: "", eventDate: "", guestCount: "", eventType: "", message: "" })
-    setIsSubmitting(false)
+
+    try {
+      const result = await submitCateringRequest(formData)
+      if (result.success) {
+        toast.success("Catering request sent! We'll be in touch soon.")
+        setFormData({ name: "", email: "", phone: "", eventDate: "", guestCount: "", eventType: "", message: "" })
+      } else {
+        toast.error(result.message)
+      }
+    } catch (error) {
+      toast.error("Something went wrong. Please try again.")
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background via-amber-50/20 to-background dark:from-background dark:via-amber-950/10 dark:to-background">
+    <div className="min-h-screen bg-white">
       {/* Hero */}
-      <section className="relative py-16 md:py-24 overflow-hidden">
-        <div className="container mx-auto px-4 md:px-6">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="text-center max-w-3xl mx-auto"
-          >
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-amber-500/10 via-primary/10 to-blue-500/10 rounded-full text-amber-600 dark:text-amber-400 text-sm font-medium border border-amber-200/50 dark:border-amber-500/20 mb-6">
-              <ChefHat className="h-4 w-4" />
-              Catering Services
+      <section className="relative py-24 md:py-32 bg-primary text-white overflow-hidden">
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-white rounded-full blur-3xl translate-x-1/4 -translate-y-1/4" />
+        </div>
+        <div className="container mx-auto px-4 md:px-6 relative z-10 text-center">
+          <BlurFade delay={0.1} inView>
+            <div className="max-w-4xl mx-auto space-y-8">
+              <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 rounded-sm">
+                <ChefHat className="h-4 w-4" />
+                <span className="text-[10px] font-black uppercase tracking-[0.2em]">Catering & Events</span>
+              </div>
+              <h1 className="text-4xl md:text-7xl font-black uppercase tracking-tighter leading-none">
+                Share the <br />
+                <span className="text-accent italic font-serif normal-case tracking-normal">Blessing</span>
+              </h1>
+              <p className="text-xl md:text-2xl text-white/80 leading-relaxed font-medium max-w-2xl mx-auto">
+                From business lunches to divine celebrations, we bring the warmth of Abraham&apos;s to every occasion.
+              </p>
+              <div className="flex flex-wrap gap-4 justify-center pt-6">
+                <Button size="lg" className="rounded-sm px-10 h-16 text-sm font-black uppercase tracking-widest bg-white text-primary hover:bg-white/90 shadow-2xl">
+                  Request Quote
+                </Button>
+                <Button size="lg" variant="outline" className="rounded-sm px-10 h-16 text-sm font-black uppercase tracking-widest border-2 border-white text-white hover:bg-white/10">
+                  View Packages
+                </Button>
+              </div>
             </div>
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-heading font-bold text-foreground mb-4">
-              Exceptional Catering for <span className="text-golden">Every Occasion</span>
-            </h1>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-8">
-              From intimate gatherings to grand celebrations, our catering team delivers restaurant-quality cuisine with impeccable service.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" className="rounded-full gap-2">
-                <Calendar className="h-4 w-4" />
-                Request a Quote
-              </Button>
-              <Button size="lg" variant="outline" className="rounded-full gap-2">
-                <Phone className="h-4 w-4" />
-                (555) 123-4567
-              </Button>
-            </div>
-          </motion.div>
+          </BlurFade>
         </div>
       </section>
 
-      {/* Event Types */}
-      <section className="py-12">
+      {/* Event Types Grid */}
+      <section className="py-24 border-b border-blue-50">
         <div className="container mx-auto px-4 md:px-6">
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl mx-auto">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {EVENT_TYPES.map((event, index) => (
-              <motion.div
-                key={event.name}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="relative aspect-[4/3] rounded-2xl overflow-hidden group cursor-pointer"
-              >
-                <Image src={event.image} alt={event.name} fill className="object-cover transition-transform duration-500 group-hover:scale-110" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
-                <div className="absolute bottom-4 left-4 right-4">
-                  <p className="text-white font-semibold">{event.name}</p>
+              <BlurFade key={event.name} delay={0.1 + index * 0.1} inView>
+                <div className="relative aspect-[4/5] rounded-sm overflow-hidden group">
+                  <Image src={event.image} alt={event.name} fill className="object-cover transition-transform duration-700 group-hover:scale-110" />
+                  <div className="absolute inset-0 bg-primary/40 group-hover:bg-primary/20 transition-all duration-500" />
+                  <div className="absolute inset-x-0 bottom-0 p-8 text-center bg-gradient-to-t from-primary to-transparent">
+                    <p className="text-sm font-black text-white uppercase tracking-widest">{event.name}</p>
+                  </div>
                 </div>
-              </motion.div>
+              </BlurFade>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Packages */}
-      <section className="py-16 bg-muted/30">
+      {/* Packages Section */}
+      <section className="py-24 bg-blue-50/10">
         <div className="container mx-auto px-4 md:px-6">
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-12">
-            <h2 className="text-2xl md:text-3xl font-heading font-semibold mb-4">Catering Packages</h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto">Choose from our curated packages or work with us to create a custom menu.</p>
-          </motion.div>
+          <BlurFade delay={0.1} inView>
+            <div className="text-center mb-16">
+              <h2 className="text-3xl md:text-6xl font-black text-primary uppercase tracking-tighter mb-4">Catering Packages</h2>
+              <div className="w-24 h-1 bg-accent mx-auto"></div>
+            </div>
+          </BlurFade>
 
-          <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+          <div className="grid lg:grid-cols-3 gap-12 max-w-6xl mx-auto">
             {CATERING_PACKAGES.map((pkg, index) => (
-              <motion.div
-                key={pkg.name}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-              >
-                <Card className={`rounded-3xl h-full relative ${pkg.popular ? "border-primary border-2" : ""}`}>
+              <BlurFade key={pkg.name} delay={0.1 + index * 0.1} inView>
+                <Card className={`rounded-sm h-full flex flex-col border-2 ${pkg.popular ? "border-primary shadow-2xl scale-105" : "border-blue-50 shadow-sm"} bg-white relative`}>
                   {pkg.popular && (
-                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 bg-primary text-primary-foreground text-sm font-medium rounded-full flex items-center gap-1">
-                      <Star className="h-3 w-3" /> Most Popular
+                    <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-6 py-2 bg-accent text-primary text-[10px] font-black uppercase tracking-widest rounded-sm border-2 border-primary shadow-xl">
+                      ⭐ Most Requested
                     </div>
                   )}
-                  <CardHeader className="pt-8">
-                    <CardTitle className="text-xl">{pkg.name}</CardTitle>
-                    <p className="text-sm text-muted-foreground">{pkg.description}</p>
+                  <CardHeader className="p-8 text-center">
+                    <CardTitle className="text-lg font-black text-primary uppercase tracking-widest">{pkg.name}</CardTitle>
+                    <p className="text-xs font-medium text-primary/40 leading-relaxed mt-2">{pkg.description}</p>
                   </CardHeader>
-                  <CardContent>
-                    <div className="mb-6">
-                      <span className="text-4xl font-bold">${pkg.pricePerPerson}</span>
-                      <span className="text-muted-foreground">/person</span>
-                      <p className="text-sm text-muted-foreground mt-1">Minimum {pkg.minGuests} guests</p>
+                  <CardContent className="p-8 flex-1 flex flex-col">
+                    <div className="text-center mb-8 border-y border-blue-50 py-6">
+                      <span className="text-4xl font-black text-primary">${pkg.pricePerPerson}</span>
+                      <span className="text-[10px] font-black text-primary/40 uppercase tracking-widest ml-2">/ Guest</span>
+                      <p className="text-[10px] font-bold text-accent uppercase tracking-widest mt-2">Minimum {pkg.minGuests} Guests</p>
                     </div>
-                    <ul className="space-y-3 mb-6">
+                    <ul className="space-y-4 mb-10 flex-1">
                       {pkg.features.map((feature) => (
-                        <li key={feature} className="flex items-start gap-2 text-sm">
-                          <Check className="h-4 w-4 text-primary shrink-0 mt-0.5" />
+                        <li key={feature} className="flex items-start gap-3 text-xs font-medium text-primary/70">
+                          <Check className="h-4 w-4 text-accent shrink-0" />
                           <span>{feature}</span>
                         </li>
                       ))}
                     </ul>
-                    <Button className={`w-full rounded-full ${pkg.popular ? "" : "variant-outline"}`} variant={pkg.popular ? "default" : "outline"}>
-                      Get Quote
+                    <Button size="lg" className={`w-full rounded-sm h-14 font-black uppercase tracking-widest ${pkg.popular ? "bg-primary shadow-xl" : "variant-ghost border-2 border-primary bg-transparent text-primary hover:bg-primary/5"}`}>
+                      Select Package
                     </Button>
                   </CardContent>
                 </Card>
-              </motion.div>
+              </BlurFade>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Request Form */}
-      <section className="py-16">
+      {/* Inquiry Form */}
+      <section className="py-24 md:py-32">
         <div className="container mx-auto px-4 md:px-6">
-          <div className="max-w-2xl mx-auto">
-            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-8">
-              <h2 className="text-2xl md:text-3xl font-heading font-semibold mb-4">Request a Custom Quote</h2>
-              <p className="text-muted-foreground">Tell us about your event and we'll create a personalized proposal.</p>
-            </motion.div>
+          <div className="max-w-4xl mx-auto">
+            <div className="grid md:grid-cols-2 gap-16 items-start">
+              <div className="space-y-10">
+                <BlurFade delay={0.1} inView>
+                  <h2 className="text-3xl md:text-5xl font-black text-primary uppercase tracking-tighter leading-none">
+                    Tailored For <br />
+                    <span className="text-accent italic font-serif normal-case tracking-normal">Your Event</span>
+                  </h2>
+                </BlurFade>
+                <BlurFade delay={0.2} inView>
+                  <p className="text-lg text-primary/60 font-medium leading-relaxed">
+                    Need a custom blessing? Our team works closely with you to curate a unique organic treat experience for your specific needs.
+                  </p>
+                </BlurFade>
+                <div className="space-y-6 pt-4">
+                  <div className="flex items-center gap-6">
+                    <div className="h-12 w-12 rounded-sm bg-blue-50 flex items-center justify-center border border-blue-100/50">
+                      <Phone className="h-5 w-5 text-primary" />
+                    </div>
+                    <div>
+                      <p className="text-[10px] font-black text-primary/40 uppercase tracking-widest">Call Us</p>
+                      <p className="text-sm font-black text-primary uppercase tracking-widest">(555) 123-4567</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-6">
+                    <div className="h-12 w-12 rounded-sm bg-blue-50 flex items-center justify-center border border-blue-100/50">
+                      <Mail className="h-5 w-5 text-primary" />
+                    </div>
+                    <div>
+                      <p className="text-[10px] font-black text-primary/40 uppercase tracking-widest">Email Us</p>
+                      <p className="text-sm font-black text-primary uppercase tracking-widest">blessings@abrahams.com</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
 
-            <Card className="rounded-3xl">
-              <CardContent className="p-6">
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  <div className="grid sm:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="name">Your Name *</Label>
-                      <Input id="name" value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} className="rounded-xl" required />
+              <BlurFade delay={0.3} inView>
+                <Card className="rounded-sm border-blue-50 shadow-2xl p-10 md:p-12">
+                  <form onSubmit={handleSubmit} className="space-y-6">
+                    <div className="space-y-4">
+                      <div className="space-y-2">
+                        <Label className="text-[10px] font-black uppercase tracking-widest text-primary/40">Full Name</Label>
+                        <Input value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} className="h-14 rounded-sm border-blue-50 focus-visible:ring-primary font-medium" required />
+                      </div>
+                      <div className="space-y-2">
+                        <Label className="text-[10px] font-black uppercase tracking-widest text-primary/40">Email Address</Label>
+                        <Input type="email" value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} className="h-14 rounded-sm border-blue-50 focus-visible:ring-primary font-medium" required />
+                      </div>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <Label className="text-[10px] font-black uppercase tracking-widest text-primary/40">Event Date</Label>
+                          <Input type="date" value={formData.eventDate} onChange={(e) => setFormData({ ...formData, eventDate: e.target.value })} className="h-14 rounded-sm border-blue-50 focus-visible:ring-primary font-medium" />
+                        </div>
+                        <div className="space-y-2">
+                          <Label className="text-[10px] font-black uppercase tracking-widest text-primary/40">Guest Count</Label>
+                          <Input type="number" value={formData.guestCount} onChange={(e) => setFormData({ ...formData, guestCount: e.target.value })} className="h-14 rounded-sm border-blue-50 focus-visible:ring-primary font-medium" />
+                        </div>
+                      </div>
+                      <div className="space-y-2">
+                        <Label className="text-[10px] font-black uppercase tracking-widest text-primary/40">Tell Us More</Label>
+                        <Textarea value={formData.message} onChange={(e) => setFormData({ ...formData, message: e.target.value })} className="min-h-[120px] rounded-sm border-blue-50 focus-visible:ring-primary font-medium resize-none p-4" placeholder="Event details, dietary needs..." />
+                      </div>
                     </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="email">Email *</Label>
-                      <Input id="email" type="email" value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} className="rounded-xl" required />
-                    </div>
-                  </div>
-                  <div className="grid sm:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="phone">Phone</Label>
-                      <Input id="phone" type="tel" value={formData.phone} onChange={(e) => setFormData({ ...formData, phone: e.target.value })} className="rounded-xl" />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="eventDate">Event Date</Label>
-                      <Input id="eventDate" type="date" value={formData.eventDate} onChange={(e) => setFormData({ ...formData, eventDate: e.target.value })} className="rounded-xl" />
-                    </div>
-                  </div>
-                  <div className="grid sm:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="guestCount">Guest Count</Label>
-                      <Input id="guestCount" type="number" value={formData.guestCount} onChange={(e) => setFormData({ ...formData, guestCount: e.target.value })} className="rounded-xl" placeholder="Approx. number" />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="eventType">Event Type</Label>
-                      <Input id="eventType" value={formData.eventType} onChange={(e) => setFormData({ ...formData, eventType: e.target.value })} className="rounded-xl" placeholder="e.g., Wedding, Corporate" />
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="message">Tell Us More</Label>
-                    <Textarea id="message" value={formData.message} onChange={(e) => setFormData({ ...formData, message: e.target.value })} className="rounded-xl resize-none" rows={4} placeholder="Any special requests, dietary needs, or questions?" />
-                  </div>
-                  <Button type="submit" size="lg" disabled={isSubmitting} className="w-full rounded-full gap-2">
-                    {isSubmitting ? "Submitting..." : <><ArrowRight className="h-4 w-4" /> Submit Request</>}
-                  </Button>
-                </form>
-              </CardContent>
-            </Card>
+                    <Button type="submit" size="lg" disabled={isSubmitting} className="w-full rounded-sm h-16 font-black uppercase tracking-widest bg-primary hover:bg-primary/90 shadow-xl">
+                      {isSubmitting ? "Submitting..." : "Send Request"}
+                    </Button>
+                  </form>
+                </Card>
+              </BlurFade>
+            </div>
           </div>
         </div>
       </section>

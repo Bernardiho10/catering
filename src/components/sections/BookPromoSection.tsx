@@ -23,7 +23,7 @@ export function BookPromoSection() {
                                 <div className="relative w-[280px] md:w-[350px] aspect-[3/4] rounded-xl overflow-hidden shadow-2xl transform hover:-rotate-2 transition-transform duration-300">
                                     <Image
                                         src="https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&w=600&q=80"
-                                        alt="It's Not Just Cookies - Our Story"
+                                        alt="It's Not Just Cake - Our Story"
                                         fill
                                         className="object-cover"
                                         sizes="350px"
@@ -32,7 +32,7 @@ export function BookPromoSection() {
                                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent">
                                         <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
                                             <p className="text-sm font-medium opacity-80">Our Story</p>
-                                            <h3 className="text-2xl font-bold mt-1">It's Not Just Cookies!</h3>
+                                            <h3 className="text-2xl font-bold mt-1">It's Not Just Cake!</h3>
                                             <div className="flex items-center gap-1 mt-2">
                                                 {[...Array(5)].map((_, i) => (
                                                     <Star key={i} className="h-4 w-4 fill-amber-400 text-amber-400" />
@@ -64,15 +64,15 @@ export function BookPromoSection() {
 
                         <BlurFade delay={0.2} inView>
                             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground leading-tight">
-                                It's Not Just Cookies!
+                                It's Not Just Cake!
                             </h2>
                         </BlurFade>
 
                         <BlurFade delay={0.3} inView>
                             <p className="text-lg md:text-xl text-muted-foreground leading-relaxed max-w-xl mx-auto lg:mx-0">
                                 Here is the long-awaited story of how Tiffany and Leon Chen turned her batch of
-                                "sorry I stood you up" chocolate chip cookies into a first-of-its-kind
-                                <span className="text-[#c41e3a] font-semibold"> warm-cookie delivery company worth over $500M dollars</span>.
+                                "sorry I stood you up" cakes into a first-of-its-kind
+                                <span className="text-primary font-semibold"> organic cake delivery company focused on blessings</span>.
                             </p>
                         </BlurFade>
 

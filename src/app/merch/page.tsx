@@ -12,7 +12,7 @@ export default function MerchPage() {
                     We're restocking our shelves! New t-shirts, mugs, and hats are coming soon.
                 </p>
                 <Button asChild size="lg" className="rounded-full">
-                    <Link href="/menu">Back to Cookies</Link>
+                    <Link href="/menu">Back to Cakes</Link>
                 </Button>
             </div>
         </div>

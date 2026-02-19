@@ -1,192 +1,391 @@
-
-'use client'
+"use client"
 
 import { useState, useEffect } from "react"
-import { loadStripe } from "@stripe/stripe-js"
-import { Elements } from "@stripe/react-stripe-js"
-import { CheckoutForm } from "@/features/checkout/components/CheckoutForm"
 import { useCartStore } from "@/features/cart/store"
-import { createPaymentIntent } from "@/features/checkout/actions"
-import { Loader2, Minus, Plus, Trash2, ShoppingBag } from "lucide-react"
-import { toast } from "sonner"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { formatCurrency, cn } from "@/lib/utils"
+import { ShoppingBag, ChevronRight, X, User, Search, MapPin, Gift, RotateCcw, Users, Clock, Calendar, Info, CreditCard, ChevronDown, Lock, Check } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { formatCurrency } from "@/lib/utils"
 import Image from "next/image"
 import Link from "next/link"
-import { createClient } from "@/lib/supabase/client"
-
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!)
+import { BlurFade } from "@/components/magicui/blur-fade"
 
 export default function CheckoutPage() {
-    const [clientSecret, setClientSecret] = useState("")
-    const { items, total, updateQuantity, removeItem } = useCartStore()
-    const [taxRate, setTaxRate] = useState(8.0)
-    const [deliveryFeeAmount, setDeliveryFeeAmount] = useState(299)
-    const supabase = createClient()
+    const { items, total, fullAddress, shippingDate, senderInfo, recipientInfo, giftInfo, setCheckoutInfo } = useCartStore()
+    const [currentStep, setCurrentStep] = useState(1)
+    const [expandedStep, setExpandedStep] = useState<number | null>(1)
 
-    useEffect(() => {
-        const fetchSettings = async () => {
-            const { data } = await supabase
-                .from('site_settings')
-                .select('tax_rate, delivery_fee')
-                .single()
-            
-            if (data) {
-                setTaxRate(data.tax_rate || 8.0)
-                setDeliveryFeeAmount(data.delivery_fee || 299)
-            }
-        }
-        fetchSettings()
-    }, [])
-
-    useEffect(() => {
-        if (items.length > 0) {
-            createPaymentIntent(total).then((data) => {
-                if (data.clientSecret) {
-                    setClientSecret(data.clientSecret)
-                } else {
-                    toast.error("Unable to initialize checkout. Please try again.")
-                }
-            })
-        }
-    }, [items, total])
+    const steps = [
+        { id: 1, title: "Shipping Date", icon: Calendar },
+        { id: 2, title: "Your Information", icon: User },
+        { id: 3, title: "Recipient Details", icon: Users },
+        { id: 4, title: "Gift Details", icon: Gift },
+        { id: 5, title: "Payment Information", icon: CreditCard },
+        { id: 6, title: "Review", icon: Info },
+    ]
 
     if (items.length === 0) {
         return (
-            <div className="container mx-auto px-4 md:px-6 py-16">
-                <div className="flex flex-col items-center justify-center min-h-[50vh] gap-6">
-                    <div className="h-20 w-20 rounded-full bg-muted flex items-center justify-center">
-                        <ShoppingBag className="h-10 w-10 text-muted-foreground" />
+            <div className="min-h-screen bg-white flex items-center justify-center p-6">
+                <div className="text-center space-y-8 max-w-sm">
+                    <div className="h-24 w-24 bg-blue-50 rounded-full flex items-center justify-center mx-auto">
+                        <ShoppingBag className="h-12 w-12 text-primary/20" />
                     </div>
-                    <div className="text-center space-y-2">
-                        <h1 className="text-2xl font-heading font-semibold text-foreground">Your cart is empty</h1>
-                        <p className="text-muted-foreground">Add some delicious items to get started.</p>
+                    <div className="space-y-2">
+                        <h1 className="text-2xl font-black text-primary uppercase tracking-tighter">Your cart is empty</h1>
+                        <p className="text-primary/60 font-medium">Add some organic blessings to your cart to proceed with checkout.</p>
                     </div>
-                    <Link href="/#menu">
-                        <Button className="rounded-full px-8">Browse Menu</Button>
+                    <Link href="/menu">
+                        <Button className="w-full h-14 bg-[#001ba0] hover:bg-[#001580] text-white rounded-sm font-black uppercase tracking-widest text-[10px]">
+                            Go to Menu
+                        </Button>
                     </Link>
                 </div>
             </div>
         )
     }
 
-    const subtotal = items.reduce((acc, item) => acc + item.price * item.quantity, 0)
-    const deliveryFee = deliveryFeeAmount
-    const tax = Math.round(subtotal * (taxRate / 100))
-
     return (
-        <div className="container mx-auto px-4 md:px-6 py-10">
-            <h1 className="text-3xl font-heading font-semibold text-foreground mb-8">Checkout</h1>
-            
-            <div className="grid lg:grid-cols-5 gap-8">
-                {/* Payment Form - Left Side */}
-                <div className="lg:col-span-3 order-2 lg:order-1">
-                    <Card className="rounded-2xl border-border">
-                        <CardHeader className="pb-4">
-                            <CardTitle className="text-lg font-semibold">Payment Details</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            {clientSecret ? (
-                                <Elements options={{ clientSecret, appearance: { theme: 'stripe' } }} stripe={stripePromise}>
-                                    <CheckoutForm clientSecret={clientSecret} />
-                                </Elements>
-                            ) : (
-                                <div className="flex flex-col justify-center items-center h-40 gap-4">
-                                    <Loader2 className="h-8 w-8 animate-spin text-primary" />
-                                    <p className="text-sm text-muted-foreground text-center">
-                                        Initializing payment...
-                                    </p>
-                                </div>
-                            )}
-                        </CardContent>
-                    </Card>
+        <div className="min-h-screen bg-white">
+            {/* Header / Nav */}
+            <div className="sticky top-0 z-50 bg-white border-b border-blue-50 py-4 px-6 flex items-center justify-between">
+                <Link href="/" className="flex items-center gap-3">
+                    <div className="h-10 w-10 flex items-center justify-center">
+                        <div className="w-8 h-8 rounded-full border-4 border-[#001ba0] flex items-center justify-center">
+                            <div className="w-2 h-2 bg-[#001ba0] rounded-full" />
+                        </div>
+                    </div>
+                    <span className="text-2xl font-black text-[#001ba0] uppercase tracking-tighter">The A Cake</span>
+                </Link>
+                <div className="flex items-center gap-4">
+                    <button className="text-[10px] font-black uppercase tracking-widest text-[#001ba0] flex items-center gap-2 px-6 h-10 border border-blue-50 rounded-sm hover:bg-blue-50 transition-colors">
+                        <User className="h-3 w-3" />
+                        Log In
+                    </button>
+                    <button
+                        onClick={() => window.location.href = '/menu'}
+                        className="text-[10px] font-black uppercase tracking-widest text-[#001ba0] flex items-center gap-2 px-6 h-10 border border-blue-50 rounded-sm hover:bg-blue-50 transition-colors"
+                    >
+                        <RotateCcw className="h-3 w-3" />
+                        Start Over
+                    </button>
                 </div>
+            </div>
 
-                {/* Order Summary - Right Side */}
-                <div className="lg:col-span-2 order-1 lg:order-2">
-                    <Card className="rounded-2xl border-border sticky top-24">
-                        <CardHeader className="pb-4 border-b border-border">
-                            <CardTitle className="text-lg font-semibold flex items-center justify-between">
-                                Order Summary
-                                <span className="text-sm font-normal text-muted-foreground">
-                                    {items.length} {items.length === 1 ? 'item' : 'items'}
-                                </span>
-                            </CardTitle>
-                        </CardHeader>
-                        <CardContent className="p-0">
-                            {/* Items List */}
-                            <div className="max-h-[300px] overflow-y-auto divide-y divide-border">
-                                {items.map((item) => (
-                                    <div key={item.id} className="p-4 flex gap-3">
-                                        <div className="relative h-16 w-16 rounded-xl overflow-hidden bg-muted shrink-0">
-                                            <Image
-                                                src={item.image_url || '/placeholder-food.jpg'}
-                                                alt={item.name}
-                                                fill
-                                                className="object-cover"
-                                            />
+            <div className="min-h-[calc(100vh-64px)] bg-white overflow-y-auto px-6 py-12 md:px-12 lg:px-24">
+                <div className="max-w-3xl mx-auto space-y-12">
+                    {/* Progress Stepper */}
+                    <div className="space-y-4">
+                        <div className="flex items-center gap-1 h-3 bg-blue-50 rounded-full overflow-hidden">
+                            {steps.map((s) => (
+                                <div
+                                    key={s.id}
+                                    className={cn(
+                                        "flex-1 h-full transition-all duration-500",
+                                        s.id <= currentStep ? "bg-[#001ba0]" : "bg-transparent"
+                                    )}
+                                />
+                            ))}
+                        </div>
+                        <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest text-[#001ba0]/40">
+                            <span>Progress</span>
+                            <span>Step {currentStep}/6</span>
+                        </div>
+                    </div>
+
+                    {/* Step Content */}
+                    <div className="space-y-2">
+                        {steps.map((step) => (
+                            <div
+                                key={step.id}
+                                className={cn(
+                                    "bg-white rounded-sm overflow-hidden transition-all duration-300",
+                                    expandedStep === step.id ? "border border-blue-100 shadow-sm" : "border-b border-blue-50 h-20 flex items-center"
+                                )}
+                            >
+                                <button
+                                    onClick={() => setExpandedStep(expandedStep === step.id ? null : step.id)}
+                                    className={cn(
+                                        "w-full text-left flex items-center justify-between",
+                                        expandedStep === step.id ? "p-8 border-b border-blue-50 bg-blue-50/5" : "px-8"
+                                    )}
+                                >
+                                    <div className="flex items-center gap-6">
+                                        <div className={cn(
+                                            "h-10 w-10 flex items-center justify-center rounded-full text-lg font-black transition-all",
+                                            currentStep >= step.id ? "bg-[#001ba0] text-white" : "bg-blue-50 text-primary/20"
+                                        )}>
+                                            {currentStep > step.id ? <Check className="h-5 w-5" /> : step.id}
                                         </div>
-                                        <div className="flex-1 min-w-0">
-                                            <h4 className="font-medium text-foreground text-sm truncate">{item.name}</h4>
-                                            <p className="text-sm text-primary font-medium mt-0.5">
-                                                {formatCurrency(item.price * item.quantity)}
-                                            </p>
-                                            <div className="flex items-center gap-2 mt-2">
+                                        <h2 className={cn(
+                                            "text-xl font-black uppercase tracking-tighter",
+                                            currentStep >= step.id ? "text-primary" : "text-primary/20"
+                                        )}>
+                                            {step.title}
+                                        </h2>
+                                    </div>
+                                    {expandedStep !== step.id && (
+                                        <ChevronDown className="h-6 w-6 text-primary/20" />
+                                    )}
+                                </button>
+
+                                {expandedStep === step.id && (
+                                    <BlurFade delay={0.1} className="p-8 space-y-8">
+                                        {step.id === 1 && (
+                                            <div className="space-y-6">
+                                                <div className="space-y-2">
+                                                    <h3 className="text-xl font-bold text-primary">Shipping Date</h3>
+                                                    <p className="text-sm text-primary/60 italic font-medium leading-relaxed">
+                                                        Select when you would like your treats to ship. <br />
+                                                        <span className="text-[#001ba0]">Orders ship out on your selected date and transit time is 1-3 days.</span>
+                                                    </p>
+                                                </div>
+                                                <div className="relative">
+                                                    <input
+                                                        type="date"
+                                                        value={shippingDate || ""}
+                                                        onChange={(e) => setCheckoutInfo({ shippingDate: e.target.value })}
+                                                        className="w-full h-14 border-2 border-blue-100 rounded-sm px-6 outline-none focus:border-[#001ba0] font-medium text-primary transition-all"
+                                                    />
+                                                </div>
                                                 <Button
-                                                    variant="outline"
-                                                    size="icon"
-                                                    className="h-7 w-7 rounded-full"
-                                                    onClick={() => updateQuantity(item.id, Math.max(0, item.quantity - 1))}
+                                                    onClick={() => { setCurrentStep(2); setExpandedStep(2); }}
+                                                    disabled={!shippingDate}
+                                                    className="w-full h-14 bg-[#001ba0] hover:bg-[#001580] text-white rounded-sm font-black uppercase tracking-widest text-[10px]"
                                                 >
-                                                    <Minus className="h-3 w-3" />
-                                                </Button>
-                                                <span className="text-sm font-medium w-6 text-center">{item.quantity}</span>
-                                                <Button
-                                                    variant="outline"
-                                                    size="icon"
-                                                    className="h-7 w-7 rounded-full"
-                                                    onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                                                >
-                                                    <Plus className="h-3 w-3" />
-                                                </Button>
-                                                <Button
-                                                    variant="ghost"
-                                                    size="icon"
-                                                    className="h-7 w-7 rounded-full ml-auto text-muted-foreground hover:text-destructive"
-                                                    onClick={() => removeItem(item.id)}
-                                                >
-                                                    <Trash2 className="h-3.5 w-3.5" />
+                                                    Continue
                                                 </Button>
                                             </div>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
+                                        )}
+                                        {step.id === 2 && (
+                                            <div className="space-y-6">
+                                                <div className="grid grid-cols-2 gap-4">
+                                                    <div className="space-y-2">
+                                                        <label className="text-[10px] font-black uppercase tracking-widest text-primary/40">First Name</label>
+                                                        <input
+                                                            type="text"
+                                                            value={senderInfo?.firstName || ""}
+                                                            onChange={(e) => setCheckoutInfo({ senderInfo: { ...senderInfo!, firstName: e.target.value } })}
+                                                            className="w-full h-14 border-2 border-blue-100 rounded-sm px-6 outline-none focus:border-[#001ba0] font-medium text-primary transition-all"
+                                                            placeholder="Abraham"
+                                                        />
+                                                    </div>
+                                                    <div className="space-y-2">
+                                                        <label className="text-[10px] font-black uppercase tracking-widest text-primary/40">Last Name</label>
+                                                        <input
+                                                            type="text"
+                                                            value={senderInfo?.lastName || ""}
+                                                            onChange={(e) => setCheckoutInfo({ senderInfo: { ...senderInfo!, lastName: e.target.value } })}
+                                                            className="w-full h-14 border-2 border-blue-100 rounded-sm px-6 outline-none focus:border-[#001ba0] font-medium text-primary transition-all"
+                                                            placeholder="Delight"
+                                                        />
+                                                    </div>
+                                                </div>
+                                                <div className="space-y-2">
+                                                    <label className="text-[10px] font-black uppercase tracking-widest text-primary/40">Email Address</label>
+                                                    <input
+                                                        type="email"
+                                                        value={senderInfo?.email || ""}
+                                                        onChange={(e) => setCheckoutInfo({ senderInfo: { ...senderInfo!, email: e.target.value } })}
+                                                        className="w-full h-14 border-2 border-blue-100 rounded-sm px-6 outline-none focus:border-[#001ba0] font-medium text-primary transition-all"
+                                                        placeholder="hello@theacake.com"
+                                                    />
+                                                </div>
+                                                <div className="space-y-2">
+                                                    <label className="text-[10px] font-black uppercase tracking-widest text-primary/40">Phone Number</label>
+                                                    <input
+                                                        type="tel"
+                                                        value={senderInfo?.phone || ""}
+                                                        onChange={(e) => setCheckoutInfo({ senderInfo: { ...senderInfo!, phone: e.target.value } })}
+                                                        className="w-full h-14 border-2 border-blue-100 rounded-sm px-6 outline-none focus:border-[#001ba0] font-medium text-primary transition-all"
+                                                        placeholder="(832) 713-0868"
+                                                    />
+                                                </div>
+                                                <Button
+                                                    onClick={() => { setCurrentStep(3); setExpandedStep(3); }}
+                                                    disabled={!senderInfo?.firstName || !senderInfo?.lastName || !senderInfo?.email || !senderInfo?.phone}
+                                                    className="w-full h-14 bg-[#001ba0] hover:bg-[#001580] text-white rounded-sm font-black uppercase tracking-widest text-[10px]"
+                                                >
+                                                    Continue
+                                                </Button>
+                                            </div>
+                                        )}
+                                        {step.id === 3 && (
+                                            <div className="space-y-6">
+                                                <div className="space-y-2">
+                                                    <label className="text-[10px] font-black uppercase tracking-widest text-primary/40">Recipient Name</label>
+                                                    <input
+                                                        type="text"
+                                                        value={recipientInfo?.name || ""}
+                                                        onChange={(e) => setCheckoutInfo({ recipientInfo: { ...recipientInfo!, name: e.target.value } })}
+                                                        className="w-full h-14 border-2 border-blue-100 rounded-sm px-6 outline-none focus:border-[#001ba0] font-medium text-primary transition-all"
+                                                        placeholder="Mary Jane"
+                                                    />
+                                                </div>
+                                                <div className="space-y-2">
+                                                    <label className="text-[10px] font-black uppercase tracking-widest text-primary/40">Delivery Address</label>
+                                                    <input
+                                                        type="text"
+                                                        value={recipientInfo?.address || fullAddress || ""}
+                                                        onChange={(e) => setCheckoutInfo({ recipientInfo: { ...recipientInfo!, address: e.target.value } })}
+                                                        className="w-full h-14 border-2 border-blue-100 rounded-sm px-6 outline-none focus:border-[#001ba0] font-medium text-primary transition-all"
+                                                        placeholder="123 Blessing Lane, Houston, TX"
+                                                    />
+                                                </div>
+                                                <div className="space-y-2">
+                                                    <label className="text-[10px] font-black uppercase tracking-widest text-primary/40">Special Instructions (Optional)</label>
+                                                    <textarea
+                                                        value={recipientInfo?.instructions || ""}
+                                                        onChange={(e) => setCheckoutInfo({ recipientInfo: { ...recipientInfo!, instructions: e.target.value } })}
+                                                        className="w-full h-32 border-2 border-blue-100 rounded-sm p-6 outline-none focus:border-[#001ba0] font-medium text-primary transition-all resize-none"
+                                                        placeholder="Gate code 1234, leave at the front door..."
+                                                    />
+                                                </div>
+                                                <Button
+                                                    onClick={() => { setCurrentStep(4); setExpandedStep(4); }}
+                                                    disabled={!recipientInfo?.name || (!recipientInfo?.address && !fullAddress)}
+                                                    className="w-full h-14 bg-[#001ba0] hover:bg-[#001580] text-white rounded-sm font-black uppercase tracking-widest text-[10px]"
+                                                >
+                                                    Continue
+                                                </Button>
+                                            </div>
+                                        )}
+                                        {step.id === 4 && (
+                                            <div className="space-y-6">
+                                                <div className="space-y-2">
+                                                    <label className="text-[10px] font-black uppercase tracking-widest text-primary/40">Gift Message (Optional)</label>
+                                                    <textarea
+                                                        value={giftInfo?.message || ""}
+                                                        onChange={(e) => setCheckoutInfo({ giftInfo: { ...giftInfo!, message: e.target.value } })}
+                                                        className="w-full h-32 border-2 border-blue-100 rounded-sm p-6 outline-none focus:border-[#001ba0] font-medium text-primary transition-all resize-none"
+                                                        placeholder="To: [Name], Message: [Your Message], From: [Your Name]"
+                                                    />
+                                                </div>
+                                                <div className="flex items-center gap-4 p-6 bg-blue-50/20 border border-blue-50 rounded-sm">
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={giftInfo?.isGiftWrapped || false}
+                                                        onChange={(e) => setCheckoutInfo({ giftInfo: { ...giftInfo!, isGiftWrapped: e.target.checked } })}
+                                                        className="h-5 w-5 rounded border-blue-100 text-[#001ba0] focus:ring-[#001ba0]"
+                                                        id="gift-wrap"
+                                                    />
+                                                    <label htmlFor="gift-wrap" className="flex-1 cursor-pointer">
+                                                        <span className="block text-sm font-black uppercase tracking-widest text-[#001ba0]">Signature Gift Wrapping</span>
+                                                        <span className="block text-[10px] text-primary/40 font-medium">Add a beautiful royal blue ribbon and gold seal to your Blessing.</span>
+                                                    </label>
+                                                    <Gift className="h-6 w-6 text-[#001ba0]/20" />
+                                                </div>
+                                                <Button
+                                                    onClick={() => { setCurrentStep(5); setExpandedStep(5); }}
+                                                    className="w-full h-14 bg-[#001ba0] hover:bg-[#001580] text-white rounded-sm font-black uppercase tracking-widest text-[10px]"
+                                                >
+                                                    Continue
+                                                </Button>
+                                            </div>
+                                        )}
+                                        {step.id === 5 && (
+                                            <div className="space-y-6">
+                                                <div className="p-8 bg-blue-50/10 border border-blue-50 rounded-sm space-y-6">
+                                                    <div className="space-y-2">
+                                                        <label className="text-[10px] font-black uppercase tracking-widest text-primary/40">Card Number</label>
+                                                        <div className="relative">
+                                                            <input
+                                                                type="text"
+                                                                className="w-full h-14 border-2 border-blue-100 rounded-sm px-6 pr-12 outline-none focus:border-[#001ba0] font-medium text-primary transition-all tracking-[0.2em]"
+                                                                placeholder="0000 0000 0000 0000"
+                                                            />
+                                                            <CreditCard className="absolute right-4 top-1/2 -translate-y-1/2 h-5 w-5 text-primary/20" />
+                                                        </div>
+                                                    </div>
+                                                    <div className="grid grid-cols-3 gap-4">
+                                                        <div className="space-y-2">
+                                                            <label className="text-[10px] font-black uppercase tracking-widest text-primary/40">Expiry</label>
+                                                            <input
+                                                                type="text"
+                                                                className="w-full h-14 border-2 border-blue-100 rounded-sm px-6 outline-none focus:border-[#001ba0] font-medium text-primary transition-all"
+                                                                placeholder="MM/YY"
+                                                            />
+                                                        </div>
+                                                        <div className="space-y-2">
+                                                            <label className="text-[10px] font-black uppercase tracking-widest text-primary/40">CVV</label>
+                                                            <input
+                                                                type="text"
+                                                                className="w-full h-14 border-2 border-blue-100 rounded-sm px-6 outline-none focus:border-[#001ba0] font-medium text-primary transition-all"
+                                                                placeholder="123"
+                                                            />
+                                                        </div>
+                                                        <div className="space-y-2">
+                                                            <label className="text-[10px] font-black uppercase tracking-widest text-primary/40">Billing Zip</label>
+                                                            <input
+                                                                type="text"
+                                                                className="w-full h-14 border-2 border-blue-100 rounded-sm px-6 outline-none focus:border-[#001ba0] font-medium text-primary transition-all"
+                                                                placeholder="77001"
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-widest text-primary/40 px-2">
+                                                    <Lock className="h-3 w-3" />
+                                                    Secure 256-bit SSL encrypted payment
+                                                </div>
+                                                <Button
+                                                    onClick={() => { setCurrentStep(6); setExpandedStep(6); }}
+                                                    className="w-full h-14 bg-[#001ba0] hover:bg-[#001580] text-white rounded-sm font-black uppercase tracking-widest text-[10px]"
+                                                >
+                                                    Review & Place Order
+                                                </Button>
+                                            </div>
+                                        )}
+                                        {step.id === 6 && (
+                                            <div className="space-y-8">
+                                                <div className="space-y-4">
+                                                    <h3 className="text-xl font-bold text-primary">Order Review</h3>
+                                                    <p className="text-sm text-primary/60 italic font-medium leading-relaxed">
+                                                        Please confirm all details before placing your blessing.
+                                                    </p>
+                                                </div>
 
-                            {/* Price Breakdown */}
-                            <div className="p-4 border-t border-border space-y-3">
-                                <div className="flex justify-between text-sm">
-                                    <span className="text-muted-foreground">Subtotal</span>
-                                    <span className="text-foreground">{formatCurrency(subtotal)}</span>
-                                </div>
-                                <div className="flex justify-between text-sm">
-                                    <span className="text-muted-foreground">Delivery Fee</span>
-                                    <span className="text-foreground">{formatCurrency(deliveryFee)}</span>
-                                </div>
-                                <div className="flex justify-between text-sm">
-                                    <span className="text-muted-foreground">Tax ({taxRate}%)</span>
-                                    <span className="text-foreground">{formatCurrency(tax)}</span>
-                                </div>
-                                <div className="flex justify-between text-base font-semibold pt-3 border-t border-border">
-                                    <span className="text-foreground">Total</span>
-                                    <span className="text-primary">{formatCurrency(subtotal + deliveryFee + tax)}</span>
-                                </div>
+                                                <div className="grid md:grid-cols-2 gap-8">
+                                                    <div className="space-y-4">
+                                                        <div className="p-6 border border-blue-50 rounded-sm space-y-2">
+                                                            <h4 className="text-[10px] font-black uppercase tracking-widest text-primary/40">Shipping Address</h4>
+                                                            <p className="text-sm font-bold text-primary">{recipientInfo?.name || "Abraham Delight"}</p>
+                                                            <p className="text-xs text-primary/60 font-medium">{recipientInfo?.address || fullAddress || "123 Main St, Houston, TX"}</p>
+                                                        </div>
+                                                        <div className="p-6 border border-blue-50 rounded-sm space-y-2">
+                                                            <h4 className="text-[10px] font-black uppercase tracking-widest text-primary/40">Shipping Date</h4>
+                                                            <p className="text-sm font-bold text-primary">{shippingDate ? new Date(shippingDate).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' }) : "Select a date"}</p>
+                                                        </div>
+                                                    </div>
+                                                    <div className="space-y-4">
+                                                        <div className="p-6 border border-blue-50 rounded-sm space-y-2">
+                                                            <h4 className="text-[10px] font-black uppercase tracking-widest text-primary/40">Your Information</h4>
+                                                            <p className="text-sm font-bold text-primary">{senderInfo?.firstName} {senderInfo?.lastName}</p>
+                                                            <p className="text-xs text-primary/60 font-medium">{senderInfo?.email}</p>
+                                                            <p className="text-xs text-primary/60 font-medium">{senderInfo?.phone}</p>
+                                                        </div>
+                                                        <div className="p-6 border border-blue-50 rounded-sm space-y-2">
+                                                            <h4 className="text-[10px] font-black uppercase tracking-widest text-primary/40">Gift Message</h4>
+                                                            <p className="text-xs text-primary/60 font-medium italic">{giftInfo?.message || "No message provided."}</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <Button
+                                                    onClick={() => { alert('Blessing Placed Successfully!'); window.location.href = '/tracker'; }}
+                                                    className="w-full h-14 bg-[#001ba0] hover:bg-[#001580] text-white rounded-sm font-black uppercase tracking-widest text-[10px]"
+                                                >
+                                                    Place Order ({formatCurrency(total)})
+                                                </Button>
+                                            </div>
+                                        )}
+                                    </BlurFade>
+                                )}
                             </div>
-                        </CardContent>
-                    </Card>
+                        ))}
+                    </div>
                 </div>
             </div>
         </div>
     )
 }
+

@@ -40,7 +40,7 @@ export default function AdminPage() {
             .from('site_settings')
             .select('*')
             .single();
-        
+
         if (data) {
             setTaxRate(data.tax_rate || 8.0);
             setDeliveryFee(data.delivery_fee || 299);
@@ -49,13 +49,13 @@ export default function AdminPage() {
 
     const saveSettings = async () => {
         setSavingSettings(true);
-        
+
         const { error } = await supabase
             .from('site_settings')
-            .upsert({ 
+            .upsert({
                 id: 1,
-                tax_rate: taxRate, 
-                delivery_fee: deliveryFee 
+                tax_rate: taxRate,
+                delivery_fee: deliveryFee
             });
 
         if (error) {
@@ -63,7 +63,7 @@ export default function AdminPage() {
         } else {
             toast.success("Settings saved successfully!");
         }
-        
+
         setSavingSettings(false);
     };
 
@@ -161,7 +161,7 @@ export default function AdminPage() {
                         <ShieldCheck className="h-6 w-6 text-primary" />
                     </div>
                     <h1 className="mt-5 text-2xl font-heading font-semibold text-foreground">Admin access</h1>
-                    <p className="mt-2 text-muted-foreground">Sign in to curate today’s menu for Foody.</p>
+                    <p className="mt-2 text-muted-foreground">Sign in to curate today’s menu for The A Cake.</p>
                     <Button onClick={() => router.push('/login')} className="mt-6 rounded-full" variant="outline">
                         Sign In
                     </Button>
@@ -169,8 +169,8 @@ export default function AdminPage() {
                         <div className="mt-8 p-4 rounded-2xl bg-muted/50 border border-border text-left">
                             <p className="text-xs font-semibold text-foreground mb-2">Demo Admin Credentials</p>
                             <div className="space-y-1 text-xs text-muted-foreground font-mono">
-                                <p>Email: admin@foody.com</p>
-                                <p>Password: FoodyAdmin123!</p>
+                                <p>Email: admin@theacake.com</p>
+                                <p>Password: AbrahamAdmin123!</p>
                             </div>
                             <p className="text-[10px] text-muted-foreground mt-3">
                                 See ADMIN_SETUP.md for setup instructions
@@ -210,7 +210,7 @@ export default function AdminPage() {
                             <Sparkles className="h-5 w-5 text-primary" />
                         </div>
                         <div>
-                            <p className="text-xs tracking-widest uppercase text-muted-foreground">Foody Admin</p>
+                            <p className="text-xs tracking-widest uppercase text-muted-foreground">The A Cake Admin</p>
                             <h1 className="text-3xl sm:text-4xl font-heading font-semibold text-foreground leading-tight">
                                 Today’s Menu
                             </h1>
@@ -373,7 +373,7 @@ export default function AdminPage() {
                                     <p className="font-medium text-foreground">Example Order:</p>
                                     <p>$50.00 subtotal + ${deliveryFee.toFixed(2)} delivery + ${(50 * taxRate / 100).toFixed(2)} tax = <span className="font-semibold text-primary">${(50 + deliveryFee + (50 * taxRate / 100)).toFixed(2)}</span></p>
                                 </div>
-                                <Button 
+                                <Button
                                     onClick={saveSettings}
                                     disabled={savingSettings}
                                     className="rounded-full gap-2"

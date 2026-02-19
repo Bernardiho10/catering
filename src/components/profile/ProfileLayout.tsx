@@ -15,14 +15,33 @@ import {
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
-// import { useAuth } from "@/lib/auth" // Placeholder for when we have real auth
+import { createClient } from "@/lib/supabase/client"
+import { useEffect } from "react"
+import { toast } from "sonner"
 
 export default function ProfileLayout({ children }: { children: React.ReactNode }) {
     const pathname = usePathname()
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+    const [user, setUser] = useState<any>(null)
+    const supabase = createClient()
 
-    // Mock user for "Welcome" message in header if needed
-    const user = { name: "Bernarhido" }
+    useEffect(() => {
+        const getUser = async () => {
+            const { data: { user } } = await supabase.auth.getUser()
+            setUser(user)
+        }
+        getUser()
+    }, [])
+
+    const handleSignOut = async () => {
+        const { error } = await supabase.auth.signOut()
+        if (error) {
+            toast.error(error.message)
+        } else {
+            toast.success("Signed out successfully")
+            window.location.href = "/"
+        }
+    }
 
     const navigation = [
         { name: "Dashboard", href: "/profile", icon: LayoutDashboard },
@@ -51,7 +70,9 @@ export default function ProfileLayout({ children }: { children: React.ReactNode 
                         isMobileMenuOpen ? "fixed inset-0 top-[120px] z-50 p-4 m-0 rounded-none h-[calc(100vh-120px)] overflow-y-auto" : "hidden"
                     )}>
                         <div className="p-6 border-b">
-                            <h2 className="text-xl font-bold font-heading">Welcome, {user.name}</h2>
+                            <h2 className="text-xl font-bold font-heading">
+                                Welcome, {user?.user_metadata?.full_name?.split(' ')[0] || user?.email?.split('@')[0] || "Guest"}
+                            </h2>
                             <p className="text-sm text-muted-foreground mt-1">Tier: <span className="text-amber-600 font-semibold">Gold Elite</span></p>
                         </div>
                         <nav className="p-4 space-y-1">
@@ -73,10 +94,7 @@ export default function ProfileLayout({ children }: { children: React.ReactNode 
                             })}
                             <div className="pt-4 mt-4 border-t">
                                 <button
-                                    onClick={() => {
-                                        localStorage.removeItem("isLoggedIn")
-                                        window.location.href = "/"
-                                    }}
+                                    onClick={handleSignOut}
                                     className="w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-colors font-medium text-sm text-red-500 hover:bg-red-50 dark:hover:bg-red-950/20"
                                 >
                                     <LogOut className="h-5 w-5" />

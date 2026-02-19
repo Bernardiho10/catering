@@ -19,7 +19,7 @@ import {
 const LOCATIONS = [
   {
     id: "jackson-kitchen",
-    name: "Foody Kitchen — Jackson",
+    name: "Abraham's Kitchen — Jackson",
     address: "Jackson, MS",
     hours: "Daily 10:00 AM – 10:00 PM",
     phone: "(555) 010-0101",
@@ -27,7 +27,7 @@ const LOCATIONS = [
   },
   {
     id: "texas-kitchen",
-    name: "Foody Kitchen — Texas Metro",
+    name: "Abraham's Kitchen — Texas Metro",
     address: "Houston / Dallas / Austin / San Antonio, TX",
     hours: "Daily 10:00 AM – 10:00 PM",
     phone: "(555) 020-0202",
@@ -35,7 +35,7 @@ const LOCATIONS = [
   },
   {
     id: "chicago-kitchen",
-    name: "Foody Kitchen — Chicago",
+    name: "Abraham's Kitchen — Chicago",
     address: "Chicago, IL",
     hours: "Daily 10:00 AM – 10:00 PM",
     phone: "(555) 030-0303",
@@ -147,9 +147,8 @@ export default function LocationsDeliveriesPage() {
 
                 {eligibility && (
                   <div
-                    className={`rounded-2xl border p-4 flex gap-3 items-start ${
-                      eligibility.eligible ? "border-emerald-500/30 bg-emerald-500/10" : "border-destructive/30 bg-destructive/10"
-                    }`}
+                    className={`rounded-2xl border p-4 flex gap-3 items-start ${eligibility.eligible ? "border-emerald-500/30 bg-emerald-500/10" : "border-destructive/30 bg-destructive/10"
+                      }`}
                     role="status"
                     aria-live="polite"
                   >

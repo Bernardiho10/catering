@@ -63,11 +63,10 @@ export function ProductDialog({ item, open, onOpenChange }: ProductDialogProps) 
                                 <button
                                     key={idx}
                                     onClick={() => setSelectedImageIndex(idx)}
-                                    className={`relative w-12 h-12 flex-shrink-0 rounded-lg overflow-hidden border-2 transition-all ${
-                                        selectedImageIndex === idx 
-                                            ? 'border-primary' 
+                                    className={`relative w-12 h-12 flex-shrink-0 rounded-lg overflow-hidden border-2 transition-all ${selectedImageIndex === idx
+                                            ? 'border-primary'
                                             : 'border-transparent opacity-70 hover:opacity-100'
-                                    }`}
+                                        }`}
                                 >
                                     <Image
                                         src={img}
@@ -86,7 +85,7 @@ export function ProductDialog({ item, open, onOpenChange }: ProductDialogProps) 
                         <DialogHeader className="space-y-3">
                             <div className="flex items-center gap-2 text-sm text-muted-foreground">
                                 <Clock className="h-4 w-4" />
-                                <span>Ready in 25 min</span>
+                                <span>Baked Fresh Daily</span>
                             </div>
                             <DialogTitle className="text-2xl font-heading font-semibold text-foreground">
                                 {item.name}
@@ -132,9 +131,9 @@ export function ProductDialog({ item, open, onOpenChange }: ProductDialogProps) 
                                 </Button>
                             </div>
 
-                            <Button 
-                                onClick={handleAddToCart} 
-                                className="w-full rounded-full h-12" 
+                            <Button
+                                onClick={handleAddToCart}
+                                className="w-full rounded-full h-12"
                                 size="lg"
                             >
                                 <ShoppingBag className="w-4 h-4 mr-2" />

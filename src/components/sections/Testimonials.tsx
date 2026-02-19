@@ -11,7 +11,7 @@ const testimonials = [
         role: "Event Planner",
         avatar: "SM",
         rating: 5,
-        text: "Foody catered our company holiday party and exceeded every expectation. The food was restaurant-quality, presentation was stunning, and the team was incredibly professional.",
+        text: "The A Cake catered our company holiday party and exceeded every expectation. The desserts were organic, stunningly presented, and our entire team felt the blessing in every bite.",
     },
     {
         id: 2,
@@ -27,7 +27,7 @@ const testimonials = [
         role: "Regular Customer",
         avatar: "JK",
         rating: 5,
-        text: "I order from Foody every week for family dinners. The Buddha bowls are my kids' favorite, and I love that everything is fresh and healthy.",
+        text: "I order from Abraham's every week for family celebrations. The organic sampler boxes are my kids' favorite—pure ingredients I can actually trust.",
     },
 ]
 
@@ -41,7 +41,7 @@ export function Testimonials() {
                         Loved by food enthusiasts
                     </h2>
                     <p className="text-muted-foreground max-w-xl mx-auto">
-                        See what our customers have to say about their Foody experience.
+                        See what our customers have to say about their experience with The A Cake.
                     </p>
                 </div>
 
@@ -57,7 +57,7 @@ export function Testimonials() {
                             <Card className="h-full bg-card border-border rounded-2xl">
                                 <CardContent className="p-6 space-y-4">
                                     <Quote className="h-8 w-8 text-primary/20" />
-                                    
+
                                     <div className="flex gap-0.5">
                                         {Array.from({ length: testimonial.rating }).map((_, i) => (
                                             <Star key={i} className="h-4 w-4 fill-amber-400 text-amber-400" />

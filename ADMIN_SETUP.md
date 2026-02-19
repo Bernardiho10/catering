@@ -1,10 +1,10 @@
-# Foody Admin Setup Guide
+# The A Cake Admin Setup Guide
 
 ## Demo Admin Credentials
 
 ```
-Email: admin@foody.com
-Password: FoodyAdmin123!
+Email: admin@theacake.com
+Password: AbrahamAdmin123!
 ```
 
 ## Setup Instructions
@@ -14,8 +14,8 @@ Password: FoodyAdmin123!
 1. Go to your Supabase Dashboard → Authentication → Users
 2. Click "Add User" → "Create New User"
 3. Enter:
-   - Email: `admin@foody.com`
-   - Password: `FoodyAdmin123!`
+   - Email: `admin@theacake.com`
+   - Password: `AbrahamAdmin123!`
 4. Click "Create User"
 
 ### Step 2: Set User as Admin
@@ -24,7 +24,7 @@ Password: FoodyAdmin123!
 2. First, find the user's UUID:
 
 ```sql
-SELECT id, email FROM auth.users WHERE email = 'admin@foody.com';
+SELECT id, email FROM auth.users WHERE email = 'admin@theacake.com';
 ```
 
 3. Copy the UUID from the result
@@ -33,14 +33,14 @@ SELECT id, email FROM auth.users WHERE email = 'admin@foody.com';
 ```sql
 -- Replace YOUR_UUID with the actual UUID from step 2
 INSERT INTO public.users (id, full_name, role)
-VALUES ('YOUR_UUID', 'Foody Admin', 'admin')
+VALUES ('YOUR_UUID', 'Abraham Admin', 'admin')
 ON CONFLICT (id) DO UPDATE SET role = 'admin';
 ```
 
 ### Step 3: Verify Setup
 
 1. Go to http://localhost:3000/login
-2. Sign in with admin@foody.com / FoodyAdmin123!
+2. Sign in with admin@theacake.com / AbrahamAdmin123!
 3. Navigate to http://localhost:3000/admin
 4. You should see the admin dashboard
 

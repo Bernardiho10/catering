@@ -2,50 +2,52 @@
 
 import { useState } from "react"
 import { motion } from "framer-motion"
-import { Phone, Mail, MapPin, Clock, Send, MessageSquare, Users, Building } from "lucide-react"
+import Image from "next/image"
+import { Phone, Mail, MapPin, Clock, Send, MessageSquare, Users, Building, Heart, Sparkles } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { toast } from "sonner"
+import { BlurFade } from "@/components/magicui/blur-fade"
 
 const CONTACT_INFO = [
   {
     icon: Phone,
-    title: "Phone",
-    value: "(555) 123-4567",
-    description: "Mon-Fri 9am-9pm, Sat-Sun 10am-8pm",
-    action: "tel:+15551234567"
+    title: "Call Us",
+    value: "832-713-0868",
+    description: "Mon-Sat 8am-10pm",
+    action: "tel:+18327130868"
   },
   {
     icon: Mail,
-    title: "Email",
-    value: "hello@foody.com",
+    title: "Email Us",
+    value: "hello@theacake.com",
     description: "We respond within 24 hours",
-    action: "mailto:hello@foody.com"
+    action: "mailto:hello@theacake.com"
   },
   {
     icon: MapPin,
-    title: "Kitchen Location",
-    value: "123 Culinary Street",
-    description: "Austin, TX 78701",
-    action: "https://maps.google.com"
+    title: "Location",
+    value: "Houston/Texas",
+    description: "Our Heart & Kitchen",
+    action: "/locations"
   },
   {
-    icon: Clock,
-    title: "Hours",
-    value: "Open Daily",
-    description: "10:00 AM - 10:00 PM",
-    action: null
+    icon: Heart,
+    title: "Support",
+    value: "Track Your Order",
+    description: "Checking on your cake?",
+    action: "/tracker"
   }
 ]
 
 const INQUIRY_TYPES = [
-  { id: "general", label: "General Inquiry", icon: MessageSquare },
-  { id: "catering", label: "Catering Request", icon: Users },
-  { id: "corporate", label: "Corporate Account", icon: Building },
-  { id: "feedback", label: "Feedback", icon: Mail },
+  { id: "general", label: "General", icon: MessageSquare },
+  { id: "catering", label: "Catering", icon: Users },
+  { id: "events", label: "Events", icon: Sparkles },
+  { id: "wholesale", label: "Wholesale", icon: Building },
 ]
 
 export default function ContactPage() {
@@ -61,18 +63,18 @@ export default function ContactPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    
+
     if (!formData.name || !formData.email || !formData.message) {
       toast.error("Please fill in all required fields")
       return
     }
 
     setIsSubmitting(true)
-    
+
     // Simulate form submission
     await new Promise(resolve => setTimeout(resolve, 1500))
-    
-    toast.success("Message sent! We'll get back to you soon.")
+
+    toast.success("Thank you for reaching out! We&apos;ll be in touch soon.")
     setFormData({
       name: "",
       email: "",
@@ -85,251 +87,182 @@ export default function ContactPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background via-blue-50/20 to-background dark:from-background dark:via-blue-950/10 dark:to-background">
+    <div className="min-h-screen bg-white">
       {/* Hero Section */}
-      <section className="relative py-16 md:py-24">
-        <div className="container mx-auto px-4 md:px-6">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="text-center max-w-3xl mx-auto"
-          >
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-amber-500/10 via-primary/10 to-blue-500/10 rounded-full text-amber-600 dark:text-amber-400 text-sm font-medium border border-amber-200/50 dark:border-amber-500/20 mb-6">
-              <MessageSquare className="h-4 w-4" />
-              Get in Touch
+      <section className="relative py-24 md:py-32 bg-primary text-white overflow-hidden">
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-white rounded-full blur-3xl -translate-x-1/2 translate-y-1/2" />
+        </div>
+        <div className="container mx-auto px-4 md:px-6 relative z-10 text-center">
+          <BlurFade delay={0.1} inView>
+            <div className="max-w-4xl mx-auto space-y-8">
+              <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 rounded-sm">
+                <MessageSquare className="h-4 w-4" />
+                <span className="text-[10px] font-black uppercase tracking-[0.2em]">The A Cake</span>
+              </div>
+              <h1 className="text-4xl md:text-7xl font-black uppercase tracking-tighter leading-none">
+                Get in <br />
+                <span className="text-accent italic font-serif normal-case tracking-normal">Touch</span>
+              </h1>
+              <p className="text-xl md:text-2xl text-white/80 leading-relaxed font-medium max-w-2xl mx-auto italic font-serif">
+                We&apos;d love to hear from you.
+              </p>
             </div>
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-heading font-bold text-foreground mb-4">
-              We'd Love to <span className="text-golden">Hear From You</span>
-            </h1>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Have a question, feedback, or want to discuss catering for your next event? We're here to help.
-            </p>
-          </motion.div>
+          </BlurFade>
         </div>
       </section>
 
-      {/* Contact Info Cards */}
-      <section className="pb-12">
-        <div className="container mx-auto px-4 md:px-6">
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-5xl mx-auto">
-            {CONTACT_INFO.map((info, index) => (
-              <motion.div
-                key={info.title}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-              >
-                <Card className="rounded-2xl h-full hover:shadow-lg transition-shadow">
-                  <CardContent className="p-6 text-center">
-                    <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-amber-500 to-primary flex items-center justify-center mx-auto mb-4">
-                      <info.icon className="h-6 w-6 text-white" />
-                    </div>
-                    <h3 className="font-semibold text-foreground mb-1">{info.title}</h3>
-                    {info.action ? (
-                      <a 
-                        href={info.action} 
-                        className="text-primary hover:underline font-medium"
-                        target={info.action.startsWith("http") ? "_blank" : undefined}
-                      >
-                        {info.value}
-                      </a>
-                    ) : (
-                      <p className="text-primary font-medium">{info.value}</p>
-                    )}
-                    <p className="text-sm text-muted-foreground mt-1">{info.description}</p>
-                  </CardContent>
-                </Card>
-              </motion.div>
+      {/* Contact Cards Grid */}
+      <section className="py-24 border-b border-blue-50">
+        <div className="container mx-auto px-4">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
+            {CONTACT_INFO.map((info, idx) => (
+              <BlurFade key={info.title} delay={0.1 + idx * 0.1} inView>
+                <a
+                  href={info.action || "#"}
+                  className="block h-full bg-white p-8 rounded-sm border border-blue-50 hover:shadow-2xl transition-all duration-500 group text-center"
+                >
+                  <div className="h-14 w-14 rounded-sm bg-blue-50 flex items-center justify-center border border-blue-100/50 mx-auto mb-6 group-hover:bg-primary transition-colors">
+                    <info.icon className="h-6 w-6 text-primary group-hover:text-white transition-colors" />
+                  </div>
+                  <h3 className="text-[10px] font-black uppercase tracking-widest text-primary/40 mb-2">{info.title}</h3>
+                  <p className="text-sm font-black text-primary uppercase tracking-widest mb-2 group-hover:text-accent transition-colors">{info.value}</p>
+                  <p className="text-[10px] font-medium text-primary/60">{info.description}</p>
+                </a>
+              </BlurFade>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Contact Form Section */}
-      <section className="pb-20">
+      {/* Main Content Area */}
+      <section className="py-24 md:py-32">
         <div className="container mx-auto px-4 md:px-6">
-          <div className="grid lg:grid-cols-5 gap-8 max-w-6xl mx-auto">
-            {/* Form */}
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              className="lg:col-span-3"
-            >
-              <Card className="rounded-3xl">
-                <CardHeader>
-                  <CardTitle className="text-xl">Send Us a Message</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <form onSubmit={handleSubmit} className="space-y-6">
-                    {/* Inquiry Type */}
-                    <div className="space-y-2">
-                      <Label>What can we help you with?</Label>
-                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                        {INQUIRY_TYPES.map((type) => (
-                          <button
-                            key={type.id}
-                            type="button"
-                            onClick={() => setFormData({ ...formData, inquiryType: type.id })}
-                            className={`p-3 rounded-xl border-2 text-sm font-medium transition-all flex flex-col items-center gap-2 ${
-                              formData.inquiryType === type.id
-                                ? "border-primary bg-primary/10 text-primary"
-                                : "border-border hover:border-primary/50"
+          <div className="grid lg:grid-cols-2 gap-20 items-start max-w-6xl mx-auto">
+            {/* Form Side */}
+            <div className="space-y-12">
+              <BlurFade delay={0.1} inView>
+                <div className="space-y-6">
+                  <h2 className="text-3xl md:text-5xl font-black text-primary uppercase tracking-tighter leading-tight">
+                    Send a <br />
+                    <span className="text-accent italic font-serif normal-case tracking-normal">Message</span>
+                  </h2>
+                  <p className="text-lg text-primary/60 font-medium max-w-md">
+                    Fill out the form below and our team will get back to you faster than a cake rises!
+                  </p>
+                </div>
+              </BlurFade>
+
+              <BlurFade delay={0.2} inView>
+                <form onSubmit={handleSubmit} className="space-y-8">
+                  <div className="space-y-4">
+                    <Label className="text-[10px] font-black uppercase tracking-widest text-primary/40">Inquiry Type</Label>
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                      {INQUIRY_TYPES.map((type) => (
+                        <button
+                          key={type.id}
+                          type="button"
+                          onClick={() => setFormData({ ...formData, inquiryType: type.id })}
+                          className={`h-12 rounded-sm border-2 text-[10px] font-black uppercase tracking-widest transition-all flex items-center justify-center gap-2 ${formData.inquiryType === type.id
+                            ? "border-primary bg-primary text-white shadow-lg"
+                            : "border-blue-50 text-primary/40 hover:border-primary/20"
                             }`}
-                          >
-                            <type.icon className="h-5 w-5" />
-                            <span className="text-xs">{type.label}</span>
-                          </button>
-                        ))}
-                      </div>
+                        >
+                          <type.icon className="h-3 w-3" />
+                          <span>{type.label}</span>
+                        </button>
+                      ))}
                     </div>
+                  </div>
 
-                    {/* Name & Email */}
-                    <div className="grid sm:grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="name">Your Name *</Label>
-                        <Input
-                          id="name"
-                          value={formData.name}
-                          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                          placeholder="John Doe"
-                          className="rounded-xl"
-                          required
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="email">Email Address *</Label>
-                        <Input
-                          id="email"
-                          type="email"
-                          value={formData.email}
-                          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                          placeholder="john@example.com"
-                          className="rounded-xl"
-                          required
-                        />
-                      </div>
-                    </div>
-
-                    {/* Phone & Subject */}
-                    <div className="grid sm:grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="phone">Phone Number</Label>
-                        <Input
-                          id="phone"
-                          type="tel"
-                          value={formData.phone}
-                          onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                          placeholder="(555) 123-4567"
-                          className="rounded-xl"
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="subject">Subject</Label>
-                        <Input
-                          id="subject"
-                          value={formData.subject}
-                          onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-                          placeholder="How can we help?"
-                          className="rounded-xl"
-                        />
-                      </div>
-                    </div>
-
-                    {/* Message */}
+                  <div className="grid sm:grid-cols-2 gap-6">
                     <div className="space-y-2">
-                      <Label htmlFor="message">Your Message *</Label>
-                      <Textarea
-                        id="message"
-                        value={formData.message}
-                        onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                        placeholder="Tell us more about your inquiry..."
-                        className="rounded-xl resize-none"
-                        rows={5}
-                        required
-                      />
+                      <Label className="text-[10px] font-black uppercase tracking-widest text-primary/40">Your Name</Label>
+                      <Input value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} placeholder="Full Name" className="h-14 rounded-sm border-blue-50 focus-visible:ring-primary font-medium" required />
                     </div>
-
-                    <Button
-                      type="submit"
-                      size="lg"
-                      disabled={isSubmitting}
-                      className="w-full rounded-full gap-2"
-                    >
-                      {isSubmitting ? (
-                        "Sending..."
-                      ) : (
-                        <>
-                          <Send className="h-4 w-4" />
-                          Send Message
-                        </>
-                      )}
-                    </Button>
-                  </form>
-                </CardContent>
-              </Card>
-            </motion.div>
-
-            {/* FAQ & Quick Links */}
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5, delay: 0.3 }}
-              className="lg:col-span-2 space-y-6"
-            >
-              <Card className="rounded-2xl">
-                <CardHeader>
-                  <CardTitle className="text-lg">Quick Answers</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div>
-                    <h4 className="font-medium text-foreground mb-1">What are your delivery hours?</h4>
-                    <p className="text-sm text-muted-foreground">We deliver daily from 10 AM to 10 PM.</p>
+                    <div className="space-y-2">
+                      <Label className="text-[10px] font-black uppercase tracking-widest text-primary/40">Email Address</Label>
+                      <Input type="email" value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} placeholder="your@email.com" className="h-14 rounded-sm border-blue-50 focus-visible:ring-primary font-medium" required />
+                    </div>
                   </div>
-                  <div>
-                    <h4 className="font-medium text-foreground mb-1">How far in advance should I order?</h4>
-                    <p className="text-sm text-muted-foreground">Regular orders need 2 hours; catering needs 24-48 hours.</p>
-                  </div>
-                  <div>
-                    <h4 className="font-medium text-foreground mb-1">Do you accommodate dietary restrictions?</h4>
-                    <p className="text-sm text-muted-foreground">Yes! We offer vegetarian, vegan, and gluten-free options.</p>
-                  </div>
-                  <a href="/faq" className="text-primary hover:underline text-sm font-medium block mt-4">
-                    View All FAQs →
-                  </a>
-                </CardContent>
-              </Card>
 
-              <Card className="rounded-2xl bg-gradient-to-br from-amber-500/10 to-primary/10">
-                <CardContent className="p-6">
-                  <h3 className="font-semibold text-foreground mb-2">Planning an Event?</h3>
-                  <p className="text-sm text-muted-foreground mb-4">
-                    Our catering team is ready to help you create an unforgettable experience.
-                  </p>
-                  <a href="/catering">
-                    <Button variant="outline" className="rounded-full w-full">
-                      Explore Catering
-                    </Button>
-                  </a>
-                </CardContent>
-              </Card>
+                  <div className="space-y-2">
+                    <Label className="text-[10px] font-black uppercase tracking-widest text-primary/40">Message</Label>
+                    <Textarea value={formData.message} onChange={(e) => setFormData({ ...formData, message: e.target.value })} placeholder="How can we bless your day?" className="min-h-[160px] rounded-sm border-blue-50 focus-visible:ring-primary font-medium resize-none p-4" required />
+                  </div>
 
-              <Card className="rounded-2xl">
-                <CardContent className="p-6">
-                  <h3 className="font-semibold text-foreground mb-2">Corporate Account</h3>
-                  <p className="text-sm text-muted-foreground mb-4">
-                    Streamline ordering for your business with dedicated support and invoicing.
-                  </p>
-                  <a href="/corporate">
-                    <Button variant="outline" className="rounded-full w-full">
-                      Learn More
-                    </Button>
-                  </a>
-                </CardContent>
-              </Card>
-            </motion.div>
+                  <Button type="submit" size="lg" disabled={isSubmitting} className="w-full h-16 rounded-sm text-sm font-black uppercase tracking-widest bg-primary hover:bg-primary/90 shadow-2xl">
+                    {isSubmitting ? "Sending..." : "Send Message"}
+                  </Button>
+                </form>
+              </BlurFade>
+            </div>
+
+            {/* Info Side */}
+            <div className="space-y-12 lg:pt-12">
+              <BlurFade delay={0.3} inView>
+                <div className="bg-blue-50/20 p-10 md:p-12 rounded-sm border border-blue-50 space-y-10">
+                  <div className="space-y-6">
+                    <h3 className="text-xl font-black text-primary uppercase tracking-widest">Office Hours</h3>
+                    <div className="space-y-4">
+                      <div className="flex justify-between items-center text-sm font-medium text-primary/70">
+                        <span>Monday - Thursday</span>
+                        <span>8:00 AM - 10:00 PM</span>
+                      </div>
+                      <div className="flex justify-between items-center text-sm font-medium text-primary/70">
+                        <span>Friday - Saturday</span>
+                        <span>8:00 AM - 11:00 PM</span>
+                      </div>
+                      <div className="flex justify-between items-center text-sm font-black text-accent">
+                        <span>Sunday</span>
+                        <span>Closed for Rest</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="space-y-6">
+                    <h3 className="text-xl font-black text-primary uppercase tracking-widest">Global Support</h3>
+                    <p className="text-sm font-medium text-primary/60 leading-relaxed">
+                      Our support team is available via email 24/7. We typically respond to all inquiries within one business day.
+                    </p>
+                  </div>
+                </div>
+              </BlurFade>
+
+              <BlurFade delay={0.4} inView>
+                <div className="relative aspect-video rounded-sm overflow-hidden border border-blue-50 group shadow-xl">
+                  <Image
+                    src="https://images.unsplash.com/photo-1483695028939-5bb13f8648b0?auto=format&fit=crop&w=800&q=80"
+                    alt="Our Kitchen"
+                    fill
+                    className="object-cover group-hover:scale-105 transition-transform duration-700"
+                  />
+                  <div className="absolute inset-0 bg-primary/20" />
+                  <div className="absolute bottom-6 left-6 right-6 p-4 bg-white/90 backdrop-blur-sm rounded-sm">
+                    <p className="text-[10px] font-black text-primary uppercase tracking-widest">Flagship Kitchen</p>
+                    <p className="text-xs font-medium text-primary/70 italic">Where the magic happens daily.</p>
+                  </div>
+                </div>
+              </BlurFade>
+            </div>
           </div>
+        </div>
+      </section>
+
+      {/* Final Tagline Section */}
+      <section className="py-24 bg-primary text-white text-center border-t border-white/10">
+        <div className="container mx-auto px-4 md:px-6">
+          <BlurFade delay={0.2} inView>
+            <div className="max-w-4xl mx-auto space-y-6">
+              <h2 className="text-2xl md:text-4xl font-black uppercase tracking-widest text-accent">
+                The A Cake
+              </h2>
+              <p className="text-xl md:text-2xl font-black uppercase tracking-tighter leading-tight">
+                Abraham&apos;s Delight — A Blessing in Every Slice.
+              </p>
+              <div className="w-24 h-1 bg-accent mx-auto mt-8"></div>
+            </div>
+          </BlurFade>
         </div>
       </section>
     </div>

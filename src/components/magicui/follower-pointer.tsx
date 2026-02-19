@@ -118,7 +118,7 @@ export const FollowPointer = ({
                     "px-2 py-1 bg-neutral-200 text-black whitespace-nowrap min-w-max text-xs rounded-full"
                 }
             >
-                {title || "Foody"}
+                {title || "The A Cake"}
             </motion.div>
         </motion.div>
     );

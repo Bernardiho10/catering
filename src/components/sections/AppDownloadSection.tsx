@@ -19,7 +19,7 @@ const features = [
     {
         icon: Bell,
         title: "Push Notifications",
-        description: "Get updates when your cookies are being baked and delivered",
+        description: "Get updates when your cakes are being baked and delivered",
     },
     {
         icon: Star,
@@ -55,7 +55,7 @@ export function AppDownloadSection() {
 
                         <BlurFade delay={0.3} inView>
                             <p className="text-lg md:text-xl text-white/90 leading-relaxed">
-                                The best way to order Tiff's Treats warm cookies? Through our app!
+                                The best way to order The A Cake's organic cakes? Through our app!
                                 Repeat orders in a snap and even track your delivery all the way to your door on the map.
                             </p>
                         </BlurFade>

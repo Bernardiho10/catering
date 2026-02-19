@@ -2,7 +2,7 @@ import ProfileSettings from "@/components/profile/ProfileSettings"
 import { Metadata } from "next"
 
 export const metadata: Metadata = {
-    title: "Settings | Cookie Delivery",
+    title: "Settings | Cake Delivery",
     description: "Update your account settings.",
 }
 

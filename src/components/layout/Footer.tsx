@@ -1,152 +1,107 @@
+"use client"
 
 import Link from "next/link"
-import { Cookie, Instagram, Facebook, Twitter, Mail } from "lucide-react"
+import { Cookie, Instagram, Facebook, Twitter, Mail, Cake, MapPin, Phone } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { RetroGrid } from "@/components/magicui/retro-grid"
 
 export function Footer() {
     return (
-        <footer className="relative border-t border-border bg-zinc-50 dark:bg-zinc-950 overflow-hidden">
-            <RetroGrid className="opacity-15" />
-
-            {/* Branding Stripe */}
-            <div className="w-full h-8 bg-[repeating-linear-gradient(45deg,#c41e3a,#c41e3a_10px,#a31830_10px,#a31830_20px)] shadow-md relative z-10" />
-
-            {/* Newsletter Section */}
-            <div className="relative z-10 bg-white/50 dark:bg-black/50 backdrop-blur-sm border-b border-border">
-                <div className="container mx-auto px-4 md:px-6 py-10">
-                    <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-                        <div>
-                            <h3 className="text-xl md:text-2xl font-bold font-heading">Sign up for Warm Moments</h3>
-                            <p className="text-muted-foreground mt-1">
-                                Join our list! Be the first to know about new flavors, stores, and exclusive offers.
+        <footer className="bg-white border-t border-blue-50">
+            {/* Newsletter Section - Refined */}
+            <div className="border-b border-blue-50">
+                <div className="container mx-auto px-4 md:px-6 py-12">
+                    <div className="flex flex-col lg:flex-row items-center justify-between gap-8">
+                        <div className="text-center lg:text-left">
+                            <h3 className="text-xl font-black text-primary uppercase tracking-widest">Join the Family</h3>
+                            <p className="text-primary/60 mt-2 font-medium">
+                                Sign up for fresh-baked updates and exclusive organic treats.
                             </p>
                         </div>
-                        <form className="flex gap-2 w-full md:w-auto">
+                        <form className="flex gap-3 w-full max-w-md">
                             <Input
                                 type="email"
-                                placeholder="Enter your email"
-                                className="bg-background/80 border-input text-foreground placeholder:text-muted-foreground rounded-full px-5 min-w-[280px]"
+                                placeholder="Email Address"
+                                className="h-12 border-blue-100 focus-visible:ring-primary rounded-sm"
                             />
                             <Button
                                 type="submit"
-                                className="rounded-full px-6 font-bold bg-[#c41e3a] text-white hover:bg-[#a31830] shadow-md"
+                                className="h-12 px-8 font-black uppercase tracking-widest bg-primary hover:bg-primary/90 rounded-sm shadow-xl"
                             >
-                                Subscribe
+                                Join
                             </Button>
                         </form>
                     </div>
                 </div>
             </div>
 
-            {/* Main Footer Content */}
-            <div className="relative z-10 container mx-auto px-4 md:px-6 py-12 md:py-16">
-                <div className="grid grid-cols-2 md:grid-cols-5 gap-8 lg:gap-12">
-                    {/* Brand Column */}
-                    <div className="col-span-2 md:col-span-1 space-y-4">
-                        <Link href="/" className="flex items-center gap-2.5 w-fit group">
-                            <div className="h-10 w-10 rounded-full bg-gradient-to-br from-[#c41e3a] to-[#8b1528] flex items-center justify-center shadow-md transition-transform group-hover:scale-105">
-                                <Cookie className="h-5 w-5 text-white" />
-                            </div>
-                            <span className="font-heading font-bold text-xl text-[#c41e3a]">David's Delights</span>
-                        </Link>
-                        <p className="text-muted-foreground text-sm leading-relaxed">
-                            Warm Moments Delivered® since 1999. Fresh-baked cookies delivered to your door.
-                        </p>
-                        <div className="flex gap-2 pt-2">
-                            <Button
-                                variant="ghost"
-                                size="icon"
-                                aria-label="Instagram"
-                                className="h-9 w-9 text-muted-foreground hover:text-[#c41e3a] hover:bg-[#c41e3a]/10 rounded-full"
-                            >
-                                <Instagram className="h-4 w-4" />
+            {/* Main Footer Links */}
+            <div className="container mx-auto px-4 md:px-6 py-16">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 lg:gap-8">
+                    {/* Brand & Location */}
+                    <div className="lg:col-span-2 space-y-6">
+                        <div className="space-y-4">
+                            <h4 className="text-xs font-black text-primary uppercase tracking-[0.2em]">Our Mission</h4>
+                            <p className="text-primary/70 text-sm leading-relaxed font-medium max-w-sm">
+                                Abraham’s Organic Treats — A Blessing in Every Slice.
+                                Traditionally crafted with 100% organic ingredients and shared with love.
+                            </p>
+                        </div>
+                        <div className="flex gap-4">
+                            <Button variant="ghost" size="icon" className="h-10 w-10 text-primary hover:text-accent hover:bg-blue-50 rounded-full">
+                                <Instagram className="h-5 w-5" />
                             </Button>
-                            <Button
-                                variant="ghost"
-                                size="icon"
-                                aria-label="Facebook"
-                                className="h-9 w-9 text-muted-foreground hover:text-[#c41e3a] hover:bg-[#c41e3a]/10 rounded-full"
-                            >
-                                <Facebook className="h-4 w-4" />
+                            <Button variant="ghost" size="icon" className="h-10 w-10 text-primary hover:text-accent hover:bg-blue-50 rounded-full">
+                                <Facebook className="h-5 w-5" />
                             </Button>
-                            <Button
-                                variant="ghost"
-                                size="icon"
-                                aria-label="Twitter"
-                                className="h-9 w-9 text-muted-foreground hover:text-[#c41e3a] hover:bg-[#c41e3a]/10 rounded-full"
-                            >
-                                <Twitter className="h-4 w-4" />
-                            </Button>
-                            <Button
-                                variant="ghost"
-                                size="icon"
-                                aria-label="Email"
-                                className="h-9 w-9 text-muted-foreground hover:text-[#c41e3a] hover:bg-[#c41e3a]/10 rounded-full"
-                            >
-                                <Mail className="h-4 w-4" />
+                            <Button variant="ghost" size="icon" className="h-10 w-10 text-primary hover:text-accent hover:bg-blue-50 rounded-full">
+                                <Twitter className="h-5 w-5" />
                             </Button>
                         </div>
                     </div>
 
-                    {/* Menu Links */}
-                    <div className="space-y-4">
-                        <h4 className="text-sm font-bold text-foreground uppercase tracking-wide">Menu</h4>
-                        <ul className="space-y-2.5 text-sm text-muted-foreground">
-                            <li><Link href="/menu" className="hover:text-[#c41e3a] transition-colors">Full Menu</Link></li>
-                            <li><Link href="/menu?cat=warm" className="hover:text-[#c41e3a] transition-colors">Warm Cookies</Link></li>
-                            <li><Link href="/menu?cat=valentines" className="hover:text-[#c41e3a] transition-colors">Valentine's Day</Link></li>
-                            <li><Link href="/menu?cat=birthday" className="hover:text-[#c41e3a] transition-colors">Birthday Bundles</Link></li>
-                            <li><Link href="/menu?cat=pie" className="hover:text-[#c41e3a] transition-colors">Cookie Pie</Link></li>
-                            <li><Link href="/menu?cat=brownies" className="hover:text-[#c41e3a] transition-colors">Brownies</Link></li>
+                    {/* Quick Links */}
+                    <div>
+                        <h4 className="text-xs font-black text-primary uppercase tracking-[0.2em] mb-6">Shop</h4>
+                        <ul className="space-y-4 text-sm font-bold text-primary/60 uppercase tracking-widest">
+                            <li><Link href="/menu" className="hover:text-primary transition-colors">Our Menu</Link></li>
+                            <li><Link href="/catering" className="hover:text-primary transition-colors">Catering</Link></li>
+                            <li><Link href="/gift-cards" className="hover:text-primary transition-colors">Gifting</Link></li>
+                            <li><Link href="/rewards" className="hover:text-primary transition-colors">Rewards</Link></li>
                         </ul>
                     </div>
 
-                    {/* Services Links */}
-                    <div className="space-y-4">
-                        <h4 className="text-sm font-bold text-foreground uppercase tracking-wide">Services</h4>
-                        <ul className="space-y-2.5 text-sm text-muted-foreground">
-                            <li><Link href="/catering" className="hover:text-[#c41e3a] transition-colors">Catering</Link></li>
-                            <li><Link href="/corporate" className="hover:text-[#c41e3a] transition-colors">Corporate Gifting</Link></li>
-                            <li><Link href="/gift-cards" className="hover:text-[#c41e3a] transition-colors">Gift Cards</Link></li>
-                            <li><Link href="/rewards" className="hover:text-[#c41e3a] transition-colors">David's Rewards®</Link></li>
-                            <li><Link href="/delivery-areas" className="hover:text-[#c41e3a] transition-colors">Delivery Areas</Link></li>
+                    {/* Support */}
+                    <div>
+                        <h4 className="text-xs font-black text-primary uppercase tracking-[0.2em] mb-6">Support</h4>
+                        <ul className="space-y-4 text-sm font-bold text-primary/60 uppercase tracking-widest">
+                            <li><Link href="/tracker" className="hover:text-primary transition-colors">Track Order</Link></li>
+                            <li><Link href="/locations" className="hover:text-primary transition-colors">Locations</Link></li>
+                            <li><Link href="/contact" className="hover:text-primary transition-colors">Contact Us</Link></li>
+                            <li><Link href="/faq" className="hover:text-primary transition-colors">FAQ</Link></li>
                         </ul>
                     </div>
 
-                    {/* Company Links */}
-                    <div className="space-y-4">
-                        <h4 className="text-sm font-bold text-foreground uppercase tracking-wide">Company</h4>
-                        <ul className="space-y-2.5 text-sm text-muted-foreground">
-                            <li><Link href="/about" className="hover:text-[#c41e3a] transition-colors">Our Story</Link></li>
-                            <li><Link href="/about" className="hover:text-[#c41e3a] transition-colors">Blog</Link></li>
-                            <li><Link href="/about" className="hover:text-[#c41e3a] transition-colors">Careers</Link></li>
-                            <li><Link href="/contact" className="hover:text-[#c41e3a] transition-colors">Contact Us</Link></li>
-                            <li><Link href="/faq" className="hover:text-[#c41e3a] transition-colors">FAQ</Link></li>
-                        </ul>
-                    </div>
-
-                    {/* Support Links */}
-                    <div className="space-y-4">
-                        <h4 className="text-sm font-bold text-foreground uppercase tracking-wide">Support</h4>
-                        <ul className="space-y-2.5 text-sm text-muted-foreground">
-                            <li><Link href="/tracker" className="hover:text-[#c41e3a] transition-colors">Track Order</Link></li>
-                            <li><Link href="/policies/delivery" className="hover:text-[#c41e3a] transition-colors">Delivery Policy</Link></li>
-                            <li><Link href="/policies/privacy" className="hover:text-[#c41e3a] transition-colors">Privacy Policy</Link></li>
-                            <li><Link href="/policies/terms" className="hover:text-[#c41e3a] transition-colors">Terms of Use</Link></li>
-                            <li><Link href="/rewards/faq" className="hover:text-[#c41e3a] transition-colors">Rewards FAQ</Link></li>
+                    {/* Company */}
+                    <div>
+                        <h4 className="text-xs font-black text-primary uppercase tracking-[0.2em] mb-6">About</h4>
+                        <ul className="space-y-4 text-sm font-bold text-primary/60 uppercase tracking-widest">
+                            <li><Link href="/about" className="hover:text-primary transition-colors">Our Story</Link></li>
+                            <li><Link href="/policies/privacy" className="hover:text-primary transition-colors">Privacy</Link></li>
+                            <li><Link href="/policies/terms" className="hover:text-primary transition-colors">Terms</Link></li>
                         </ul>
                     </div>
                 </div>
 
                 {/* Bottom Bar */}
-                <div className="mt-12 pt-8 border-t border-border flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-muted-foreground">
-                    <p>© 2026 David's Delights. Warm Moments Delivered®</p>
+                <div className="mt-16 pt-8 border-t border-blue-50 flex flex-col md:flex-row justify-between items-center gap-4">
+                    <p className="text-[10px] font-black text-primary/40 uppercase tracking-widest">
+                        © 2026 Abraham&apos;s Organic Treats. All Rights Reserved.
+                    </p>
                     <div className="flex items-center gap-6">
-                        <Link href="/policies/accessibility" className="hover:text-[#c41e3a] transition-colors">Accessibility</Link>
-                        <Link href="/sitemap" className="hover:text-[#c41e3a] transition-colors">Sitemap</Link>
-                        <Link href="/policies/privacy" className="hover:text-[#c41e3a] transition-colors">Your Privacy Choices</Link>
+                        <span className="text-[10px] font-black text-primary/60 uppercase tracking-widest flex items-center gap-2">
+                            <Cake className="h-3 w-3 text-accent" /> Warm Moments Delivered®
+                        </span>
                     </div>
                 </div>
             </div>

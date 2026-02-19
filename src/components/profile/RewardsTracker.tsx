@@ -7,7 +7,25 @@ import { Progress } from "@/components/ui/progress"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
-export default function RewardsTracker() {
+interface RewardsTrackerProps {
+    initialData?: {
+        points: number;
+        tier: string;
+        nextTierPoints: number;
+        progress: number;
+        pointsUntilNext: number;
+    } | null;
+}
+
+export default function RewardsTracker({ initialData }: RewardsTrackerProps) {
+    const data = initialData || {
+        points: 0,
+        tier: 'Bronze',
+        nextTierPoints: 500,
+        progress: 0,
+        pointsUntilNext: 500
+    }
+
     return (
         <div className="space-y-8">
             <div className="flex flex-col md:flex-row gap-8 items-start">
@@ -21,10 +39,12 @@ export default function RewardsTracker() {
                         <CardDescription>Earn points for every dollar you spend.</CardDescription>
                     </CardHeader>
                     <CardContent>
-                        <div className="text-4xl font-bold font-heading mb-2">1,250 <span className="text-lg font-normal text-muted-foreground">pts</span></div>
-                        <Progress value={83} className="h-3 mb-2 bg-amber-100 dark:bg-amber-900" indicatorClassName="bg-amber-500" />
+                        <div className="text-4xl font-bold font-heading mb-2">{data.points.toLocaleString()} <span className="text-lg font-normal text-muted-foreground">pts</span></div>
+                        <Progress value={data.progress} className="h-3 mb-2 bg-amber-100 dark:bg-amber-900" indicatorClassName="bg-amber-500" />
                         <p className="text-sm text-muted-foreground">
-                            250 points until your next reward!
+                            {data.pointsUntilNext > 0
+                                ? `${data.pointsUntilNext} points until your next reward!`
+                                : 'You have reached the highest tier!'}
                         </p>
                     </CardContent>
                 </Card>
@@ -37,10 +57,11 @@ export default function RewardsTracker() {
                     <CardHeader>
                         <CardTitle className="flex items-center gap-2 text-indigo-700 dark:text-indigo-400">
                             <Crown className="h-5 w-5" />
-                            Elite Status
+                            {data.tier} Status
                         </CardTitle>
                         <CardDescription className="text-indigo-600/80 dark:text-indigo-400/80">Active Membership</CardDescription>
                     </CardHeader>
+                    {/* ... rest of content remains same but can be made dynamic later ... */}
                     <CardContent>
                         <div className="flex flex-col gap-2">
                             <div className="flex items-center gap-2 text-sm">
@@ -75,7 +96,7 @@ export default function RewardsTracker() {
                             {[
                                 { points: 500, name: "$5 Off Reward", icon: Gift },
                                 { points: 1000, name: "$10 Off Reward", icon: Gift },
-                                { points: 2500, name: "Free Dozen Cookies", icon: Gift },
+                                { points: 2500, name: "Free Cake Bundle", icon: Gift },
                             ].map((reward, i) => (
                                 <Card key={i} className={1250 >= reward.points ? "border-primary/50" : "opacity-70"}>
                                     <CardContent className="p-6 flex flex-col items-center text-center gap-4">

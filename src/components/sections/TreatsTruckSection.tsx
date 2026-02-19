@@ -15,7 +15,7 @@ const features = [
     {
         icon: PartyPopper,
         title: "Full Experience",
-        description: "Our team serves warm cookies on-site",
+        description: "Our team serves fresh cakes on-site",
     },
     {
         icon: Calendar,
@@ -52,7 +52,7 @@ export function TreatsTruckSection() {
 
                         <BlurFade delay={0.3} inView>
                             <p className="text-lg md:text-xl text-zinc-300 leading-relaxed">
-                                From cookie trays to Tiffwich® Ice Cream Sandwich parties, we've got you covered.
+                                From cake trays to Ice Cream Sandwich parties, we've got you covered.
                                 Check out our tasty solutions for parties, gifts, and gatherings.
                             </p>
                         </BlurFade>

@@ -2,7 +2,7 @@ import OrderHistory from "@/components/profile/OrderHistory"
 import { Metadata } from "next"
 
 export const metadata: Metadata = {
-    title: "Order History | Cookie Delivery",
+    title: "Order History | Cake Delivery",
     description: "View and reorder your past purchases.",
 }
 

@@ -25,14 +25,14 @@
 -- Quick way to find your user's UUID:
 -- SELECT id, email FROM auth.users WHERE email = 'admin@foody.com';
 
--- Sample menu items (optional)
+-- Sample menu items (The A Cake - Organic Blessings)
 INSERT INTO public.menu_items (name, description, price, category, image_url, active, dietary_tags)
 VALUES
-  ('Classic Smash Burger', 'Juicy double-smashed beef patties with aged cheddar, caramelized onions, pickles, and our signature house sauce.', 1299, 'Mains', 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=500&q=60', true, '{}'),
-  ('Rainbow Buddha Bowl', 'Protein-packed quinoa with crispy roasted chickpeas, creamy avocado, massaged kale, and lemon-tahini drizzle.', 1450, 'Mains', 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=500&q=60', true, '{vegan,gluten-free}'),
-  ('Honey Glazed Salmon', 'Wild-caught salmon fillet with honey-soy glaze, served over jasmine rice with seasonal vegetables.', 1899, 'Mains', 'https://images.unsplash.com/photo-1467003909585-2f8a72700288?auto=format&fit=crop&w=500&q=60', true, '{gluten-free}'),
-  ('Truffle Mushroom Risotto', 'Creamy arborio rice slow-cooked with wild mushrooms, white wine, parmesan, and black truffle oil.', 1650, 'Mains', 'https://images.unsplash.com/photo-1476124369491-e7addf5db371?auto=format&fit=crop&w=500&q=60', true, '{vegetarian}'),
-  ('Molten Chocolate Lava Cake', 'Warm chocolate cake with a gooey molten center, served with vanilla bean gelato.', 950, 'Desserts', 'https://images.unsplash.com/photo-1624353365286-3f8d62daad51?auto=format&fit=crop&w=500&q=60', true, '{vegetarian}')
+  ('The Signature Blessing', 'Our crown jewel. A triple-layered organic chocolate masterpiece crafted with heritage cocoa and celestial velvet cream.', 8500, 'organic-cakes', 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=800&q=80', true, '{organic,premium}'),
+  ('Lavender Dream Bliss', 'An ethereal sponge infused with organic French lavender and vanilla bean. Light as a morning prayer.', 7200, 'organic-cakes', 'https://images.unsplash.com/photo-1563729784474-d77dbb933a9e?auto=format&fit=crop&w=800&q=80', true, '{organic,gluten-optional}'),
+  ('Golden Pecan Radiance', 'A warm, sun-kissed delight filled with toasted organic pecans and a hint of Canadian maple syrup.', 6800, 'organic-cakes', 'https://images.unsplash.com/photo-1542826438-bd32f43d626f?auto=format&fit=crop&w=800&q=80', true, '{contains-nuts,organic}'),
+  ('Lemon Sunshine Grace', 'Zesty organic lemons harvest from heritage groves meeting our signature velvet crumb. Pure radiance.', 6500, 'organic-cakes', 'https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&w=800&q=80', true, '{organic,citrus}'),
+  ('The Mother’s Blessing', 'Our sacred recipe. Nutrient-dense organic ingredients specifically balanced to support and celebrate new mothers.', 7800, 'organic-cakes', 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=800&q=80', true, '{lactation-support,organic}')
 ON CONFLICT DO NOTHING;
 
 -- Daily menu table (for admin to manage)

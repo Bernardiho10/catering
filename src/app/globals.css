@@ -63,114 +63,68 @@
 }
 
 /* ============================================================
-   David's Delights — Light Theme
-   Premium Cookie Red + Warm Cream palette
+   The A Cake — Light Theme (Tiff's Treats Inspired)
+   Royal Blue, Gold, and Pure White palette
    ============================================================ */
 :root {
-  --radius: 0.75rem;
+  --radius: 0.5rem;
 
   /* Surfaces */
-  --background: hsl(30 30% 98%);
-  /* Warm Cream */
-  --foreground: hsl(20 10% 10%);
-  /* Dark Warm Brown */
+  --background: hsl(0 0% 100%);
+  /* Pure White */
+  --foreground: hsl(231 100% 10%);
+  /* Near Black Blue */
 
   --card: hsl(0 0% 100%);
-  --card-foreground: hsl(20 10% 10%);
+  --card-foreground: hsl(231 100% 10%);
 
   --popover: hsl(0 0% 100%);
-  --popover-foreground: hsl(20 10% 10%);
+  --popover-foreground: hsl(231 100% 10%);
 
-  /* Brand — Premium Cookie Red */
-  --primary: hsl(355 78% 42%);
+  /* Brand — Royal Blue (#001ba0) */
+  --primary: hsl(230 100% 31%);
   --primary-foreground: hsl(0 0% 100%);
 
-  /* Warm Cookie Dough / Gold accent */
-  --secondary: hsl(35 60% 92%);
-  --secondary-foreground: hsl(35 80% 20%);
+  /* Secondary — Light Sky Blue */
+  --secondary: hsl(200 80% 90%);
+  --secondary-foreground: hsl(230 100% 31%);
 
-  --muted: hsl(30 20% 94%);
-  --muted-foreground: hsl(20 10% 45%);
+  /* Accent — Bright Gold */
+  --accent: hsl(45 100% 50%);
+  --accent-foreground: hsl(231 100% 10%);
 
-  --accent: hsl(35 60% 92%);
-  --accent-foreground: hsl(35 80% 20%);
+  --muted: hsl(210 20% 98%);
+  --muted-foreground: hsl(231 20% 45%);
 
   --destructive: hsl(0 84% 60%);
   --destructive-foreground: hsl(0 0% 98%);
 
-  --border: hsl(30 20% 88%);
-  --input: hsl(30 20% 88%);
-  --ring: hsl(355 78% 42%);
+  --border: hsl(231 20% 92%);
+  --input: hsl(231 20% 92%);
+  --ring: hsl(230 100% 31%);
 
-  /* Charts */
-  --chart-1: hsl(355 78% 42%);
-  --chart-2: hsl(35 80% 56%);
-  --chart-3: hsl(20 60% 40%);
-  --chart-4: hsl(45 90% 55%);
-  --chart-5: hsl(10 50% 30%);
-
-  /* Sidebar */
-  --sidebar: hsl(30 30% 97%);
-  --sidebar-foreground: hsl(20 10% 10%);
-  --sidebar-primary: hsl(355 78% 42%);
+  /* Sidebar fallback */
+  --sidebar: hsl(0 0% 100%);
+  --sidebar-foreground: hsl(231 100% 10%);
+  --sidebar-primary: hsl(230 100% 31%);
   --sidebar-primary-foreground: hsl(0 0% 100%);
-  --sidebar-accent: hsl(35 60% 92%);
-  --sidebar-accent-foreground: hsl(35 80% 20%);
-  --sidebar-border: hsl(30 20% 88%);
-  --sidebar-ring: hsl(355 78% 42%);
+  --sidebar-accent: hsl(210 20% 96%);
+  --sidebar-accent-foreground: hsl(230 100% 31%);
+  --sidebar-border: hsl(231 20% 92%);
+  --sidebar-ring: hsl(230 100% 31%);
 }
 
-/* ============================================================
-   David's Delights — Dark Theme
-   ============================================================ */
+/* Dark mode simplified to preserve visibility, but prioritizing white theme */
 .dark {
-  --background: hsl(20 10% 6%);
-  /* Deep Dark Warm Brown */
-  --foreground: hsl(30 30% 98%);
-
-  --card: hsl(20 10% 8%);
-  --card-foreground: hsl(30 30% 98%);
-
-  --popover: hsl(20 10% 8%);
-  --popover-foreground: hsl(30 30% 98%);
-
-  /* Premium Cookie Red (brighter for dark mode) */
-  --primary: hsl(355 85% 55%);
+  --background: hsl(0 0% 100%);
+  --foreground: hsl(231 100% 10%);
+  --card: hsl(0 0% 100%);
+  --card-foreground: hsl(231 100% 10%);
+  --primary: hsl(230 100% 31%);
   --primary-foreground: hsl(0 0% 100%);
-
-  /* Warm Gold / Dough */
-  --secondary: hsl(35 30% 15%);
-  --secondary-foreground: hsl(35 60% 90%);
-
-  --muted: hsl(20 10% 12%);
-  --muted-foreground: hsl(30 10% 60%);
-
-  --accent: hsl(35 30% 15%);
-  --accent-foreground: hsl(35 60% 90%);
-
-  --destructive: hsl(0 62% 30%);
-  --destructive-foreground: hsl(0 0% 98%);
-
-  --border: hsl(20 10% 16%);
-  --input: hsl(20 10% 16%);
-  --ring: hsl(355 85% 55%);
-
-  /* Charts */
-  --chart-1: hsl(355 85% 55%);
-  --chart-2: hsl(35 80% 56%);
-  --chart-3: hsl(20 50% 50%);
-  --chart-4: hsl(45 80% 60%);
-  --chart-5: hsl(10 50% 40%);
-
-  /* Sidebar */
-  --sidebar: hsl(20 10% 8%);
-  --sidebar-foreground: hsl(30 30% 98%);
-  --sidebar-primary: hsl(355 85% 55%);
-  --sidebar-primary-foreground: hsl(0 0% 100%);
-  --sidebar-accent: hsl(35 30% 15%);
-  --sidebar-accent-foreground: hsl(35 60% 90%);
-  --sidebar-border: hsl(20 10% 16%);
-  --sidebar-ring: hsl(355 85% 55%);
+  --secondary: hsl(200 80% 90%);
+  --accent: hsl(45 100% 50%);
+  --border: hsl(231 20% 92%);
 }
 
 /* ============================================================
@@ -187,7 +141,7 @@
 }
 
 /* ============================================================
-   David's Delights — Utility Classes
+   The A Cake — Utility Classes
    ============================================================ */
 @layer utilities {
 
@@ -196,26 +150,27 @@
     @apply bg-card/90 backdrop-blur-sm border border-border/50 shadow-sm;
   }
 
-  /* Brand red utilities */
+  /* Brand utilities (Legacy compat) */
   .davids-red {
-    color: #c41e3a;
+    color: hsl(215 85% 35%);
   }
 
   .bg-davids-red {
-    background-color: #c41e3a;
+    background-color: hsl(215 85% 35%);
   }
 
   .border-davids-red {
-    border-color: #c41e3a;
+    border-color: hsl(215 85% 35%);
   }
 
   /* Warm shadows */
   .warm-shadow {
-    box-shadow: 0 4px 20px rgba(196, 30, 58, 0.08);
+    box-shadow: 0 4px 20px rgba(17, 46, 110, 0.08);
+    /* Blueish shadow */
   }
 
   .warm-shadow-lg {
-    box-shadow: 0 8px 30px rgba(196, 30, 58, 0.12);
+    box-shadow: 0 8px 30px rgba(17, 46, 110, 0.12);
   }
 
   /* Organic card — warm hover glow */
@@ -225,45 +180,47 @@
 
   .organic-card:hover {
     @apply shadow-md;
-    border-color: rgba(196, 30, 58, 0.3);
+    border-color: rgba(17, 46, 110, 0.3);
   }
 
   /* Premium glow */
   .davids-glow {
-    box-shadow: 0 0 40px rgba(196, 30, 58, 0.15),
-      0 0 80px rgba(236, 72, 153, 0.1);
+    box-shadow: 0 0 40px rgba(17, 46, 110, 0.15),
+      0 0 80px rgba(234, 179, 8, 0.1);
+    /* Blue and Gold glow */
   }
 
   /* Brand gradient background */
   .davids-gradient {
     background: linear-gradient(135deg,
-        rgba(196, 30, 58, 0.1) 0%,
-        rgba(236, 72, 153, 0.1) 100%);
+        rgba(17, 46, 110, 0.1) 0%,
+        rgba(234, 179, 8, 0.1) 100%);
   }
 
   /* Text gradient — premium feel */
   .text-davids-gradient {
-    background: linear-gradient(135deg, #c41e3a 0%, #ec4899 50%, #f59e0b 100%);
+    /* Blue -> Gold Gradient */
+    background: linear-gradient(135deg, hsl(215 85% 35%) 0%, hsl(45 90% 50%) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
 
-  /* Focus ring — brand red */
+  /* Focus ring — brand blue */
   .davids-ring {
-    box-shadow: 0 0 0 2px rgba(196, 30, 58, 0.3),
-      0 0 20px rgba(196, 30, 58, 0.2);
+    box-shadow: 0 0 0 2px rgba(17, 46, 110, 0.3),
+      0 0 20px rgba(17, 46, 110, 0.2);
   }
 
   /* Premium card — richer hover */
   .premium-card {
     @apply bg-card rounded-2xl border border-border/50 shadow-sm transition-all duration-300;
-    box-shadow: 0 4px 20px rgba(196, 30, 58, 0.08);
+    box-shadow: 0 4px 20px rgba(17, 46, 110, 0.08);
   }
 
   .premium-card:hover {
     @apply shadow-lg;
-    box-shadow: 0 8px 30px rgba(196, 30, 58, 0.12);
+    box-shadow: 0 8px 30px rgba(17, 46, 110, 0.12);
   }
 }
 

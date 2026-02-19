@@ -27,7 +27,7 @@ export default async function OrdersPage() {
         return (
             <div className="container mx-auto px-4 md:px-6 py-12 md:py-16 space-y-8">
                 <div className="flex flex-col gap-2 text-left">
-                    <p className="text-xs tracking-widest uppercase text-muted-foreground">Foody</p>
+                    <p className="text-xs tracking-widest uppercase text-muted-foreground">The A Cake</p>
                     <h1 className="text-3xl sm:text-4xl font-heading font-semibold text-foreground leading-tight">Your Orders</h1>
                     <p className="text-muted-foreground max-w-2xl">
                         We couldn’t load your orders right now. Please try again in a moment.
@@ -66,7 +66,7 @@ export default async function OrdersPage() {
     return (
         <div className="container mx-auto px-4 md:px-6 py-12 md:py-16 space-y-8">
             <div className="flex flex-col gap-2">
-                <p className="text-xs tracking-widest uppercase text-muted-foreground">Foody</p>
+                <p className="text-xs tracking-widest uppercase text-muted-foreground">The A Cake</p>
                 <h1 className="text-3xl sm:text-4xl font-heading font-semibold text-foreground leading-tight">Your Orders</h1>
                 <p className="text-muted-foreground max-w-2xl">
                     Track catering deliveries, view receipts, and reorder favorites.

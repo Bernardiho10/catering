@@ -7,26 +7,26 @@ const steps = [
     {
         icon: MousePointerClick,
         step: "01",
-        title: "Browse & Order",
-        description: "Explore our seasonal menu, filter by dietary needs, and add your favorites to cart.",
+        title: "Select Your Blessing",
+        description: "Choose from our organic cake flavors, special bundles, or seasonal treats.",
     },
     {
         icon: ChefHat,
         step: "02",
-        title: "We Cook Fresh",
-        description: "Our chefs prepare your order using fresh, locally-sourced ingredients on the day of delivery.",
+        title: "Baked with Prayer",
+        description: "Our bakers prepare your order with love, faith, and 100% organic ingredients.",
     },
     {
         icon: Truck,
         step: "03",
-        title: "Fast Delivery",
-        description: "Track your order in real-time as we deliver straight to your door or event venue.",
+        title: "Delivered with Care",
+        description: "Track your wholesome delivery as it makes its way to your home or event.",
     },
     {
         icon: PartyPopper,
         step: "04",
-        title: "Enjoy!",
-        description: "Impress your guests with restaurant-quality food. No cooking, no cleanup, just great food.",
+        title: "Share the Love",
+        description: "Gather your loved ones and enjoy a slice of pure, organic joy together.",
     },
 ]
 
@@ -37,10 +37,10 @@ export function HowItWorks() {
                 <div className="text-center space-y-4 mb-12">
                     <p className="text-xs tracking-widest uppercase text-primary font-medium">Simple Process</p>
                     <h2 className="text-3xl md:text-4xl font-heading font-semibold text-foreground">
-                        How Foody works
+                        How The A Cake works
                     </h2>
                     <p className="text-muted-foreground max-w-xl mx-auto">
-                        From browsing to enjoying, we make catering effortless.
+                        From our oven to your table, we make sharing the blessing simple.
                     </p>
                 </div>
 
@@ -66,7 +66,7 @@ export function HowItWorks() {
                                     {step.description}
                                 </p>
                             </div>
-                            
+
                             {index < steps.length - 1 && (
                                 <div className="hidden lg:block absolute top-1/2 -right-4 w-8 h-0.5 bg-border" />
                             )}

@@ -8,27 +8,15 @@ import { cn } from "@/lib/utils"
 const announcements = [
     {
         id: 1,
-        text: "💝 Valentine's Day Mini Heart Cookie Pies Now Available!",
-        link: "/menu?cat=valentines",
-        bgColor: "bg-[#c41e3a]",
+        text: "RED VELVET COOKIES + OUR NEW REWARDS PROGRAM IS HERE! + COOKIE PIES",
+        link: "/menu",
+        bgColor: "bg-primary",
     },
     {
         id: 2,
-        text: "🏈 Game Day Cookies – Order for the Big Game!",
-        link: "/menu",
-        bgColor: "bg-[#c41e3a]",
-    },
-    {
-        id: 3,
-        text: "🚚 Same-Day Delivery in All Locations",
-        link: "/delivery-areas",
-        bgColor: "bg-[#c41e3a]",
-    },
-    {
-        id: 4,
-        text: "⭐ Join Tiff's Rewards® – Earn Free Cookies!",
+        text: "ABRAHAM'S REWARDS: JOIN FOR FREE TREATS + EARN EVERY TIME YOU SHOP",
         link: "/rewards",
-        bgColor: "bg-[#c41e3a]",
+        bgColor: "bg-primary",
     },
 ]
 

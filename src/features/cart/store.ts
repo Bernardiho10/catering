@@ -23,6 +23,22 @@ interface CartStore {
     orderType: "delivery" | "pickup" | null
     deliveryZoneId: DeliveryZoneId | null
     deliveryFeeCents: number
+    shippingDate: string | null
+    senderInfo: {
+        firstName: string
+        lastName: string
+        email: string
+        phone: string
+    } | null
+    recipientInfo: {
+        name: string
+        address: string
+        instructions: string
+    } | null
+    giftInfo: {
+        message: string
+        isGiftWrapped: boolean
+    } | null
     setDeliveryAddress: (input: {
         addressLine1: string
         city: string
@@ -32,6 +48,7 @@ interface CartStore {
     }) => void
     setFullAddress: (address: string) => void
     setOrderType: (type: "delivery" | "pickup") => void
+    setCheckoutInfo: (info: Partial<Pick<CartStore, 'shippingDate' | 'senderInfo' | 'recipientInfo' | 'giftInfo'>>) => void
     clearDeliveryAddress: () => void
 }
 
@@ -45,6 +62,10 @@ export const useCartStore = create<CartStore>()(
             orderType: null,
             deliveryZoneId: null,
             deliveryFeeCents: 0,
+            shippingDate: null,
+            senderInfo: null,
+            recipientInfo: null,
+            giftInfo: null,
             addItem: (item) => {
                 const currentItems = get().items
                 const existingItem = currentItems.find((i) => i.id === item.id)
@@ -107,15 +128,78 @@ export const useCartStore = create<CartStore>()(
             },
             setFullAddress: (address) => set({ fullAddress: address }),
             setOrderType: (type) => set({ orderType: type }),
-            clearDeliveryAddress: () => set({ deliveryAddress: null, fullAddress: null, orderType: null, deliveryZoneId: null, deliveryFeeCents: 0 }),
+            setCheckoutInfo: (info) => set((state) => ({ ...state, ...info })),
+            clearDeliveryAddress: () => set({
+                deliveryAddress: null,
+                fullAddress: null,
+                orderType: null,
+                deliveryZoneId: null,
+                deliveryFeeCents: 0,
+                shippingDate: null,
+                senderInfo: null,
+                recipientInfo: null,
+                giftInfo: null
+            }),
         }),
         {
             name: 'katherine-cart-storage',
-            storage: createJSONStorage(() => localStorage),
+            storage: createJSONStorage(() => ({
+                getItem: async (name: string): Promise<string | null> => {
+                    if (typeof window === 'undefined') return null;
+                    try {
+                        const { getCartFromDB } = await import('@/lib/db');
+                        const items = await getCartFromDB();
+                        if (!items || items.length === 0) return localStorage.getItem(name);
+
+                        return JSON.stringify({
+                            state: {
+                                items: items,
+                                total: items.reduce((acc: number, item: any) => acc + item.price * item.quantity, 0),
+                                deliveryAddress: null,
+                                fullAddress: null,
+                                orderType: null,
+                                deliveryZoneId: null,
+                                deliveryFeeCents: 0
+                            },
+                            version: 0
+                        });
+                    } catch (e) {
+                        return localStorage.getItem(name);
+                    }
+                },
+                setItem: async (name: string, value: string) => {
+                    if (typeof window === 'undefined') return;
+                    localStorage.setItem(name, value);
+
+                    try {
+                        const { saveCartToDB } = await import('@/lib/db');
+                        const parsed = JSON.parse(value);
+                        if (parsed.state && parsed.state.items) {
+                            await saveCartToDB(parsed.state.items);
+                        }
+                    } catch (e) {
+                        console.error("Failed to save to IDB", e);
+                    }
+                },
+                removeItem: async (name: string) => {
+                    localStorage.removeItem(name);
+                },
+            })),
+            skipHydration: true,
+            onRehydrateStorage: () => (state) => {
+                if (state) {
+                    state.total = state.items.reduce((total, item) => total + item.price * item.quantity, 0)
+                }
+            }
         }
     )
 )
 
 function calculateTotal(items: CartItem[]) {
     return items.reduce((total, item) => total + item.price * item.quantity, 0)
+}
+
+// Hydrate on mount
+if (typeof window !== 'undefined') {
+    useCartStore.persist.rehydrate()
 }

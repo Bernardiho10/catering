@@ -6,8 +6,9 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Checkbox } from "@/components/ui/checkbox"
-import { Mail, Lock, User, Eye, EyeOff, Gift } from "lucide-react"
+import { Mail, Lock, User, Eye, EyeOff, Gift, Sparkles } from "lucide-react"
 import { toast } from "sonner"
+import { createClient } from "@/lib/supabase/client"
 
 interface LoginModalProps {
     open: boolean
@@ -26,7 +27,6 @@ export function LoginModal({ open, onOpenChange, onSwitchToRegister, onLoginSucc
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [showPassword, setShowPassword] = useState(false)
-    const [rememberMe, setRememberMe] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -34,12 +34,17 @@ export function LoginModal({ open, onOpenChange, onSwitchToRegister, onLoginSucc
         if (!email || !password) return
 
         setIsLoading(true)
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 1500))
+        const supabase = createClient()
+        const { error } = await supabase.auth.signInWithPassword({
+            email,
+            password,
+        })
 
-        // Mock Login Success
-        localStorage.setItem("isLoggedIn", "true")
-        localStorage.setItem("user", JSON.stringify({ name: email.split('@')[0], email: email })) // Mock basic user profile
+        if (error) {
+            toast.error(error.message)
+            setIsLoading(false)
+            return
+        }
 
         toast.success("Welcome back!")
         setIsLoading(false)
@@ -49,32 +54,32 @@ export function LoginModal({ open, onOpenChange, onSwitchToRegister, onLoginSucc
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="sm:max-w-md bg-white dark:bg-zinc-900 border-border rounded-2xl p-0 overflow-hidden">
-                <div className="p-6">
-                    <DialogHeader className="space-y-3 mb-6 text-center">
-                        <div className="mx-auto w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-2">
-                            <User className="h-8 w-8 text-primary" />
+            <DialogContent className="sm:max-w-[480px] bg-white border-blue-50 rounded-sm p-0 overflow-hidden shadow-2xl">
+                <div className="p-10 md:p-12">
+                    <DialogHeader className="space-y-4 mb-8 text-center">
+                        <div className="mx-auto w-20 h-20 rounded-sm bg-blue-50 flex items-center justify-center mb-2 border border-blue-100">
+                            <User className="h-10 w-10 text-primary" />
                         </div>
-                        <DialogTitle className="text-2xl font-heading font-semibold text-foreground">
-                            Welcome Back
+                        <DialogTitle className="text-3xl font-black text-primary uppercase tracking-tighter">
+                            Sign In
                         </DialogTitle>
-                        <DialogDescription className="text-muted-foreground">
-                            Sign in to your account to continue
+                        <DialogDescription className="text-primary/60 font-medium">
+                            Access your Abraham&apos;s Rewards and order history.
                         </DialogDescription>
                     </DialogHeader>
 
-                    <form onSubmit={handleSubmit} className="space-y-4">
+                    <form onSubmit={handleSubmit} className="space-y-6">
                         <div className="space-y-2">
-                            <Label htmlFor="login-email">Email</Label>
+                            <Label htmlFor="login-email" className="text-[10px] font-black uppercase tracking-widest text-primary/40">Email Address</Label>
                             <div className="relative">
-                                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-primary/30" />
                                 <Input
                                     id="login-email"
                                     type="email"
-                                    placeholder="Enter your email"
+                                    placeholder="your@email.com"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
-                                    className="pl-10 h-12 rounded-xl"
+                                    className="pl-12 h-14 rounded-sm border-blue-100 focus-visible:ring-primary font-medium"
                                     required
                                 />
                             </div>
@@ -82,65 +87,54 @@ export function LoginModal({ open, onOpenChange, onSwitchToRegister, onLoginSucc
 
                         <div className="space-y-2">
                             <div className="flex items-center justify-between">
-                                <Label htmlFor="login-password">Password</Label>
+                                <Label htmlFor="login-password" className="text-[10px] font-black uppercase tracking-widest text-primary/40">Password</Label>
                                 <button
                                     type="button"
-                                    className="text-sm text-primary hover:underline"
-                                    onClick={() => toast.info("Password reset link would be sent to your email")}
+                                    className="text-[10px] font-black uppercase tracking-widest text-accent hover:underline"
+                                    onClick={() => toast.info("Password reset feature coming soon!")}
                                 >
-                                    Forgot password?
+                                    Forgot?
                                 </button>
                             </div>
                             <div className="relative">
-                                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-primary/30" />
                                 <Input
                                     id="login-password"
                                     type={showPassword ? "text" : "password"}
-                                    placeholder="Enter your password"
+                                    placeholder="••••••••"
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
-                                    className="pl-10 pr-10 h-12 rounded-xl"
+                                    className="pl-12 pr-12 h-14 rounded-sm border-blue-100 focus-visible:ring-primary font-medium"
                                     required
                                 />
                                 <button
                                     type="button"
                                     onClick={() => setShowPassword(!showPassword)}
-                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                                    className="absolute right-4 top-1/2 -translate-y-1/2 text-primary/30 hover:text-primary"
                                 >
                                     {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                                 </button>
                             </div>
                         </div>
 
-                        <div className="flex items-center gap-2">
-                            <Checkbox
-                                id="remember"
-                                checked={rememberMe}
-                                onCheckedChange={(checked) => setRememberMe(checked as boolean)}
-                            />
-                            <Label htmlFor="remember" className="text-sm font-normal cursor-pointer">
-                                Remember me
-                            </Label>
-                        </div>
-
                         <Button
                             type="submit"
-                            className="w-full h-12 rounded-full text-base font-semibold"
+                            className="w-full h-14 rounded-sm text-sm font-black uppercase tracking-widest bg-primary hover:bg-primary/90 shadow-xl"
                             disabled={isLoading}
                         >
                             {isLoading ? "Signing in..." : "Sign In"}
                         </Button>
                     </form>
 
-                    <div className="mt-6 text-center">
-                        <p className="text-sm text-muted-foreground">
-                            Don't have an account?{" "}
+                    <div className="mt-10 text-center border-t border-blue-50 pt-8">
+                        <p className="text-sm font-medium text-primary/60">
+                            New to the family?{" "}
                             <button
                                 type="button"
                                 onClick={onSwitchToRegister}
-                                className="text-primary hover:underline font-medium"
+                                className="text-primary hover:text-accent font-black uppercase tracking-widest text-xs"
                             >
-                                Create one
+                                Create Account
                             </button>
                         </p>
                     </div>
@@ -155,182 +149,138 @@ export function RegisterModal({ open, onOpenChange, onSwitchToLogin }: RegisterM
     const [lastName, setLastName] = useState("")
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
-    const [confirmPassword, setConfirmPassword] = useState("")
-    const [showPassword, setShowPassword] = useState(false)
-    const [acceptTerms, setAcceptTerms] = useState(false)
-    const [joinRewards, setJoinRewards] = useState(true)
     const [isLoading, setIsLoading] = useState(false)
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
-        if (!firstName || !lastName || !email || !password || !confirmPassword) return
-
-        if (password !== confirmPassword) {
-            toast.error("Passwords do not match")
-            return
-        }
-
-        if (!acceptTerms) {
-            toast.error("Please accept the terms and conditions")
-            return
-        }
+        if (!firstName || !lastName || !email || !password) return
 
         setIsLoading(true)
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 1500))
+        const supabase = createClient()
+        const { error } = await supabase.auth.signUp({
+            email,
+            password,
+            options: {
+                data: {
+                    full_name: `${firstName} ${lastName}`,
+                    join_rewards: true
+                }
+            }
+        })
 
-        // Mock Registration Success
-        localStorage.setItem("isLoggedIn", "true")
-        localStorage.setItem("user", JSON.stringify({ name: firstName, email: email }))
+        if (error) {
+            toast.error(error.message)
+            setIsLoading(false)
+            return
+        }
 
-        toast.success("Account created successfully! Welcome aboard!")
+        toast.success("Welcome to the family! Check your email.")
         setIsLoading(false)
         onOpenChange(false)
     }
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="sm:max-w-md bg-white dark:bg-zinc-900 border-border rounded-2xl p-0 overflow-hidden max-h-[90vh] overflow-y-auto">
-                <div className="p-6">
-                    <DialogHeader className="space-y-3 mb-6 text-center">
-                        <div className="mx-auto w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-2">
-                            <Gift className="h-8 w-8 text-primary" />
+            <DialogContent className="sm:max-w-[540px] bg-white border-blue-50 rounded-sm p-0 overflow-hidden shadow-2xl max-h-[95vh] overflow-y-auto">
+                <div className="p-10 md:p-12">
+                    <DialogHeader className="space-y-4 mb-8 text-center">
+                        <div className="mx-auto w-20 h-20 rounded-sm bg-accent/10 flex items-center justify-center mb-2 border border-accent/20">
+                            <Sparkles className="h-10 w-10 text-accent" />
                         </div>
-                        <DialogTitle className="text-2xl font-heading font-semibold text-foreground">
-                            Create Your Account
+                        <DialogTitle className="text-3xl font-black text-primary uppercase tracking-tighter">
+                            Join Rewards
                         </DialogTitle>
-                        <DialogDescription className="text-muted-foreground">
-                            Join us and start ordering delicious treats
+                        <DialogDescription className="text-primary/60 font-medium">
+                            Earn free treats and experience a blessing in every slice.
                         </DialogDescription>
                     </DialogHeader>
 
-                    <form onSubmit={handleSubmit} className="space-y-4">
-                        <div className="grid grid-cols-2 gap-3">
+                    <form onSubmit={handleSubmit} className="space-y-6">
+                        <div className="grid grid-cols-2 gap-4">
                             <div className="space-y-2">
-                                <Label htmlFor="first-name">First Name</Label>
+                                <Label htmlFor="first-name" className="text-[10px] font-black uppercase tracking-widest text-primary/40">First Name</Label>
                                 <Input
                                     id="first-name"
                                     placeholder="John"
                                     value={firstName}
                                     onChange={(e) => setFirstName(e.target.value)}
-                                    className="h-12 rounded-xl"
+                                    className="h-14 rounded-sm border-blue-100 focus-visible:ring-primary font-medium"
                                     required
                                 />
                             </div>
                             <div className="space-y-2">
-                                <Label htmlFor="last-name">Last Name</Label>
+                                <Label htmlFor="last-name" className="text-[10px] font-black uppercase tracking-widest text-primary/40">Last Name</Label>
                                 <Input
                                     id="last-name"
                                     placeholder="Doe"
                                     value={lastName}
                                     onChange={(e) => setLastName(e.target.value)}
-                                    className="h-12 rounded-xl"
+                                    className="h-14 rounded-sm border-blue-100 focus-visible:ring-primary font-medium"
                                     required
                                 />
                             </div>
                         </div>
 
                         <div className="space-y-2">
-                            <Label htmlFor="register-email">Email</Label>
+                            <Label htmlFor="register-email" className="text-[10px] font-black uppercase tracking-widest text-primary/40">Email Address</Label>
                             <div className="relative">
-                                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-primary/30" />
                                 <Input
                                     id="register-email"
                                     type="email"
-                                    placeholder="john@example.com"
+                                    placeholder="your@email.com"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
-                                    className="pl-10 h-12 rounded-xl"
+                                    className="pl-12 h-14 rounded-sm border-blue-100 focus-visible:ring-primary font-medium"
                                     required
                                 />
                             </div>
                         </div>
 
                         <div className="space-y-2">
-                            <Label htmlFor="register-password">Password</Label>
+                            <Label htmlFor="register-password" className="text-[10px] font-black uppercase tracking-widest text-primary/40">Password</Label>
                             <div className="relative">
-                                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-primary/30" />
                                 <Input
                                     id="register-password"
-                                    type={showPassword ? "text" : "password"}
+                                    type="password"
                                     placeholder="Create a password"
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
-                                    className="pl-10 pr-10 h-12 rounded-xl"
-                                    required
-                                />
-                                <button
-                                    type="button"
-                                    onClick={() => setShowPassword(!showPassword)}
-                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                                >
-                                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                                </button>
-                            </div>
-                        </div>
-
-                        <div className="space-y-2">
-                            <Label htmlFor="confirm-password">Confirm Password</Label>
-                            <div className="relative">
-                                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                                <Input
-                                    id="confirm-password"
-                                    type={showPassword ? "text" : "password"}
-                                    placeholder="Confirm your password"
-                                    value={confirmPassword}
-                                    onChange={(e) => setConfirmPassword(e.target.value)}
-                                    className="pl-10 h-12 rounded-xl"
+                                    className="pl-12 h-14 rounded-sm border-blue-100 focus-visible:ring-primary font-medium"
                                     required
                                 />
                             </div>
                         </div>
 
-                        <div className="space-y-3 pt-2">
-                            <div className="flex items-start gap-2">
-                                <Checkbox
-                                    id="join-rewards"
-                                    checked={joinRewards}
-                                    onCheckedChange={(checked) => setJoinRewards(checked as boolean)}
-                                    className="mt-1"
-                                />
-                                <Label htmlFor="join-rewards" className="text-sm font-normal cursor-pointer">
-                                    <span className="font-medium text-primary">Join Rewards®</span> - Earn points on every order!
+                        <div className="bg-blue-50/50 p-6 rounded-sm space-y-3">
+                            <div className="flex items-center gap-3">
+                                <Checkbox id="join-rewards" checked disabled />
+                                <Label htmlFor="join-rewards" className="text-xs font-bold text-primary uppercase tracking-widest cursor-pointer">
+                                    Sign me up for Abraham&apos;s Rewards®
                                 </Label>
                             </div>
-
-                            <div className="flex items-start gap-2">
-                                <Checkbox
-                                    id="terms"
-                                    checked={acceptTerms}
-                                    onCheckedChange={(checked) => setAcceptTerms(checked as boolean)}
-                                    className="mt-1"
-                                    required
-                                />
-                                <Label htmlFor="terms" className="text-sm font-normal cursor-pointer">
-                                    I agree to the{" "}
-                                    <a href="/policies/terms" className="text-primary hover:underline">Terms of Use</a>{" "}
-                                    and{" "}
-                                    <a href="/policies/privacy" className="text-primary hover:underline">Privacy Policy</a>
-                                </Label>
-                            </div>
+                            <p className="text-[10px] text-primary/40 font-medium leading-relaxed">
+                                By creating an account, you agree to our Terms of Use and Privacy Policy. You will receive transactional emails and marketing updates.
+                            </p>
                         </div>
 
                         <Button
                             type="submit"
-                            className="w-full h-12 rounded-full text-base font-semibold"
+                            className="w-full h-16 rounded-sm text-base font-black uppercase tracking-widest bg-primary hover:bg-primary/90 shadow-2xl"
                             disabled={isLoading}
                         >
                             {isLoading ? "Creating Account..." : "Create Account"}
                         </Button>
                     </form>
 
-                    <div className="mt-6 text-center">
-                        <p className="text-sm text-muted-foreground">
+                    <div className="mt-10 text-center border-t border-blue-50 pt-8">
+                        <p className="text-sm font-medium text-primary/60">
                             Already have an account?{" "}
                             <button
                                 type="button"
                                 onClick={onSwitchToLogin}
-                                className="text-primary hover:underline font-medium"
+                                className="text-primary hover:text-accent font-black uppercase tracking-widest text-xs"
                             >
                                 Sign in
                             </button>

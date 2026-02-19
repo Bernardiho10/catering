@@ -34,7 +34,7 @@ const ORDERS = [
         total: "$18.00",
         status: "Delivered",
         items: ["Tiff's Mix"],
-        image: "https://images.unsplash.com/photo-1499636138143-bd649043ea80?auto=format&fit=crop&w=200&q=80"
+        image: "https://images.unsplash.com/photo-1559620192-032c4bc4674e?auto=format&fit=crop&w=200&q=80"
     },
     {
         id: "ORD-2799",
@@ -43,7 +43,7 @@ const ORDERS = [
         total: "$48.25",
         status: "Delivered",
         items: ["Holiday Pack", "Hot Cocoa Mix"],
-        image: "https://images.unsplash.com/photo-1600431562968-ef980c92f0ce?auto=format&fit=crop&w=200&q=80"
+        image: "https://images.unsplash.com/photo-1560180474-e8563fd75bab?auto=format&fit=crop&w=200&q=80"
     }
 ]
 

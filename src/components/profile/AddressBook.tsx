@@ -68,7 +68,7 @@ export default function AddressBook() {
                             </div>
                             <div className="grid grid-cols-4 items-center gap-4">
                                 <Label htmlFor="address" className="text-right">Address</Label>
-                                <Input id="address" placeholder="123 Cookie Lane" className="col-span-3" />
+                                <Input id="address" placeholder="123 Blessing Blvd" className="col-span-3" />
                             </div>
                             <div className="grid grid-cols-4 items-center gap-4">
                                 <Label htmlFor="city" className="text-right">City/Zip</Label>

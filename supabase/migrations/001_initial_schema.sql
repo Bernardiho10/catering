@@ -14,7 +14,7 @@ alter table public.users enable row level security;
 
 -- MENU ITEMS
 create table public.menu_items (
-  id uuid default uuid_generate_v4() primary key,
+  id uuid default gen_random_uuid() primary key,
   name text not null,
   description text,
   price integer not null, -- stored in cents
@@ -28,7 +28,7 @@ alter table public.menu_items enable row level security;
 
 -- ORDERS
 create table public.orders (
-  id uuid default uuid_generate_v4() primary key,
+  id uuid default gen_random_uuid() primary key,
   user_id uuid references public.users(id) on delete set null,
   status text default 'received' check (status in ('received', 'preparing', 'out_for_delivery', 'delivered', 'cancelled')),
   total_amount integer not null,
@@ -39,7 +39,7 @@ alter table public.orders enable row level security;
 
 -- ORDER ITEMS
 create table public.order_items (
-  id uuid default uuid_generate_v4() primary key,
+  id uuid default gen_random_uuid() primary key,
   order_id uuid references public.orders(id) on delete cascade not null,
   menu_item_id uuid references public.menu_items(id) on delete set null,
   quantity integer not null default 1,
@@ -51,7 +51,7 @@ alter table public.order_items enable row level security;
 
 -- CHECKPOINTS (Order History/Tracking)
 create table public.checkpoints (
-  id uuid default uuid_generate_v4() primary key,
+  id uuid default gen_random_uuid() primary key,
   order_id uuid references public.orders(id) on delete cascade not null,
   status text not null,
   message text,
